@@ -5,12 +5,11 @@
     border-radius: 4px;
     background-color: #1e98d7;
     box-sizing: border-box;
-    border-color: transparent;
     font-family: "Roboto-Regular", "Roboto", sans-serif;
     color: #ffffff;
     text-align: center;
     line-height: normal;
-}
+  }
 
 .consulter {
     width: 113px;
