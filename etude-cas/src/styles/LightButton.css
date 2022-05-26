@@ -1,26 +1,31 @@
-.se-connecter {
-    width: 133px;
-    height: 29px;
-    padding: 2px 2px 2px 2px;
-    border-radius: 4px;
-    background-color: #1e98d7;
-    box-sizing: border-box;
-    font-family: "Roboto-Regular", "Roboto", sans-serif;
-    color: #ffffff;
-    text-align: center;
-    line-height: normal;
-  }
+    .se-connecter {
+        width: 133px;
+        height: 29px;
+        padding: 2px 2px 2px 2px;
+        border-radius: 4px;
+        background-color: #1e98d7;
+        box-sizing: border-box;
+        font-family: "Roboto-Regular", "Roboto", sans-serif;
+        color: #ffffff;
+        text-align: center;
+        line-height: normal;
+        border-color: transparent;
+        position:relative;
+        left: 1036px; /*TODO: make it dynamic resize*/
+        top: 35px; 
+    }
 
-.consulter {
-    width: 113px;
-    height: 31px;
-    padding: 2px 2px 2px 2px;
-    border-radius: 5px;
-    background-color: #1e98d7;
-    box-sizing: border-box;
-    border-color: transparent;
-    font-family: "Roboto-Regular", "Roboto", sans-serif;
-    color: #ffffff;
-    text-align: center;
-    line-height: normal;
-}
+    .consulter {
+        width: 113px;
+        height: 31px;
+        padding: 2px 2px 2px 2px;
+        border-radius: 5px;
+        background-color: #1e98d7;
+        box-sizing: border-box;
+        border-color: transparent;
+        font-family: "Roboto-Regular", "Roboto", sans-serif;
+        color: #ffffff;
+        text-align: center;
+        line-height: normal;
+    }
+

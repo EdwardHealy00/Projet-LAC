@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/LightButton.css';
+import '../../styles/LightButton.css';
 
 interface Props {
   onClick: () => void;
@@ -13,7 +13,7 @@ const Button: React.FC<Props> = ({
     styleName,
   }) => { 
   return (
-    <button
+    <button id="positionConnect"
       onClick={onClick}
       className={styleName}
     >
