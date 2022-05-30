@@ -4,6 +4,7 @@ import Button from './UI-Elements/Button';
 import '../img/normal_search.svg';
 import SearchIcon from "./UI-Elements/SearchIcon";
 import DropDown from "./UI-Elements/Dropdown";
+import Results from "./UI-Elements/Results";
 
 interface Props {}
 
@@ -37,7 +38,14 @@ const Catalogue: React.FC<Props> = ({ }) => {
                             <DropDown children="AUTEUR" onClick={() => console.log("You clicked")} ></DropDown>
                         </div>
                         <div id="articles">
-
+                            <Results title="LES BOUCHONS : une aventure entrepreneuriale" 
+                                    auteurs="Franck Barès, Sabrina Hombourger-Barès, Catherine S Beaucage"
+                                    content="Le cas suit le parcours entrepreneurial de Nicolas et Xavier, deux étudiants qui s’associent pour fonder LES BOUCHONS, entreprise qui vise à offrir des conseils aux consommateurs de vin. Il aborde les approches basées sur la pensée design (design thinking) et le lean start-up."
+                                    date="2022-02-24"
+                                    page="2022-02-24"
+                                    discipline="Génie Industriel"
+                                    tags="Entrepreneuriat">
+                                    </Results>
                         </div>
                     </div>
                 </div>

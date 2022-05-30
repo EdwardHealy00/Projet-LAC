@@ -1,0 +1,104 @@
+#title{
+    width: 447px;
+    height: 23px;
+    border-bottom: 1px solid #d7d7d7;
+    background-color: rgba(255, 255, 255, 0);
+    box-sizing: border-box;
+    font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
+    font-weight: 700;
+    color: #0084cf;
+    text-align: left;
+    line-height: normal;
+  }
+
+  #authors {
+    width: 455px;
+    height: 14px;
+    background-color: rgba(255, 255, 255, 0);
+    box-sizing: border-box;
+    font-family: "Roboto-Regular", "Roboto", sans-serif;
+    font-weight: bold;
+    color: #949494;
+    text-align: left;
+    line-height: normal;
+  }
+
+  #viewArticles {
+    width: 797px;
+    height: 266px;
+    padding: 2px 2px 2px 2px;
+    border-top: 1px solid #a5a5a5;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    position:relative;
+  }
+
+  #preview {
+    width: 444px;
+    height: 69px;
+    padding: 2px 2px 2px 2px;
+    border-top: 1px solid #d7d7d7;
+    border-bottom: 1px solid #d7d7d7;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    font-family: "Roboto-Regular", "Roboto", sans-serif;
+    color: #333333;
+    text-align: left;
+    line-height: normal;
+  }
+
+  #date{
+    width: 113px;
+    height: 23px;
+    padding: 2px 2px 2px 2px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
+    color: #333333;
+    text-align: left;
+    line-height: normal;
+    font-size:11px;
+    font-weight: bold;
+  }
+
+  #page{
+    width: 125px;
+    height: 19px;
+    padding: 2px 2px 2px 2px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
+    color: #333333;
+    text-align: left;
+    line-height: normal;
+    font-size:11px;
+    font-weight: bold;
+  }
+
+  #discipline{
+    width: 441px;
+    height: 19px;
+    padding: 2px 2px 2px 2px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
+    color: #333333;
+    text-align: left;
+    line-height: normal;
+    font-size:11px;
+    font-weight: bold;
+  }
+
+  #tags{
+    width: 258px;
+    height: 19px;
+    padding: 2px 2px 2px 2px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
+    color: #333333;
+    text-align: left;
+    line-height: normal;
+    font-size: 11px;
+    font-weight: bold;
+  }
