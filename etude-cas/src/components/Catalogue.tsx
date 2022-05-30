@@ -42,10 +42,32 @@ const Catalogue: React.FC<Props> = ({ }) => {
                                     auteurs="Franck Barès, Sabrina Hombourger-Barès, Catherine S Beaucage"
                                     content="Le cas suit le parcours entrepreneurial de Nicolas et Xavier, deux étudiants qui s’associent pour fonder LES BOUCHONS, entreprise qui vise à offrir des conseils aux consommateurs de vin. Il aborde les approches basées sur la pensée design (design thinking) et le lean start-up."
                                     date="2022-02-24"
-                                    page="2022-02-24"
+                                    page="6"
                                     discipline="Génie Industriel"
-                                    tags="Entrepreneuriat">
-                                    </Results>
+                                    tags="Entrepreneuriat"
+                                    classNumber="IND6117"
+                                    className="Gestion de l’innovation">
+                            </Results>
+                            <Results title="LES BOUCHONS : une aventure entrepreneuriale" 
+                                    auteurs="Franck Barès, Sabrina Hombourger-Barès, Catherine S Beaucage"
+                                    content="Le cas suit le parcours entrepreneurial de Nicolas et Xavier, deux étudiants qui s’associent pour fonder LES BOUCHONS, entreprise qui vise à offrir des conseils aux consommateurs de vin. Il aborde les approches basées sur la pensée design (design thinking) et le lean start-up."
+                                    date="2022-02-24"
+                                    page="6"
+                                    discipline="Génie Industriel"
+                                    tags="Entrepreneuriat"
+                                    classNumber="IND6117"
+                                    className="Gestion de l’innovation">
+                            </Results>
+                            <Results title="LES BOUCHONS : une aventure entrepreneuriale" 
+                                    auteurs="Franck Barès, Sabrina Hombourger-Barès, Catherine S Beaucage"
+                                    content="Le cas suit le parcours entrepreneurial de Nicolas et Xavier, deux étudiants qui s’associent pour fonder LES BOUCHONS, entreprise qui vise à offrir des conseils aux consommateurs de vin. Il aborde les approches basées sur la pensée design (design thinking) et le lean start-up."
+                                    date="2022-02-24"
+                                    page="6"
+                                    discipline="Génie Industriel"
+                                    tags="Entrepreneuriat"
+                                    classNumber="IND6117"
+                                    className="Gestion de l’innovation">
+                            </Results>
                         </div>
                     </div>
                 </div>

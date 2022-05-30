@@ -157,7 +157,7 @@
         width: 797px;
         height: 1064px;
         /* padding: 2px 2px 2px 2px; */
-        border: 1px solid #797979;
+        /* border: 1px solid #797979; */
         background-color: #ffffff;
         box-sizing: border-box;
         font-family: "ArialMT", "Arial", sans-serif;
@@ -171,7 +171,5 @@
     #rows{
         flex-direction: row;
         display: flex;
-        /* justify-content: space-around;
-        align-items: flex-start; */
     }
 
