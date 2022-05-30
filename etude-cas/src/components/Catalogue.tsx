@@ -71,9 +71,6 @@ const Catalogue: React.FC<Props> = ({ }) => {
                         </div>
                     </div>
                 </div>
-                
-                
-        {/* <Button children="Consulter" styleName="consulter" onClick={() => console.log("You clicked")}></Button> */}
     </div>
   );
 }
