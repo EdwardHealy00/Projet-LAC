@@ -4,7 +4,7 @@
         flex-direction: row;
         display:flex;
         position:relative;
-        left:58px;
+        /* left:58px; */
         padding: 2px 2px 2px 2px;
         border-bottom: 1px solid #bebdbd;
     }

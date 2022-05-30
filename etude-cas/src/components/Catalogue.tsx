@@ -26,15 +26,18 @@ const Catalogue: React.FC<Props> = ({ }) => {
                     </div>
                     <div id="smallRectangle"> 
                         <div id="filtrer-par">Filtrer par</div>
+                        <div id="results"> X résultats</div>
                     </div>
-                    <div>
+                    <div id="rows">
                         <div id="rectangleFilter">
-{/* add dropdowns */}
                             <DropDown children="DISCIPLINE" onClick={() => console.log("You clicked")} ></DropDown>
                             <DropDown children="SUJET" onClick={() => console.log("You clicked")} ></DropDown>
                             <DropDown children="DATE DE PARUTION" onClick={() => console.log("You clicked")} ></DropDown>
                             <DropDown children="NOMBRE DE PAGES" onClick={() => console.log("You clicked")} ></DropDown>
                             <DropDown children="AUTEUR" onClick={() => console.log("You clicked")} ></DropDown>
+                        </div>
+                        <div id="articles">
+
                         </div>
                     </div>
                 </div>
