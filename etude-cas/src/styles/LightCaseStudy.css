@@ -1,0 +1,15 @@
+    #main {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #line {
+        width: 1121px;
+        height: 1px;
+        padding: 2px 2px 2px 2px;
+        border-top: 1px solid #d7d7d7;
+        background-color: #ffffff;
+        position:relative;
+        top:84px;
+        left:111px;
+  }
