@@ -5,10 +5,12 @@ import '../img/normal_search.svg';
 import SearchIcon from "./UI-Elements/SearchIcon";
 import DropDown from "./UI-Elements/Dropdown";
 import Results from "./UI-Elements/Results";
+// import { useNavigate } from "react-router-dom";
 
 interface Props {}
 
 const Catalogue: React.FC<Props> = ({ }) => { 
+    // const navigate = useNavigate();
   return (
     <div id="main">
         <Button children="Se Connecter" styleName="se-connecter" onClick={() => console.log("You clicked")}></Button>

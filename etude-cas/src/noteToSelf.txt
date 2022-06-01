@@ -1,0 +1,4 @@
+--install :
+react-router-dom with command npm i react-router-dom
+
+have to link module react with npm link ../../node_modules/react
