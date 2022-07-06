@@ -121,12 +121,12 @@
     top:15px;
   }
 
-  #first{
+  /* #first{
     position:relative;
     left:30px;
     top:8px;
     width:444px;
-  }
+  } */
 
   #placement{
     display: flex;

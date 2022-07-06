@@ -1,4 +1,4 @@
-    .se-connecter {
+     /* .se-connecter {
         width: 133px;
         height: 29px;
         padding: 2px 2px 2px 2px;
@@ -11,9 +11,9 @@
         line-height: normal;
         border-color: transparent;
         position:relative;
-        left: 1036px; /*TODO: make it dynamic resize*/
+        left: 1036px; 
         top: 35px; 
-    }
+    }*/
 
     .consulter {
         width: 113px;
@@ -30,8 +30,6 @@
     }
 
     .return {
-        width: 178px;
-        height: 33px;
         padding: 2px 2px 2px 2px;
         background-color: rgba(255, 255, 255, 0);
         box-sizing: border-box;
@@ -42,5 +40,6 @@
         text-align: left;
         line-height: normal;
         font-size:15px;
+        margin: 10px 0 0 0 !important;
     }
 
