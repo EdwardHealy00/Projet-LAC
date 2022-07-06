@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/LightCaseStudy.css';
+import '../styles/LightCaseStudy.scss';
 import Button from './UI-Elements/Button';
 import '../img/normal_search.svg';
 // import { useNavigate } from "react-router-dom";
