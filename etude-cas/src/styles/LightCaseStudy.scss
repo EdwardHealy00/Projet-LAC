@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 100px 15% 0 15%;
+  margin: 50px 15% 0 15%;
 }
 
 #main-line {
@@ -63,4 +63,9 @@
 
 #use-case {
   margin-right: 10px;
+}
+
+.pie-chart {
+  width: 50%;
+  height: 200px;
 }
