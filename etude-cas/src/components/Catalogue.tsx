@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/LightCatalogue.css';
+import '../styles/LightCatalogue.scss';
 import Button from './UI-Elements/Button';
 import '../img/normal_search.svg';
 import SearchIcon from "./UI-Elements/SearchIcon";

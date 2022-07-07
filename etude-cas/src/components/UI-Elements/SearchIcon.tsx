@@ -1,5 +1,5 @@
 import React from "react";
-import '../../styles/LightCatalogue.css';
+import '../../styles/LightCatalogue.scss';
 
 const SearchIcon: React.FC = ({  }) => { 
   return (

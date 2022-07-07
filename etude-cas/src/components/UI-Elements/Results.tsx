@@ -1,5 +1,5 @@
 import React from "react";
-import '../../styles/LightResults.css';
+import '../../styles/LightResults.scss';
 import Button from './Button';
 
 interface Props {

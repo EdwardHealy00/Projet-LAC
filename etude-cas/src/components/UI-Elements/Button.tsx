@@ -1,5 +1,5 @@
 import React from "react";
-import '../../styles/LightButton.css';
+import '../../styles/LightButton.scss';
 
 interface Props {
   onClick: () => void;

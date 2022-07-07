@@ -1,5 +1,5 @@
 import React from "react";
-import '../../styles/LightDropDown.css';
+import '../../styles/LightDropDown.scss';
 
 interface Props {
   onClick: () => void;
