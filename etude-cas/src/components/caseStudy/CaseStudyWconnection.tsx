@@ -1,11 +1,11 @@
 import React from "react";
-import "../styles/LightCaseStudy.scss";
+import "../../styles/LightCaseStudy.scss";
 import Button from "@mui/material/Button";
 import "../img/normal_search.svg";
 // import { useNavigate } from "react-router-dom";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { PieChart } from "react-minimal-pie-chart";
-import Table from '../components/UI-Elements/Table';
+import Table from './Table';
 
 interface Props {}
 

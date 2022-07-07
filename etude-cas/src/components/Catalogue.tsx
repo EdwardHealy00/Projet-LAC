@@ -1,10 +1,10 @@
 import React from "react";
 import '../styles/LightCatalogue.scss';
-import Button from './UI-Elements/Button';
+import Button from './common/Button';
 import '../img/normal_search.svg';
-import SearchIcon from "./UI-Elements/SearchIcon";
-import DropDown from "./UI-Elements/Dropdown";
-import Results from "./UI-Elements/Results";
+import SearchIcon from "./common/SearchIcon";
+import DropDown from "./common/Dropdown";
+import Results from "./common/Results";
 // import { useNavigate } from "react-router-dom";
 
 interface Props {}
