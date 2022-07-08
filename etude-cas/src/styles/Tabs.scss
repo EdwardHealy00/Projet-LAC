@@ -1,0 +1,30 @@
+#infos {
+  display: flex;
+
+  div {
+    height: 100%;
+    width: 33%;
+    margin: 0 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;  
+  }
+
+  a {
+    height: 100px;
+    width: 100%;
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+            background-color: grey;
+    }
+  }
+
+  p {
+    font-size: 12px;
+  }
+}
