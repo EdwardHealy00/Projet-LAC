@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "../../styles/LightCaseStudy.scss";
 import Button from "@mui/material/Button";
 import "../img/normal_search.svg";
 // import { useNavigate } from "react-router-dom";
 import Tabs from './Tabs';
+import { useNavigate } from "react-router-dom";
 
 interface Props {}
 
 const CaseStudyWTconnection: React.FC<Props> = ({}) => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const handleOnClick = useCallback(() => navigate('/catalogue'), [navigate]);
   return (
     <div id="main">
       <div id="profile">
@@ -18,7 +20,7 @@ const CaseStudyWTconnection: React.FC<Props> = ({}) => {
       </div>
       <div id="main-line"></div>
       <div>
-        <Button className="return" onClick={() => console.log("You clicked")}>
+        <Button className="return" onClick={handleOnClick}>
           &gt; Retour au catalogue
         </Button>
         <div className="section">
