@@ -1,9 +1,12 @@
+#first {
+  flex: 1 1 60%;
+}
+
 #title{
-    width: 447px;
+    width: 80%;
     height: 23px;
     border-bottom: 1px solid #d7d7d7;
     background-color: rgba(255, 255, 255, 0);
-    box-sizing: border-box;
     font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
     font-weight: 700;
     color: #0084cf;
@@ -12,10 +15,9 @@
   }
 
   #authors {
-    width: 455px;
+    width: 80%;
     height: 30px;
     background-color: rgba(255, 255, 255, 0);
-    box-sizing: border-box;
     font-family: "Roboto-Regular", "Roboto", sans-serif;
     font-weight: bold;
     color: #949494;
@@ -29,117 +31,91 @@
   }
 
   #viewArticles {
-    width: 790px;
-    height: 266px;
+    width: 100%;
     padding: 2px 2px 2px 2px;
     border-bottom: 1px solid #a5a5a5;
     background-color: #ffffff;
-    box-sizing: border-box;
-    position:relative;
     display: flex;
     flex-direction: row;
+    margin: 10px 0;
   }
 
   #preview {
-    width: 444px;
-    height: 69px;
+    width: 80%;
     padding: 2px 2px 2px 2px;
     border-top: 1px solid #d7d7d7;
     border-bottom: 1px solid #d7d7d7;
     background-color: #ffffff;
-    box-sizing: border-box;
     font-family: "Roboto-Regular", "Roboto", sans-serif;
     color: #333333;
     text-align: left;
     line-height: normal;
-    position:relative;
-    top:10px;
-    font-size:13px;
   }
 
   #date{
-    width: 113px;
+    width: 80%;
     height: 23px;
     padding: 2px 2px 2px 2px;
     background-color: #ffffff;
-    box-sizing: border-box;
     font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
     color: #333333;
     text-align: left;
     line-height: normal;
     font-size:11px;
     font-weight: bold;
-    position:relative;
-    top:15px;
   }
 
   #page{
-    width: 125px;
+    width: 80%;
     height: 23px;
     padding: 2px 2px 2px 2px;
     background-color: #ffffff;
-    box-sizing: border-box;
     font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
     color: #333333;
     text-align: left;
     line-height: normal;
     font-size:11px;
     font-weight: bold;
-    position:relative;
-    top:15px;
-  }
-
-  #discipline{
-    width: 441px;
-    height: 23px;
-    padding: 2px 2px 2px 2px;
-    background-color: #ffffff;
-    box-sizing: border-box;
-    font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
-    color: #333333;
-    text-align: left;
-    line-height: normal;
-    font-size:11px;
-    font-weight: bold;
-    position:relative;
-    top:15px;
   }
 
   #tags{
-    width: 258px;
     height: 23px;
     padding: 2px 2px 2px 2px;
     background-color: #ffffff;
-    box-sizing: border-box;
     font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
     color: #333333;
     text-align: left;
     line-height: normal;
     font-size: 11px;
     font-weight: bold;
-    position:relative;
-    top:15px;
   }
-
-  /* #first{
-    position:relative;
-    left:30px;
-    top:8px;
-    width:444px;
-  } */
 
   #placement{
     display: flex;
     flex-direction: row;
+    place-content: space-between;
+
+      #discipline {
+          height: 23px;
+          padding: 2px 2px 2px 2px;
+          background-color: #ffffff;
+          font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
+          color: #333333;
+          text-align: left;
+          line-height: normal;
+          font-size: 11px;
+          font-weight: bold;
+        }
   }
 
   #second{
-    position:relative;
-    left:50px;
-    top:10px;
     display: flex;
     flex-direction: column;
     /* justify-content: space-between; */
+
+    div {
+      margin: 5px 0;
+    }
   }
 
   #ratings{
@@ -151,7 +127,7 @@
     width: 50px;
     height: 13px;
     background-color: rgba(255, 255, 255, 0);
-    box-sizing: border-box;
+
     font-family: "Roboto-Regular", "Roboto", sans-serif;
     color: #333333;
     text-align: left;
@@ -161,42 +137,34 @@
   }
 
   #usedClass{
-    width: 220px;
     height: 14px;
     background-color: rgba(255, 255, 255, 0);
-    box-sizing: border-box;
+
     font-family: "Roboto-Bold", "Roboto Bold", "Roboto", sans-serif;
     font-weight: 700;
     color: #333333;
     text-align: left;
     line-height: normal;
     font-size: 12px;
-    position:relative;
-    top:20px;
   }
 
   #name{
-    width: 170px;
     height: 28px;
     background-color: rgba(255, 255, 255, 0);
-    box-sizing: border-box;
     font-family: "Roboto-Regular", "Roboto", sans-serif;
     color: #333333;
     text-align: left;
     line-height: normal;
     font-size:12px;
-    position:relative;
-    top:40px;
   }
 
   #info{
-    width: 75px;
     height: 21px;
     padding: 2px 2px 2px 2px;
     border-radius: 5px;
     border: 1px dashed #1e98d7;
     background-color: #ffffff;
-    box-sizing: border-box;
+
     font-family: "Roboto-Regular", "Roboto", sans-serif;
     color: #1e98d7;
     text-align: center;
