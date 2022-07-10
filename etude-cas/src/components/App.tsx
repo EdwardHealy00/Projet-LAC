@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
- import Catalogue from './Catalogue';
+ import Catalogue from './catalogue/Catalogue';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CaseStudyWTconnection from './caseStudy/CaseStudyWTconnection';
 import CaseStudyWconnection from './caseStudy/CaseStudyWconnection';

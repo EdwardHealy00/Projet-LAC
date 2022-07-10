@@ -1,6 +1,6 @@
 import React from "react";
 import '../../styles/LightResults.scss';
-import Button from './Button';
+import Button from '../common/Button';
 
 interface Props {
 //   onClick: () => void;

@@ -1,10 +1,10 @@
 import React from "react";
-import '../styles/LightCatalogue.scss';
+import '../../styles/LightCatalogue.scss';
 import Button from "@mui/material/Button";
 import '../img/normal_search.svg';
-import SearchIcon from "./common/SearchIcon";
-import DropDown from "./common/Dropdown";
-import Results from "./common/Results";
+import SearchIcon from "../common/SearchIcon";
+import DropDown from "../common/Dropdown";
+import Results from "./Results";
 import { InputAdornment, TextField } from "@mui/material";
 // import { useNavigate } from "react-router-dom";
 
