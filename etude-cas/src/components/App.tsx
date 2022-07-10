@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CaseStudyWTconnection from './caseStudy/CaseStudyWTconnection';
 import CaseStudyWconnection from './caseStudy/CaseStudyWconnection';
 import NavBar from './common/NavBar';
+import CollaborativeSpace from './collaborativeSpace/collaborativeSpace';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -16,6 +17,7 @@ function App() {
           {/* <Route path="/etude-de-cas" element={<CaseStudyWTconnection />} /> */}
           <Route path="/etude-de-cas" element={<CaseStudyWconnection />} />
           {/* <Route path="/contact" element={< />} /> */}
+          <Route path="/espace-de-collaboration" element={<CollaborativeSpace/>} />
         </Routes>
     </div>
   );

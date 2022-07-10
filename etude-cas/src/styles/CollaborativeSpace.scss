@@ -1,0 +1,90 @@
+#collaborative {
+    width: 100%;
+}
+
+#searchCollaborative {
+    border: 1px solid rgba(30, 152, 215, 1);
+    border-radius: 9px;
+    width: 50%;
+}
+
+#formStudyContent {
+    border: 1px solid rgba(30, 152, 215, 1);
+    border-radius: 9px;
+    width: 100%;
+    //height: 500px;
+}
+
+#formStudy {
+    display: flex;    
+    flex-direction: row;
+    place-content: space-between;
+}
+
+#formStudyTitle {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    h1 {
+        background-color: rgba(30, 152, 215, 1);
+        color: white;
+        width: 50%;
+        height: fit-content;
+        padding: 10px;
+    }
+
+    #formStudySummary {
+        border: 1px solid rgba(30, 152, 215, 1);
+        border-radius: 9px;
+        width: 300px;
+        height: fit-content;
+        padding: 10px;
+    }
+}
+
+#formStudyImage {
+    text-align: center;
+}
+
+#formStudyLayout {
+    
+    h2 {
+        color: rgba(30, 152, 215, 1);
+    }
+}
+
+ol {
+    counter-reset: item;
+
+    li {
+        display: block;
+    }
+    
+    li:before {
+        content: counters(item, ".") " ";
+        counter-increment: item;
+    }
+}
+
+#caseStudyLocked {
+    display: flex;
+    place-content: space-between;
+}
+
+.case {
+    h3 {
+        color: rgba(30, 152, 215, 1);
+        margin: 0;
+    }
+
+    div {
+        color: #A5A5A5;
+    }
+}
+#bibliography {
+
+    li::marker {
+        content: '* ';
+    }
+}
