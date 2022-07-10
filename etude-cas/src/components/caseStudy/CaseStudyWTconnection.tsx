@@ -12,12 +12,7 @@ const CaseStudyWTconnection: React.FC<Props> = ({}) => {
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navigate('/catalogue'), [navigate]);
   return (
-    <div id="main">
-      <div id="profile">
-        <Button variant="contained" onClick={() => console.log("You clicked")}>
-          Se Connecter
-        </Button>
-      </div>
+    <div>
       <div id="main-line"></div>
       <div>
         <Button className="return" onClick={handleOnClick}>

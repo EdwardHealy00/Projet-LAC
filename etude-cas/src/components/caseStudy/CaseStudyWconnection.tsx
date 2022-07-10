@@ -14,11 +14,7 @@ const CaseStudyWTconnection: React.FC<Props> = ({}) => {
  const handleOnClick = useCallback(() => navigate('/catalogue'), [navigate]);
 
   return (
-    <div id="main">
-      <div id="profile">
-        <AccountCircle sx={{ verticalAlign: "middle", fontSize: "32px" }} />
-        Professeur
-      </div>
+    <div>
       <div id="main-line"></div>
       <div>
         <Button className="return" onClick={handleOnClick}>

@@ -13,12 +13,7 @@ interface Props { }
 const Catalogue: React.FC<Props> = ({ }) => {
     // const navigate = useNavigate();
     return (
-        <div id="main">
-            <div id="profile">
-                <Button variant="contained" onClick={() => console.log("You clicked")}>
-                    Se Connecter
-                </Button>
-            </div>
+        <div>
             <div id="content">
                 <div id="rectangle">
                     <div id="catalogue-des-cas">Catalogue des cas</div>
