@@ -1,7 +1,5 @@
-import { InputAdornment, TextField } from "@mui/material";
 import React from "react";
-import SearchIcon from "../common/SearchIcon";
-import "../../styles/DashboardPaidCase.scss";
+import "../../../styles/DashboardPaidCase.scss";
 
 function DashboardPaidCase() {
 

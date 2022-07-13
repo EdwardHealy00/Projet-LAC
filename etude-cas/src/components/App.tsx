@@ -6,7 +6,7 @@ import CaseStudyWconnection from './caseStudy/CaseStudyWconnection';
 import NavBar from './common/NavBar';
 import CollaborativeSpace from './collaborativeSpace/collaborativeSpace';
 import CaseStudy from './collaborativeSpace/caseStudy/CaseStudy';
-import DashboardPaidCase from './dashboard/dashboardPaidCase';
+import DashboardPaidCase from './deputy/dashboard/dashboardPaidCase';
 
 function App() {
   // const [count, setCount] = useState(0);
