@@ -6,6 +6,7 @@ import CaseStudyWconnection from './caseStudy/CaseStudyWconnection';
 import NavBar from './common/NavBar';
 import CollaborativeSpace from './collaborativeSpace/collaborativeSpace';
 import CaseStudy from './collaborativeSpace/caseStudy/CaseStudy';
+import DashboardPaidCase from './dashboard/dashboardPaidCase';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -22,6 +23,7 @@ function App() {
           path="/espace-de-collaboration"
           element={<CollaborativeSpace />}
         />
+        <Route path="/dashboard" element={<DashboardPaidCase />} />
         {/* <Route
           path="/espace-de-collaboration/etude-de-cas"
           element={<CaseStudy />}
