@@ -7,6 +7,7 @@ import NavBar from './common/NavBar';
 import CollaborativeSpace from './collaborativeSpace/collaborativeSpace';
 import CaseStudy from './collaborativeSpace/caseStudy/CaseStudy';
 import DashboardPaidCase from './deputy/dashboard/dashboardPaidCase';
+import Approval from './deputy/approval/Approval';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -24,6 +25,7 @@ function App() {
           element={<CollaborativeSpace />}
         />
         <Route path="/dashboard" element={<DashboardPaidCase />} />
+        <Route path="/approval" element={<Approval />} />
         {/* <Route
           path="/espace-de-collaboration/etude-de-cas"
           element={<CaseStudy />}
