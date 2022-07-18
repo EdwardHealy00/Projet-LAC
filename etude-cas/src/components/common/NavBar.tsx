@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import React from "react";
 import '../../styles/NavBar.scss';
 import Login from "../connection/Login";
+import Register from "../connection/Register";
 
 interface Props { }
 
@@ -12,7 +13,8 @@ const NavBar: React.FC<Props> = ({ }) => {
             {/* <Button variant="contained" onClick={() => console.log("You clicked")}>
                 Se Connecter
             </Button> */}
-            <Login />
+            {/* <Login /> */}
+            <Register />
         </div>
         // <div id="profile">
         //      <AccountCircle sx={{ verticalAlign: "middle", fontSize: "32px" }} />

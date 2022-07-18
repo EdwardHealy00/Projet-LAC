@@ -9,6 +9,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import "./Login.scss";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import Register from "./Register";
 
 export default function Login() {
   const [open, setOpen] = React.useState(false);
@@ -19,6 +20,12 @@ export default function Login() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const openRegister = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setOpen(false);
+    //return <Register />;
   };
 
   return (
@@ -32,7 +39,7 @@ export default function Login() {
           <DialogContentText>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </DialogContentText>
-          <a href="https://www.google.com">Vous n'avez pas de compte?</a>
+          <a href="#" onClick={openRegister}>Vous n'avez pas de compte?</a>
           <form id="loginForm">
             <TextField
               autoFocus
