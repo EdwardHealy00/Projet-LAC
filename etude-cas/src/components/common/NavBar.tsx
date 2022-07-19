@@ -1,5 +1,5 @@
 import { AccountCircle } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { Button, ButtonGroup } from "@mui/material";
 import React from "react";
 import '../../styles/NavBar.scss';
 import Login from "../connection/Login";
@@ -9,17 +9,17 @@ interface Props { }
 
 const NavBar: React.FC<Props> = ({ }) => {
     return (
-        <div id="profile">
-            {/* <Button variant="contained" onClick={() => console.log("You clicked")}>
-                Se Connecter
-            </Button> */}
-            {/* <Login /> */}
-            <Register />
-        </div>
-        // <div id="profile">
-        //      <AccountCircle sx={{ verticalAlign: "middle", fontSize: "32px" }} />
-        //         Professeur
-        // </div>
+      <div id="profile">
+        {/* <ButtonGroup
+          variant="contained"
+          aria-label="outlined primary button group"
+        >
+          <Button>Catalogue</Button>
+          <Button>Dashboard</Button>
+          <Button>À propos</Button>
+        </ButtonGroup> */}
+        <Login />
+      </div>
     );
 }
 

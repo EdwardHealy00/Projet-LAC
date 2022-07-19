@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
  import Catalogue from './catalogue/Catalogue';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import CaseStudyWTconnection from './caseStudy/CaseStudyWTconnection';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CaseStudyWconnection from './caseStudy/CaseStudyWconnection';
 import NavBar from './common/NavBar';
 import CollaborativeSpace from './collaborativeSpace/collaborativeSpace';
-import CaseStudy from './collaborativeSpace/caseStudy/CaseStudy';
 import DashboardPaidCase from './deputy/dashboard/dashboardPaidCase';
 import Approval from './deputy/approval/Approval';
+import Home from './home/Home';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -15,7 +14,7 @@ function App() {
     <div id="main">
       <NavBar />
       <Routes>
-        <Route path="/" element={<Catalogue />} />
+        <Route path="/" element={<Home />} />
         <Route path="/catalogue" element={<Catalogue />} />
         {/* <Route path="/etude-de-cas" element={<CaseStudyWTconnection />} /> */}
         <Route path="/etude-de-cas" element={<CaseStudyWconnection />} />

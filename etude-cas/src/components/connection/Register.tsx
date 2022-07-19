@@ -49,9 +49,9 @@ export default function Register() {
 
   return (
     <div>
-      <Button id="loginButton" variant="contained" onClick={handleClickOpen}>
-        Se connecter
-      </Button>
+      <a href="#" onClick={handleClickOpen}>
+        Vous n'avez pas de compte?
+      </a>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>S'inscrire</DialogTitle>
         <DialogContent>
@@ -109,7 +109,12 @@ export default function Register() {
                 component="label"
                 id="uploadProof"
               >
-                <input hidden accept="image/*" type="file" onChange={handleImageUpload}/>
+                <input
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  onChange={handleImageUpload}
+                />
                 <PhotoCamera />
                 <FormLabel>{uploadedImage}</FormLabel>
               </IconButton>

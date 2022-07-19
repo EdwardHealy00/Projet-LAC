@@ -22,12 +22,6 @@ export default function Login() {
     setOpen(false);
   };
 
-  const openRegister = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    setOpen(false);
-    //return <Register />;
-  };
-
   return (
     <div>
       <Button id="loginButton" variant="contained" onClick={handleClickOpen}>
@@ -39,7 +33,8 @@ export default function Login() {
           <DialogContentText>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </DialogContentText>
-          <a href="#" onClick={openRegister}>Vous n'avez pas de compte?</a>
+          <Register />
+          
           <form id="loginForm">
             <TextField
               autoFocus
@@ -48,8 +43,7 @@ export default function Login() {
               label="Identifiant"
               type="email"
               fullWidth
-              variant="outlined"
-            />
+              variant="outlined" />
             <TextField
               autoFocus
               margin="dense"
@@ -57,8 +51,7 @@ export default function Login() {
               label="Mot de passe"
               type="password"
               fullWidth
-              variant="outlined"
-            />
+              variant="outlined" />
             <FormControlLabel control={<Checkbox />} label="Mémoriser" />
 
             <a href="https://www.google.com">Mot de passe oublié?</a>
