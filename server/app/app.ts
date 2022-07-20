@@ -1,6 +1,4 @@
 import { HttpException } from '@app/classes/http.exception';
-import { DateController } from '@app/controllers/date.controller';
-import { ExampleController } from '@app/controllers/example.controller';
 import bodyParser = require('body-parser');
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
@@ -10,6 +8,7 @@ import * as logger from 'morgan';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
+import { UserController } from './controllers/user.controller';
 
 @Service()
 export class Application {
@@ -17,7 +16,7 @@ export class Application {
     private readonly internalError: number = StatusCodes.INTERNAL_SERVER_ERROR;
     private readonly swaggerOptions: swaggerJSDoc.Options;
 
-    constructor(private readonly exampleController: ExampleController, private readonly dateController: DateController) {
+    constructor(private readonly userController: UserController) {
         this.app = express();
 
         this.swaggerOptions = {
@@ -38,8 +37,7 @@ export class Application {
 
     bindRoutes(): void {
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
-        this.app.use('/api/example', this.exampleController.router);
-        this.app.use('/api/date', this.dateController.router);
+        this.app.use('/api/users', this.userController.router);
         this.app.use('/', (req, res) => {
             res.redirect('/api/docs');
         });
