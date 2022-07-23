@@ -1,5 +1,5 @@
 import { HttpException } from '@app/classes/http.exception';
-import bodyParser = require('body-parser');
+//import bodyParser = require('body-parser');
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
@@ -8,7 +8,9 @@ import * as logger from 'morgan';
 import * as swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
-import { UserController } from './controllers/user.controller';
+import { DatabaseService } from '@app/services/database/database.service';
+import { UserController } from '@app/controllers/user.controller';
+import { AuthController } from '@app/controllers/auth.controller';
 
 @Service()
 export class Application {
@@ -16,7 +18,9 @@ export class Application {
     private readonly internalError: number = StatusCodes.INTERNAL_SERVER_ERROR;
     private readonly swaggerOptions: swaggerJSDoc.Options;
 
-    constructor(private readonly userController: UserController) {
+    constructor(private readonly databaseService: DatabaseService, 
+        private readonly userController: UserController,
+        private readonly authController: AuthController) {
         this.app = express();
 
         this.swaggerOptions = {
@@ -33,11 +37,15 @@ export class Application {
         this.config();
 
         this.bindRoutes();
+
+        this.databaseService.connectDB();
+
     }
 
     bindRoutes(): void {
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
         this.app.use('/api/users', this.userController.router);
+        this.app.use('/api/auth', this.authController.router);
         this.app.use('/', (req, res) => {
             res.redirect('/api/docs');
         });
@@ -51,9 +59,9 @@ export class Application {
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
         this.app.use(cors());
-        this.app.use(bodyParser.urlencoded({
-            extended: false
-        }));
+        // this.app.use(bodyParser.urlencoded({
+        //     extended: false
+        // }));
     }
 
     private errorHandling(): void {
