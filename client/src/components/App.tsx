@@ -7,6 +7,7 @@ import CollaborativeSpace from './collaborativeSpace/collaborativeSpace';
 import DashboardPaidCase from './deputy/dashboard/dashboardPaidCase';
 import Approval from './deputy/approval/Approval';
 import Home from './home/Home';
+import * as env from 'dotenv';
 
 function App() {
   // const [count, setCount] = useState(0);

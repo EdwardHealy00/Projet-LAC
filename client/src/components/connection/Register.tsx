@@ -18,16 +18,19 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
+import { UserRegister } from "../../model/UserRegister";
 
 export default function Register() {
   const [open, setOpen] = React.useState(false);
-  const [uploadedImage, setUploadedImage] = React.useState("Preuve de votre statut de professeur");
+  const [uploadedImage, setUploadedImage] = React.useState(
+    "Preuve de votre statut de professeur"
+  );
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setUploadedImage(e.target.files[0].name);
     }
-  }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -37,14 +40,42 @@ export default function Register() {
     setOpen(false);
   };
 
-  const [status, setStatus] = React.useState("");
+  const [state, setState] = React.useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    city: "",
+    country: "",
+    status: "",
+    proof: "",
+    school: "poly"
+  });
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setStatus(event.target.value as string);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+    console.log(name, value);
+    setState({ ...state, [name]: value });
   };
 
-  const handleChangeUniversity = (event: SelectChangeEvent) => {
-    setStatus(event.target.value as string);
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    //console.log(e.target.elements.firstName.value);
+    const user: UserRegister = {
+      email: e.target.elements.email.value,
+      firstName: e.target.elements.firstName.value,
+      lastName: e.target.elements.lastName.value,
+      password: e.target.elements.password.value,
+      status: status,
+      proof: uploadedImage,
+      school: e.target.elements.school.value,
+      country: e.target.elements.country.value,
+      city: e.target.elements.city.value,
+    };
+    console.log(user);
   };
 
   return (
@@ -67,6 +98,8 @@ export default function Register() {
             }}
             noValidate
             autoComplete="off"
+            onSubmit={handleSubmit}
+            id="registerForm"
           >
             <div>
               <TextField
@@ -78,6 +111,9 @@ export default function Register() {
                 id="firstName"
                 type="text"
                 variant="outlined"
+                name="firstName"
+                onChange={handleInputChange}
+                value={state.firstName} 
               />
               <TextField
                 fullWidth
@@ -88,6 +124,9 @@ export default function Register() {
                 id="lastName"
                 type="text"
                 variant="outlined"
+                name="lastName"
+                onChange={handleInputChange}
+                value={state.lastName}
               />
             </div>
             <div>
@@ -95,9 +134,10 @@ export default function Register() {
                 <InputLabel>Statut</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
-                  value={status}
+                  value={state.status}
                   label="status"
-                  onChange={handleChange}
+                  onChange={handleInputChange}
+                  name="status"
                 >
                   <MenuItem value={"teacher"}>Enseignant/Enseignante</MenuItem>
                   <MenuItem value={"student"}>Étudiant/Étudiante</MenuItem>
@@ -114,6 +154,7 @@ export default function Register() {
                   accept="image/*"
                   type="file"
                   onChange={handleImageUpload}
+                  name="proof"
                 />
                 <PhotoCamera />
                 <FormLabel>{uploadedImage}</FormLabel>
@@ -128,6 +169,9 @@ export default function Register() {
                 label="Courriel"
                 type="email"
                 variant="outlined"
+                name="email"
+                onChange={handleInputChange}
+                value={state.email}
               />
               <TextField
                 required
@@ -137,6 +181,9 @@ export default function Register() {
                 label="Mot de passe"
                 type="password"
                 variant="outlined"
+                name="password"
+                onChange={handleInputChange}
+                value={state.password}
               />
             </div>
             <FormControl className="formControl" fullWidth required>
@@ -144,9 +191,10 @@ export default function Register() {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={status}
-                label="status"
-                onChange={handleChange}
+                value={state.school}
+                label="school"
+                onChange={handleInputChange}
+                name="school"
               >
                 <MenuItem value={"ets"}>
                   École de technologie supérieur
@@ -197,9 +245,10 @@ export default function Register() {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={status}
-                  label="status"
-                  onChange={handleChange}
+                  value={state.country}
+                  label="country"
+                  onChange={handleInputChange}
+                  name="country"
                 >
                   <MenuItem value={10}>Ten</MenuItem>
                   <MenuItem value={20}>Twenty</MenuItem>
@@ -214,13 +263,16 @@ export default function Register() {
                 label="Ville"
                 type="text"
                 variant="outlined"
+                name="city"
+                onChange={handleInputChange}
+                
               />
             </div>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Annuler</Button>
-          <Button variant="contained" onClick={handleClose}>
+          <Button variant="contained" type="submit" form="registerForm">
             Enregistrer
           </Button>
         </DialogActions>
