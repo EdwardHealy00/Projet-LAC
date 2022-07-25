@@ -57,7 +57,6 @@ export class AuthController {
             try {
                 // Get the user from the collection
                 const user = await this.userService.findUser({ email: req.body.email });
-
                 // Check if user exist and password is correct
                 if (
                     !user ||
@@ -69,11 +68,9 @@ export class AuthController {
                         message: 'Invalid email or password'
                     });
                 }
-
                 // Create an Access Token
                 const accessToken = await this.userService.signToken(user!);
-
-                // Cookie options
+                // Cookie options 
                 const accessTokenCookieOptions: CookieOptions = {
                     expires: new Date(
                         Date.now() + parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000
@@ -87,7 +84,7 @@ export class AuthController {
                 res.cookie('accessToken', accessToken, accessTokenCookieOptions);
                 res.cookie('logged_in', true, {
                     ...accessTokenCookieOptions,
-                    httpOnly: false,
+                    httpOnly: true,
                 });
 
                 // Send Access Token

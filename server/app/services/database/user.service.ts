@@ -3,7 +3,6 @@ import { FilterQuery, QueryOptions } from 'mongoose';
 import userModel, { User } from '@app/models/user.model';
 import { excludedFields } from '@app/controllers/auth.controller';
 import { signJwt } from '@app/utils/jwt';
-import { RedisService } from '@app/services/redis.service';
 import { DocumentType } from '@typegoose/typegoose';
 import { Service } from 'typedi';
 import { ACCESS_TOKEN_EXPIRES_IN } from '@app/constant/constant';
@@ -11,7 +10,7 @@ import { ACCESS_TOKEN_EXPIRES_IN } from '@app/constant/constant';
 @Service()
 export class UserService {
 
-    constructor(private readonly redisService: RedisService) { }
+    constructor() { }
 
     // CreateUser service
     async createUser(input: Partial<User>) {
@@ -47,12 +46,7 @@ export class UserService {
                 expiresIn: ACCESS_TOKEN_EXPIRES_IN,
             }
         );
-        // Create a Session
-        const redisClient = this.redisService.getClient();
-        await redisClient.set(JSON.stringify(user._id), JSON.stringify(user), {
-            EX: 60 * 60,
-        });
-
+        
         // Return access token
         return { access_token };
     }

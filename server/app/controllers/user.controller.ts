@@ -1,15 +1,13 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { RedisService } from '@app/services/redis.service';
 import { verifyJwt } from '@app/utils/jwt';
 import { UserService } from '@app/services/database/user.service';
-import Container, { Service } from 'typedi';
+import { Service } from 'typedi';
 
 @Service()
 export class UserController {
     router: Router;
 
-    constructor(private readonly userService: UserService, private readonly redisService: RedisService) {
-        this.redisService = Container.get(RedisService);
+    constructor(private readonly userService: UserService) {
         this.configureRouter();
     }
 
@@ -77,26 +75,17 @@ export class UserController {
                 return next(`Invalid token or user doesn't exist`);
             }
 
-            // Check if user has a valid session
-            const redisClient = this.redisService.getClient();
-            const session = await redisClient.get(JSON.stringify(decoded.sub));
+            // // Check if user still exist
+            // const user = await this.userService.findUserById(JSON.parse(session)._id);
 
-            if (!session) {
-                //return;
-                return next(`User session has expired`);
-            }
+            // if (!user) {
+            //     //return;
+            //     return next(`User with that token no longer exist`);
+            // }
 
-            // Check if user still exist
-            const user = await this.userService.findUserById(JSON.parse(session)._id);
-
-            if (!user) {
-                //return;
-                return next(`User with that token no longer exist`);
-            }
-
-            // This is really important (Helps us know if the user is logged in from other controllers)
-            // You can do: (req.user or res.locals.user)
-            res.locals.user = user;
+            // // This is really important (Helps us know if the user is logged in from other controllers)
+            // // You can do: (req.user or res.locals.user)
+            // res.locals.user = user;
 
             next();
         } catch (err: any) {

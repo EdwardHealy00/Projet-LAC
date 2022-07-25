@@ -10,9 +10,16 @@ import "./Login.scss";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Register from "./Register";
+import { UserLogin } from "../../model/User";
+import axios from "axios";
 
 export default function Login() {
   const [open, setOpen] = React.useState(false);
+  const [state, setState] = React.useState<UserLogin>({
+    email: "",
+    password: "",
+  });
+  const [login, setLogin] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -22,11 +29,49 @@ export default function Login() {
     setOpen(false);
   };
 
+  const handleInputChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+    console.log(name, value);
+    setState({ ...state, [name]: value });
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    //console.log(e.target.elements.firstName.value);
+    const user: UserLogin = {
+      email: e.target.elements.email.value,
+      password: e.target.elements.password.value,
+    };
+    console.log(user);
+    sendLoginForm(user);
+  };
+
+  const sendLoginForm = (user: UserLogin) => {
+    axios
+      .post("http://localhost:3001/api/auth/login", user, {
+        withCredentials: true,
+      }
+      )
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          console.log(res.data.accessToken);
+          setLogin(true);
+          handleClose();
+        }
+      });
+  };
+
   return (
     <div>
-      <Button id="loginButton" variant="contained" onClick={handleClickOpen}>
+      {!login && <Button id="loginButton" variant="contained" onClick={handleClickOpen}>
         Se connecter
-      </Button>
+      </Button>}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Se connecter</DialogTitle>
         <DialogContent>
@@ -34,8 +79,8 @@ export default function Login() {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </DialogContentText>
           <Register />
-          
-          <form id="loginForm">
+
+          <form id="loginForm" onSubmit={handleSubmit}>
             <TextField
               autoFocus
               margin="dense"
@@ -43,7 +88,9 @@ export default function Login() {
               label="Identifiant"
               type="email"
               fullWidth
-              variant="outlined" />
+              variant="outlined"
+              name="email"
+            />
             <TextField
               autoFocus
               margin="dense"
@@ -51,15 +98,17 @@ export default function Login() {
               label="Mot de passe"
               type="password"
               fullWidth
-              variant="outlined" />
+              variant="outlined"
+              name="password"
+            />
             <FormControlLabel control={<Checkbox />} label="Mémoriser" />
 
-            <a href="https://www.google.com">Mot de passe oublié?</a>
+            <a>Mot de passe oublié?</a>
           </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Annuler</Button>
-          <Button variant="contained" onClick={handleClose}>
+          <Button variant="contained" type="submit" form="loginForm">
             Valider
           </Button>
         </DialogActions>

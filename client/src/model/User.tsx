@@ -9,3 +9,8 @@ export interface UserRegister {
     country: string;
     city: string;
 }
+
+export interface UserLogin {
+    email: string;
+    password: string;
+}

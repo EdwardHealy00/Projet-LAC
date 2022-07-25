@@ -18,7 +18,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
-import { UserRegister } from "../../model/UserRegister";
+import { UserRegister } from "../../model/User";
 import axios from "axios";
 
 export default function Register() {
