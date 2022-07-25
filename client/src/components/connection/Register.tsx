@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import { UserRegister } from "../../model/UserRegister";
+import axios from "axios";
 
 export default function Register() {
   const [open, setOpen] = React.useState(false);
@@ -69,14 +70,24 @@ export default function Register() {
       firstName: e.target.elements.firstName.value,
       lastName: e.target.elements.lastName.value,
       password: e.target.elements.password.value,
-      status: status,
+      status: e.target.elements.status.value,
       proof: uploadedImage,
       school: e.target.elements.school.value,
       country: e.target.elements.country.value,
       city: e.target.elements.city.value,
     };
     console.log(user);
+    sendRegisterForm(user);
   };
+
+  const sendRegisterForm = (user: UserRegister) => {
+    axios.post("http://localhost:3001/api/auth/register", user).then((res) => {
+      console.log(res);
+      if (res.status === 201) {
+        handleClose();
+      }
+    });
+  }
 
   return (
     <div>

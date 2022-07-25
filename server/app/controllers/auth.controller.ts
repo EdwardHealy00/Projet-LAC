@@ -117,6 +117,7 @@ export class AuthController {
 
                 return next();
             } catch (err: any) {
+                console.log(err);
                 if (err instanceof ZodError) {
                     return res.status(400).json({
                         status: 'fail',

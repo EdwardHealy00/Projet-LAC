@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.1",
     "@types/node": "^16.11.36",
+    "axios": "^0.27.2",
     "chart.js": "^3.8.0",
     "chartjs-plugin-datalabels": "^2.0.0",
     "dotenv": "^16.0.1",
