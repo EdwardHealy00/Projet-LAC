@@ -1,7 +1,9 @@
+import { Document } from "./Document";
 export interface Case {
     id_: number;
     title: string;
     author: string;
-    submitted: string;
+    submittedDate: string;
     status: string;
+    documents?: Document[];
 }

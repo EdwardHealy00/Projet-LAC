@@ -8,6 +8,7 @@ import DashboardPaidCase from './deputy/dashboard/dashboardPaidCase';
 import Approval from './deputy/approval/Approval';
 import Home from './home/Home';
 import * as env from 'dotenv';
+import NewCase from './deputy/newCase/newCase';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -26,6 +27,7 @@ function App() {
         />
         <Route path="/dashboard" element={<DashboardPaidCase />} />
         <Route path="/approval" element={<Approval />} />
+        <Route path="/new-case-approval" element={<NewCase />} />
         {/* <Route
           path="/espace-de-collaboration/etude-de-cas"
           element={<CaseStudy />}

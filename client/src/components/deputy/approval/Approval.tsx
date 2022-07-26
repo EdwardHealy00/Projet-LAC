@@ -10,7 +10,7 @@ function createData(
   submitted: string,
   status: string
 ): Case {
-  return { id_, title, author, submitted, status };
+  return { id_, title, author, submittedDate: submitted, status };
 }
 
 const rowsStep1: Case[] = [

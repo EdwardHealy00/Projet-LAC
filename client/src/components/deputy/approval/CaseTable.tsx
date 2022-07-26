@@ -39,7 +39,7 @@ export default function CaseTable(rows: CaseProp) {
               </TableCell>
               <TableCell align="right">{row.title}</TableCell>
               <TableCell align="right">{row.author}</TableCell>
-              <TableCell align="right">{row.submitted}</TableCell>
+              <TableCell align="right">{row.submittedDate}</TableCell>
               <TableCell align="right">{row.status}</TableCell>
               <TableCell align="right">
                 <Button variant={getButtonVariant(row.status)}>

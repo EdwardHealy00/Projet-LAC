@@ -1,0 +1,22 @@
+#newCase {
+    width: 100%;
+}
+
+#generalCaseInfo {
+    display: flex;
+    flex-direction: column;
+
+    div {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+}
+
+#caseLastRow {
+    display: flex;
+
+    :first-child {
+        margin-right: 10px;
+    }
+}
