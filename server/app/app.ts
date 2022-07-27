@@ -11,6 +11,7 @@ import { Service } from 'typedi';
 import { DatabaseService } from '@app/services/database/database.service';
 import { UserController } from '@app/controllers/user.controller';
 import { AuthController } from '@app/controllers/auth.controller';
+import { CaseStudyController } from './controllers/caseStudy.controller';
 
 @Service()
 export class Application {
@@ -20,7 +21,8 @@ export class Application {
 
     constructor(private readonly databaseService: DatabaseService, 
         private readonly userController: UserController,
-        private readonly authController: AuthController) {
+        private readonly authController: AuthController,
+        private readonly caseStudyController: CaseStudyController) {
         this.app = express();
 
         this.swaggerOptions = {
@@ -46,6 +48,7 @@ export class Application {
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
         this.app.use('/api/users', this.userController.router);
         this.app.use('/api/auth', this.authController.router);
+        this.app.use('/api/caseStudies', this.caseStudyController.router);
         this.app.use('/', (req, res) => {
             res.redirect('/api/docs');
         });
