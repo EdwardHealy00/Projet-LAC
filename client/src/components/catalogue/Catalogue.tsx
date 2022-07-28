@@ -3,16 +3,24 @@ import '../../styles/LightCatalogue.scss';
 import '../img/normal_search.svg';
 import SearchIcon from "../common/SearchIcon";
 import Results from "./Results";
-import { Accordion, AccordionDetails, AccordionSummary, InputAdornment, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Checkbox, Chip, FormControlLabel, FormGroup, InputAdornment, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { CaseStudy } from "../../model/CaseStudy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function Catalogue() {
 
+    const disciplines = ["aérospatiale", "biomédical", "chimique", "civil", "électrique", "géologique", "industriel", "mécanique", "des mines"];
+    const subjects = ["Automatisation", "Chaîne logistique", "Économie appliqué", "Enteprenariat", "Ergonomie du travail", "Gestion de projet", "Gestion de la qualité", "Gestion du changement", "Recherche opérationnelle"]
+    const dates = ["0-3 mois", "4-8 mois", "9-12 mois", "1-2 ans", "2-3 ans", "3-6 ans", "5-6 ans", "7+ ans"];
+    const numberPages = ["1 à 4 pages", "5 à 10 pages", "11+ pages"];
+
+    const [filters, setFilters] = React.useState<string[]>([]);
+
     const [caseStudies, setCaseStudies] = React.useState<CaseStudy[]>([]);
 
     const [showCaseStudies, setShowCaseStudies] = React.useState<CaseStudy[]>([]);
+
 
     const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const search = e.target.value;
@@ -34,6 +42,20 @@ export default function Catalogue() {
                     return true;
                 }
             }
+        }
+    }
+
+    const onCheckboxChangeDiscipline = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const checked = e.target.checked;
+        const value = e.target.labels![0].innerText;
+        const newFilters = [...filters];
+        
+        if (checked) {
+            newFilters.push(value);
+            setFilters(newFilters);
+        } else {
+            newFilters.splice(newFilters.indexOf(value), 1);
+            setFilters(newFilters);
         }
     }
 
@@ -72,7 +94,9 @@ export default function Catalogue() {
           </div>
           <div className="smallRectangle">
             <div id="type-de-contenu">Type de contenu :</div>
-            {/* TODO: insert div for tags here */}
+            {filters.map((filter) => (
+                <Chip label={filter} variant="outlined" onDelete={() => {}} />
+            ))}
             <div id="effacer-tous-les-fil">Effacer tous les filtres</div>
           </div>
           <div className="smallRectangle">
@@ -91,9 +115,16 @@ export default function Catalogue() {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
+                    <FormGroup>
+                      {disciplines.map((discipline) => (
+                        <FormControlLabel
+                          control={
+                            <Checkbox onChange={onCheckboxChangeDiscipline} />
+                          }
+                          label={"Génie " + discipline}
+                        />
+                      ))}
+                    </FormGroup>
                   </Typography>
                 </AccordionDetails>
               </Accordion>
@@ -107,9 +138,12 @@ export default function Catalogue() {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
+                    {subjects.map((subject) => (
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label={subject}
+                      />
+                    ))}
                   </Typography>
                 </AccordionDetails>
               </Accordion>
@@ -123,9 +157,9 @@ export default function Catalogue() {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
+                    {dates.map((date) => (
+                      <FormControlLabel control={<Checkbox />} label={date} />
+                    ))}
                   </Typography>
                 </AccordionDetails>
               </Accordion>
@@ -139,9 +173,9 @@ export default function Catalogue() {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
+                    {numberPages.map((nbPage) => (
+                      <FormControlLabel control={<Checkbox />} label={nbPage} />
+                    ))}
                   </Typography>
                 </AccordionDetails>
               </Accordion>
@@ -154,11 +188,7 @@ export default function Catalogue() {
                   <Typography>AUTEUR</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
-                  </Typography>
+                  <Typography>TODO</Typography>
                 </AccordionDetails>
               </Accordion>
             </div>
