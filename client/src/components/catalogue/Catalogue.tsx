@@ -1,91 +1,186 @@
 import React from "react";
 import '../../styles/LightCatalogue.scss';
-import Button from "@mui/material/Button";
 import '../img/normal_search.svg';
 import SearchIcon from "../common/SearchIcon";
-import DropDown from "../common/Dropdown";
 import Results from "./Results";
-import { InputAdornment, TextField } from "@mui/material";
-// import { useNavigate } from "react-router-dom";
+import { Accordion, AccordionDetails, AccordionSummary, InputAdornment, TextField, Typography } from "@mui/material";
+import axios from "axios";
+import { CaseStudy } from "../../model/CaseStudy";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-interface Props { }
+export default function Catalogue() {
 
-const Catalogue: React.FC<Props> = ({ }) => {
-    // const navigate = useNavigate();
+    const [caseStudies, setCaseStudies] = React.useState<CaseStudy[]>([]);
+
+    const [showCaseStudies, setShowCaseStudies] = React.useState<CaseStudy[]>([]);
+
+    const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const search = e.target.value;
+ 
+        if (search.length > 0) {
+            const filteredCaseStudies = caseStudies.filter(caseStudy => {
+                return onFilter(caseStudy, search);
+            }).slice(0, 10);
+            setShowCaseStudies(filteredCaseStudies);  
+        } else {
+            setShowCaseStudies(caseStudies);
+        }
+    }
+
+    const onFilter = (caseStudy: CaseStudy, searchFilter: string) => {
+        for (const property in caseStudy) {
+            if (caseStudy.hasOwnProperty(property)) {
+                if (caseStudy[property as keyof typeof caseStudy].toString().toLowerCase().includes(searchFilter.toLowerCase())) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    const getCaseStudies = async () => { 
+        axios.get("http://localhost:3001/api/casestudies/").then((res) => {
+          setShowCaseStudies(res.data);
+          setCaseStudies(res.data);
+        });
+    };
+
+    React.useEffect(() => {
+        getCaseStudies();
+    }, []);
+
     return (
-        <div>
-            <div id="content">
-                <div id="rectangle">
-                    <div id="catalogue-des-cas">Catalogue des cas</div>
-                    <div id="searchField">
-                        <TextField
-                            label="Rechercher dans le catalogue"
-                            id="searchBar"
-                            variant="filled"
-                            fullWidth
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </div>
-                </div>
-                <div className="smallRectangle">
-                    <div id="type-de-contenu">Type de contenu :</div>
-                    {/* TODO: insert div for tags here */}
-                    <div id="effacer-tous-les-fil">Effacer tous les filtres</div>
-                </div>
-                <div className="smallRectangle">
-                    <div id="filtrer-par">Filtrer par</div>
-                    <div id="results"> X résultats</div>
-                </div>
-                <div id="rows">
-                    <div id="rectangleFilter">
-                        <DropDown children="DISCIPLINE" onClick={() => console.log("You clicked")} ></DropDown>
-                        <DropDown children="SUJET" onClick={() => console.log("You clicked")} ></DropDown>
-                        <DropDown children="DATE DE PARUTION" onClick={() => console.log("You clicked")} ></DropDown>
-                        <DropDown children="NOMBRE DE PAGES" onClick={() => console.log("You clicked")} ></DropDown>
-                        <DropDown children="AUTEUR" onClick={() => console.log("You clicked")} ></DropDown>
-                    </div>
-                    <div id="articles">
-                        <Results title="LES BOUCHONS : une aventure entrepreneuriale"
-                            auteurs="Franck Barès, Sabrina Hombourger-Barès, Catherine S Beaucage"
-                            content="Le cas suit le parcours entrepreneurial de Nicolas et Xavier, deux étudiants qui s’associent pour fonder LES BOUCHONS, entreprise qui vise à offrir des conseils aux consommateurs de vin. Il aborde les approches basées sur la pensée design (design thinking) et le lean start-up."
-                            date="2022-02-24"
-                            page="6"
-                            discipline="Génie Industriel"
-                            tags="Entrepreneuriat"
-                            classNumber="IND6117"
-                            className="Gestion de l’innovation">
-                        </Results>
-                        <Results title="LES BOUCHONS : une aventure entrepreneuriale"
-                            auteurs="Franck Barès, Sabrina Hombourger-Barès, Catherine S Beaucage"
-                            content="Le cas suit le parcours entrepreneurial de Nicolas et Xavier, deux étudiants qui s’associent pour fonder LES BOUCHONS, entreprise qui vise à offrir des conseils aux consommateurs de vin. Il aborde les approches basées sur la pensée design (design thinking) et le lean start-up."
-                            date="2022-02-24"
-                            page="6"
-                            discipline="Génie Industriel"
-                            tags="Entrepreneuriat"
-                            classNumber="IND6117"
-                            className="Gestion de l’innovation">
-                        </Results>
-                        <Results title="LES BOUCHONS : une aventure entrepreneuriale"
-                            auteurs="Franck Barès, Sabrina Hombourger-Barès, Catherine S Beaucage"
-                            content="Le cas suit le parcours entrepreneurial de Nicolas et Xavier, deux étudiants qui s’associent pour fonder LES BOUCHONS, entreprise qui vise à offrir des conseils aux consommateurs de vin. Il aborde les approches basées sur la pensée design (design thinking) et le lean start-up."
-                            date="2022-02-24"
-                            page="6"
-                            discipline="Génie Industriel"
-                            tags="Entrepreneuriat"
-                            classNumber="IND6117"
-                            className="Gestion de l’innovation">
-                        </Results>
-                    </div>
-                </div>
+      <div>
+        <div id="content">
+          <div id="rectangle">
+            <div id="catalogue-des-cas">Catalogue des cas</div>
+            <div id="searchField">
+              <TextField
+                onChange={onSearch}
+                label="Rechercher dans le catalogue"
+                id="searchBar"
+                variant="filled"
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
             </div>
+          </div>
+          <div className="smallRectangle">
+            <div id="type-de-contenu">Type de contenu :</div>
+            {/* TODO: insert div for tags here */}
+            <div id="effacer-tous-les-fil">Effacer tous les filtres</div>
+          </div>
+          <div className="smallRectangle">
+            <div id="filtrer-par">Filtrer par</div>
+            <div id="results"> {showCaseStudies.length} résultats</div>
+          </div>
+          <div id="rows">
+            <div id="rectangleFilter">
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>DISCIPLINE</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Suspendisse malesuada lacus ex, sit amet blandit leo
+                    lobortis eget.
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>SUJET</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Suspendisse malesuada lacus ex, sit amet blandit leo
+                    lobortis eget.
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>DATE DE PARUTION</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Suspendisse malesuada lacus ex, sit amet blandit leo
+                    lobortis eget.
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>NOMBRE DE PAGES</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Suspendisse malesuada lacus ex, sit amet blandit leo
+                    lobortis eget.
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>AUTEUR</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Suspendisse malesuada lacus ex, sit amet blandit leo
+                    lobortis eget.
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            </div>
+            <div id="articles">
+              {showCaseStudies.map((caseStudy) => (
+                <Results
+                  title={caseStudy.title}
+                  auteurs={caseStudy.authors}
+                  content={caseStudy.content}
+                  date={caseStudy.date}
+                  page={caseStudy.page}
+                  discipline={caseStudy.discipline}
+                  tags={caseStudy.tags}
+                  classNumber={caseStudy.classIds}
+                  className={caseStudy.classNames}
+                  rating={caseStudy.ratings}
+                  vote={caseStudy.votes}
+                ></Results>
+              ))}
+            </div>
+          </div>
         </div>
+      </div>
     );
 }
-
-export default Catalogue;
