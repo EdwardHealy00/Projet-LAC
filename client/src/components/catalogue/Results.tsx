@@ -11,7 +11,7 @@ interface Props {
   date: React.ReactNode;
   page: React.ReactNode;
   discipline: React.ReactNode;
-  tags: React.ReactNode;
+  tags: string[];
   className: React.ReactNode;
   classNumber: React.ReactNode;
   rating: React.ReactNode;
@@ -50,7 +50,7 @@ const Results: React.FC<Props> = ({
             ></Button>
           </div>
         </div>
-        <div id="tags"> Sujet(s) : {tags}</div>
+        <div id="tags"> Sujet(s) : {tags.map((tag) => (tag + ','))}</div>
       </div>
       <div id="second">
         <div id="ratings">

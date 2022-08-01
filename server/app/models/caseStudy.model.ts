@@ -33,7 +33,7 @@ export class CaseStudy {
     discipline: string;
 
     @prop({})
-    tags: string;
+    tags: string[];
 
     @prop({})
     classNames?: string;
