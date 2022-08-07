@@ -6,6 +6,9 @@
 
   #content {
     margin: 0 5%;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
   }
 }
 
@@ -18,18 +21,17 @@
 }
 
 .section-line {
-    height: 1px;
-    padding: 2px 2px 2px 2px;
-    border-top: 1px solid #d7d7d7;
-    background-color: #ffffff;
-    margin: 10px 0;
+  height: 1px;
+  padding: 2px 2px 2px 2px;
+  border-top: 1px solid #d7d7d7;
+  background-color: #ffffff;
+  margin: 10px 0;
 }
 
 .section {
   margin: 0 5%;
-  
-  #first {
 
+  #first {
     #title {
       width: 876px;
       height: 58px;
@@ -46,9 +48,8 @@
       display: flex;
 
       div:first-child {
-          width: 65%;
+        width: 65%;
       }
-
     }
   }
 

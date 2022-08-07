@@ -9,6 +9,7 @@ import Approval from './deputy/approval/Approval';
 import Home from './home/Home';
 import * as env from 'dotenv';
 import NewCase from './deputy/newCase/newCase';
+import Summary from './about/Summary';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -33,6 +34,8 @@ function App() {
             path="/espace-de-collaboration/etude-de-cas"
             element={<CaseStudy />}
           /> */}
+          <Route path="/summary" element={<Summary />} />
+          
         </Routes>
       </div>
     </div>
