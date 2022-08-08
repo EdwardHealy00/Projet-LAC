@@ -19,7 +19,6 @@ export default function Login() {
     email: "",
     password: "",
   });
-  const [login, setLogin] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -59,9 +58,8 @@ export default function Login() {
       )
       .then((res) => {
         console.log(res);
+        console.log(document.cookie);
         if (res.status === 200) {
-          console.log(res.data.accessToken);
-          setLogin(true);
           handleClose();
         }
       });
@@ -69,7 +67,7 @@ export default function Login() {
 
   return (
     <div>
-      {!login && <Button id="loginButton" variant="contained" onClick={handleClickOpen}>
+      {<Button id="loginButton" variant="contained" onClick={handleClickOpen}>
         Se connecter
       </Button>}
       <Dialog open={open} onClose={handleClose}>
