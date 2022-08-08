@@ -1,0 +1,21 @@
+.teamList {
+    display: flex;
+    text-align: -webkit-center;
+
+    div {
+        width: 33%;
+    }
+
+}
+
+.teamContent {
+    margin-bottom: 20px;
+}
+
+.teamMemberPicture {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
