@@ -10,6 +10,7 @@ import Home from './home/Home';
 import * as env from 'dotenv';
 import NewCase from './deputy/newCase/newCase';
 import Summary from './about/Summary';
+import Mission from './about/Mission';
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -35,7 +36,7 @@ function App() {
             element={<CaseStudy />}
           /> */}
           <Route path="/summary" element={<Summary />} />
-          
+          <Route path="/mission" element={<Mission />} />
         </Routes>
       </div>
     </div>

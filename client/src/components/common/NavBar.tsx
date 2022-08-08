@@ -22,6 +22,9 @@ const NavBar: React.FC<Props> = ({ }) => {
     const navigateSummary = useCallback(() => navigate("/summary"), [
        navigate,
     ]);
+    const navigateMission = useCallback(() => navigate("/mission"), [
+        navigate,
+    ]);
 
     return (
       <div id="navbar">
@@ -52,7 +55,7 @@ const NavBar: React.FC<Props> = ({ }) => {
                 }}
               >
                 <MenuItem onClick={navigateSummary}>Sommaire</MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={navigateMission}>
                   Mission, vision et objectifs
                 </MenuItem>
                 <MenuItem onClick={handleClose}>Équipe</MenuItem>

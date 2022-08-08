@@ -1,11 +1,12 @@
 import React from "react";
 import logo from "../../img/logo-lac.png";
 import "./Summary.scss";
+import "./About.scss";
 
 export default function Summary() {
   return (
     <div id="summary">
-      <div id="summaryHeader">
+      <div className="aboutHeader">
         <h2>LAC</h2>
         <img src={logo} alt="LAC logo" />
       </div>

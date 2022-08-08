@@ -1,34 +1,22 @@
-#summary {
-  width: 100%;
+.summaryAspect {
+  width: 25%;
+  height: 100px;
+  margin-bottom: 10px;
+  text-align: center;
+}
 
-  #summaryHeader {
-    width: 100%;
-    background-color: gray;
-    display: flex;
-    place-content: space-between;
-    margin-bottom: 10px;
-  }
+#aspect1 {
+  background-color: #41aae6;
+}
 
-  .summaryAspect {
-        width: 25%;
-        height: 100px;
-        margin-bottom: 10px;
-        text-align: center;
-  }
+#aspect2 {
+  background-color: #8cc83c;
+}
 
-  #aspect1 {
-    background-color: #41aae6;
-  }
+#aspect3 {
+  background-color: #fa961e;
+}
 
-  #aspect2 {
-    background-color: #8cc83c;
-  }
-
-  #aspect3 {
-    background-color: #fa961e;
-  }
-
-  #aspect4 {
-    background-color: #b91e32;
-  }
+#aspect4 {
+  background-color: #b91e32;
 }
