@@ -1,8 +1,8 @@
 import React from "react";
-import logo from "../../img/logo-lac.png";
+import logo from "../../../img/logo-lac.png";
 import "./Creation.scss";
-import "./About.scss";
-import { TeamMember } from "../../model/Team";
+import "../About.scss";
+import { TeamMember } from "../../../model/Team";
 
 export default function Creation() {
   const studentsPrisme: TeamMember[] = [
@@ -134,17 +134,8 @@ export default function Creation() {
           projet technologique, les grandes étapes sont illustrées ci-dessous
         </p>
         <br />
-        <div className="studentList">
-          {studentsLog.map((student) => (
-            <div key={student.name}>
-              <div>{student.name}</div>
-              <img
-                src={student.picture}
-                alt={student.name}
-                className="studentPicture"
-              />
-            </div>
-          ))}
+        <div>
+          
         </div>
       </div>
     </div>

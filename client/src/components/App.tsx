@@ -12,7 +12,7 @@ import NewCase from './deputy/newCase/newCase';
 import Summary from './about/Summary';
 import Mission from './about/Mission';
 import Team from './about/Team';
-import Creation from './about/Creation';
+import Creation from './about/creation/Creation';
 
 function App() {
   // const [count, setCount] = useState(0);
