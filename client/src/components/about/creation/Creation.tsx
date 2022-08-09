@@ -3,6 +3,7 @@ import logo from "../../../img/logo-lac.png";
 import "./Creation.scss";
 import "../About.scss";
 import { TeamMember } from "../../../model/Team";
+import Timeline from "./Timeline";
 
 export default function Creation() {
   const studentsPrisme: TeamMember[] = [
@@ -135,7 +136,7 @@ export default function Creation() {
         </p>
         <br />
         <div>
-          
+          <Timeline />
         </div>
       </div>
     </div>
