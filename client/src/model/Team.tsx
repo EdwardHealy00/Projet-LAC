@@ -3,6 +3,6 @@ export interface TeamMember {
     name: string;
     title?: string;
     role?: string;
-    occupation: string;
+    occupation?: string;
     picture: string;
 }

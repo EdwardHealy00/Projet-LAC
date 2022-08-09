@@ -35,6 +35,11 @@ const NavBar: React.FC<Props> = ({}) => {
     handleClose();
   }, [navigate]);
 
+  const navigateCreation = useCallback(() => {
+    navigate("/creation");
+    handleClose();
+  }, [navigate]);
+
   return (
     <div id="navbar">
       <div id="profile">
@@ -68,7 +73,7 @@ const NavBar: React.FC<Props> = ({}) => {
                 Mission, vision et objectifs
               </MenuItem>
               <MenuItem onClick={navigateTeam}>Équipe</MenuItem>
-              <MenuItem onClick={handleClose}>Création du LAC</MenuItem>
+              <MenuItem onClick={navigateCreation}>Création du LAC</MenuItem>
             </Menu>
           </div>
         </ButtonGroup>
