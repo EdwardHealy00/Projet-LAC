@@ -34,7 +34,7 @@ export class UserService {
         query: FilterQuery<User>,
         options: QueryOptions = {}
     ) {
-        return userModel.findOne(query, {}, options).select('+password');
+        return userModel.findOne(query, {}, options).select(['+password', '+name']);
     }
 
     // Sign Token

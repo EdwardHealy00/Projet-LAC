@@ -12,6 +12,9 @@ import Checkbox from "@mui/material/Checkbox";
 import Register from "./Register";
 import { UserLogin } from "../../model/User";
 import axios from "axios";
+import Cookies from "js-cookie";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import { Role } from "../../model/Role";
 
 export default function Login() {
   const [open, setOpen] = React.useState(false);
@@ -35,7 +38,6 @@ export default function Login() {
     const target = e.target;
     const value = target.value;
     const name = target.name;
-    console.log(name, value);
     setState({ ...state, [name]: value });
   };
 
@@ -46,7 +48,6 @@ export default function Login() {
       email: e.target.elements.email.value,
       password: e.target.elements.password.value,
     };
-    console.log(user);
     sendLoginForm(user);
   };
 
@@ -58,18 +59,28 @@ export default function Login() {
       )
       .then((res) => {
         console.log(res);
-        console.log(document.cookie);
         if (res.status === 200) {
           handleClose();
+          const role: Role = Role[res.data.role as keyof typeof Role]; 
+          localStorage.setItem("name", res.data.name);
+          localStorage.setItem("role", role);
         }
       });
   };
 
   return (
     <div>
-      {<Button id="loginButton" variant="contained" onClick={handleClickOpen}>
-        Se connecter
-      </Button>}
+      {!Cookies.get("logged_in") && (
+        <Button id="loginButton" variant="contained" onClick={handleClickOpen}>
+          Se connecter
+        </Button>
+      )}
+      {Cookies.get("logged_in") && (
+        <div>
+          <AccountCircle sx={{ verticalAlign: "middle", fontSize: "32px" }} />
+          {localStorage.getItem("name")}
+        </div>
+      )}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Se connecter</DialogTitle>
         <DialogContent>

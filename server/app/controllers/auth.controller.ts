@@ -76,21 +76,22 @@ export class AuthController {
                         Date.now() + parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000
                     ),
                     maxAge: parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000,
-                    httpOnly: true,
+                    //httpOnly: true,
                     sameSite: 'lax',
                 };
 
                 // Send Access Token in Cookie
-                res.cookie('accessToken', accessToken, accessTokenCookieOptions);
+                res.cookie('accessToken', accessToken.access_token, accessTokenCookieOptions);
                 res.cookie('logged_in', true, {
                     ...accessTokenCookieOptions,
-                    httpOnly: true,
+                    //httpOnly: true,
                 });
 
                 // Send Access Token
                 res.status(200).json({
                     status: 'success',
-                    accessToken,
+                    name: user!.name,
+                    role: user!.role,
                 });
             } catch (err: any) {
                 //next(err);
