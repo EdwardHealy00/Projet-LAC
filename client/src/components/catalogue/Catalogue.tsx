@@ -290,6 +290,13 @@ export default function Catalogue() {
     getCaseStudies();
   }, []);
 
+  const onDeleteChip = (filter: Filter) => {
+    const newFilters = [...filters];
+    filter.checkboxRef.click();
+    newFilters.splice(filters.indexOf(filter), 1);
+    setFilters(newFilters);
+  }
+
   return (
     <div>
       <div id="content">
@@ -315,7 +322,7 @@ export default function Catalogue() {
         <div className="smallRectangle">
           <div id="type-de-contenu">Type de contenu :</div>
           {filters.map((filter) => (
-            <Chip label={filter.name} variant="outlined" onDelete={() => {}} />
+            <Chip label={filter.name} variant="outlined" onDelete={() => onDeleteChip(filter)} />
           ))}
           <div id="effacer-tous-les-fil" onClick={onResetFilters}>
             Effacer tous les filtres
