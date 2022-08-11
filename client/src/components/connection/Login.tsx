@@ -61,12 +61,43 @@ export default function Login() {
         console.log(res);
         if (res.status === 200) {
           handleClose();
-          const role: Role = Role[res.data.role as keyof typeof Role]; 
           localStorage.setItem("name", res.data.name);
-          localStorage.setItem("role", role);
+          localStorage.setItem("role", res.data.role);
         }
       });
   };
+
+  const onLogout = () => {
+    axios
+      .get("http://localhost:3001/api/auth/logout", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          localStorage.removeItem("name");
+          localStorage.removeItem("role");
+          window.location.reload();
+        }
+      });
+  }
+
+  const showRole = (role: Role | null) => {
+    switch (role) {
+      case Role.Admin:
+        return "Administrateur";
+      case Role.User:
+        return "Étudiant";
+      case Role.Comity:
+        return "Comité scientifique";
+      case Role.Deputy:
+        return "Adjoint administratif";
+      case Role.Professor:
+        return "Professeur";
+      default:
+        return "";
+    }
+  }
 
   return (
     <div>
@@ -78,7 +109,9 @@ export default function Login() {
       {Cookies.get("logged_in") && (
         <div>
           <AccountCircle sx={{ verticalAlign: "middle", fontSize: "32px" }} />
-          {localStorage.getItem("name")}
+          {localStorage.getItem("name")} &nbsp;
+          <span>{showRole(localStorage.getItem("role") as Role)}</span>
+          <Button id="logoutButton" variant="contained" onClick={onLogout}>Déconnexion</Button>
         </div>
       )}
       <Dialog open={open} onClose={handleClose}>

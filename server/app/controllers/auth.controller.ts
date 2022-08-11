@@ -102,6 +102,23 @@ export class AuthController {
                 });
             }
         });
+
+        this.router.get('/logout', async (req: Request, res: Response) => {
+            try {
+                res.clearCookie('accessToken');
+                res.clearCookie('logged_in');
+                res.status(200).json({
+                    status: 'success',
+                    message: 'Logout success',
+                });
+            } catch (err: any) {
+                console.log(err);
+                res.status(400).json({
+                    status: 'fail',
+                    message: 'Logout fail',
+                });
+            }
+        });
     }
 
     private middlewareValidate(schema: AnyZodObject) {

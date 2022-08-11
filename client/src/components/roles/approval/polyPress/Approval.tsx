@@ -1,6 +1,6 @@
 import React from "react";
-import { Case } from "../../model/Case";
-import "../../styles/Approval.scss";
+import { Case } from "../../../../model/Case";
+import "../Approval.scss";
 import CaseTable from "./CaseTable";
 
 function createData(

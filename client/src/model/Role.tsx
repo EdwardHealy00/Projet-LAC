@@ -3,5 +3,10 @@ export enum Role {
     User = "user",
     Comity = "comity",
     Deputy = "deputy",
-    professor = "professor",
+    Professor = "professor",
+}
+
+export interface RoleProps {
+    role: Role;
+    children: React.ReactNode;
 }

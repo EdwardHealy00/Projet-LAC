@@ -5,7 +5,7 @@ import CaseStudyWconnection from './caseStudy/CaseStudyWconnection';
 import NavBar from './common/NavBar';
 import CollaborativeSpace from './collaborativeSpace/collaborativeSpace';
 import DashboardPaidCase from './deputy/dashboard/dashboardPaidCase';
-import Approval from './deputy/approval/Approval';
+import Approval from './roles/approval/Approval';
 import Home from './home/Home';
 import * as env from 'dotenv';
 import NewCase from './deputy/newCase/newCase';

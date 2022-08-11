@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { Case } from "../../model/Case";
+import { Case } from "../../../../model/Case";
 
 interface CaseProp {
     cases: Case[];
@@ -42,8 +42,8 @@ export default function CaseTable(rows: CaseProp) {
               <TableCell align="right">{row.submittedDate}</TableCell>
               <TableCell align="right">{row.status}</TableCell>
               <TableCell align="right">
-                <Button variant="contained" sx={{backgroundColor: "#c00000"}}>
-                  Traiter
+                <Button variant={getButtonVariant(row.status)}>
+                  {getButtonMessage(row.status)}
                 </Button>
               </TableCell>
             </TableRow>
@@ -52,4 +52,27 @@ export default function CaseTable(rows: CaseProp) {
       </Table>
     </TableContainer>
   );
+}
+
+function getButtonMessage(status: string): string { 
+    switch (status) {
+      case "Nouveau":
+        return "Traiter";
+      case "Édité":
+        return "Ajouter";
+      default:
+        return "Faire un suivi";
+    }
+}
+
+function getButtonVariant(
+  status: string
+): "text" | "outlined" | "contained" | undefined {
+  switch (status) {
+    case "Nouveau":
+    case "Édité":
+      return "contained";
+    default:
+      return "outlined";
+  }
 }

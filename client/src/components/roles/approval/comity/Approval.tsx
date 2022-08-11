@@ -1,6 +1,6 @@
 import React from "react";
-import { Case } from "../../model/Case";
-import "../../styles/Approval.scss";
+import { Case } from "../../../../model/Case";
+import "../Approval.scss";
 import CaseTable from "./CaseTable";
 
 function createData(
@@ -23,7 +23,7 @@ const rowsStep1: Case[] = [
   ),
 ];
 
-function Approval() {
+export function ApprovalComity() {
   return (
     <div id="approvalPage">
       <div className="stepApproval">
@@ -35,5 +35,3 @@ function Approval() {
     </div>
   );
 }
-
-export default Approval;
