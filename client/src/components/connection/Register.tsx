@@ -20,6 +20,8 @@ import {
 import { PhotoCamera } from "@mui/icons-material";
 import { UserRegister } from "../../model/User";
 import axios from "axios";
+import countryList from "react-select-country-list";
+import { useMemo } from "react";
 
 export default function Register() {
   const [open, setOpen] = React.useState(false);
@@ -27,6 +29,7 @@ export default function Register() {
     "Preuve de votre statut de professeur"
   );
   const [showProof, setShowProof] = React.useState(false);
+  const countryListOptions = useMemo(() => countryList().getData(), []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -80,22 +83,30 @@ export default function Register() {
       lastName: e.target.elements.lastName.value,
       password: e.target.elements.password.value,
       status: e.target.elements.status.value,
-      proof: uploadedImage,
       school: e.target.elements.school.value,
       country: e.target.elements.country.value,
       city: e.target.elements.city.value,
     };
+
+    if (showProof) {
+      user.proof = e.target.elements.proof.files[0];
+    }
+
+    if (state["school"] === "others") {
+      user.school = e.target.elements.otherSchool.value;
+    }
+
     console.log(user);
     sendRegisterForm(user);
   };
 
   const sendRegisterForm = (user: UserRegister) => {
-    axios.post("http://localhost:3001/api/auth/register", user).then((res) => {
-      console.log(res);
-      if (res.status === 201) {
-        handleClose();
-      }
-    });
+    // axios.post("http://localhost:3001/api/auth/register", user).then((res) => {
+    //   console.log(res);
+    //   if (res.status === 201) {
+    //     handleClose();
+    //   }
+    // });
   };
 
   return (
@@ -288,9 +299,9 @@ export default function Register() {
                   onChange={handleInputChange}
                   name="country"
                 >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  {countryListOptions.map((country) => (
+                    <MenuItem value={country.label}>{country.label}</MenuItem>
+                  ))}
                 </Select>
               </FormControl>
               <TextField
