@@ -4,9 +4,10 @@ export enum Role {
     Comity = "comity",
     Deputy = "deputy",
     Professor = "professor",
+    PolyPress = "polypress",
 }
 
 export interface RoleProps {
-    role: Role;
+    role: Role[];
     children: React.ReactNode;
 }

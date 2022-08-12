@@ -63,6 +63,7 @@ export default function Login() {
           handleClose();
           localStorage.setItem("name", res.data.name);
           localStorage.setItem("role", res.data.role);
+          window.location.reload();
         }
       });
   };

@@ -23,7 +23,7 @@ const rowsStep1: Case[] = [
   ),
 ];
 
-function Approval() {
+export function ApprovalPolyPress() {
   return (
     <div id="approvalPage">
       <div className="stepApproval">
@@ -36,4 +36,3 @@ function Approval() {
   );
 }
 
-export default Approval;

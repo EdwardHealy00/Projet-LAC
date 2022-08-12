@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import CaseStudyWconnection from './caseStudy/CaseStudyWconnection';
 import NavBar from './common/NavBar';
 import CollaborativeSpace from './collaborativeSpace/collaborativeSpace';
-import DashboardPaidCase from './deputy/dashboard/dashboardPaidCase';
+import DashboardPaidCase from './deputy/dashboard/DashboardPaidCase';
 import Approval from './roles/approval/Approval';
 import Home from './home/Home';
 import * as env from 'dotenv';
