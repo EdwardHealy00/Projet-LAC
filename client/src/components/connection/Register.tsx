@@ -26,6 +26,7 @@ export default function Register() {
   const [uploadedImage, setUploadedImage] = React.useState(
     "Preuve de votre statut de professeur"
   );
+  const [showProof, setShowProof] = React.useState(false);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -51,14 +52,22 @@ export default function Register() {
     country: "",
     status: "",
     proof: "",
-    school: "poly"
+    school: "poly",
+    otherSchool: "",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
+  const handleInputChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent
+  ) => {
     const target = e.target;
     const value = target.value;
     const name = target.name;
     console.log(name, value);
+    if (name == "status") {
+      setShowProof(value == "teacher");
+    }
     setState({ ...state, [name]: value });
   };
 
@@ -87,7 +96,7 @@ export default function Register() {
         handleClose();
       }
     });
-  }
+  };
 
   return (
     <div>
@@ -124,7 +133,7 @@ export default function Register() {
                 variant="outlined"
                 name="firstName"
                 onChange={handleInputChange}
-                value={state.firstName} 
+                value={state.firstName}
               />
               <TextField
                 fullWidth
@@ -154,22 +163,24 @@ export default function Register() {
                   <MenuItem value={"student"}>Étudiant/Étudiante</MenuItem>
                 </Select>
               </FormControl>
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="label"
-                id="uploadProof"
-              >
-                <input
-                  hidden
-                  accept="image/*"
-                  type="file"
-                  onChange={handleImageUpload}
-                  name="proof"
-                />
-                <PhotoCamera />
-                <FormLabel>{uploadedImage}</FormLabel>
-              </IconButton>
+              {showProof && (
+                <IconButton
+                  color="primary"
+                  aria-label="upload picture"
+                  component="label"
+                  id="uploadProof"
+                >
+                  <input
+                    hidden
+                    accept="image/*"
+                    type="file"
+                    onChange={handleImageUpload}
+                    name="proof"
+                  />
+                  <PhotoCamera />
+                  <FormLabel>{uploadedImage}</FormLabel>
+                </IconButton>
+              )}
             </div>
             <div>
               <TextField
@@ -247,6 +258,22 @@ export default function Register() {
               </Select>
             </FormControl>
             <div>
+              {state.school === "others" && (
+                <TextField
+                  required
+                  autoFocus
+                  margin="dense"
+                  id="school"
+                  label="Université"
+                  type="text"
+                  variant="outlined"
+                  name="otherSchool"
+                  onChange={handleInputChange}
+                  value={state.otherSchool}
+                />
+              )}
+            </div>
+            <div>
               <FormControl
                 id="registerCountry"
                 className="formControl"
@@ -276,7 +303,6 @@ export default function Register() {
                 variant="outlined"
                 name="city"
                 onChange={handleInputChange}
-                
               />
             </div>
           </Box>
