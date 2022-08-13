@@ -22,6 +22,7 @@ import { UserRegister } from "../../model/User";
 import axios from "axios";
 import countryList from "react-select-country-list";
 import { useMemo } from "react";
+import { isEmailValid, isPasswordValid } from "../../utils/Validation";
 
 export default function Register() {
   const [open, setOpen] = React.useState(false);
@@ -50,14 +51,94 @@ export default function Register() {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: "",
     city: "",
-    country: "",
+    country: "Canada",
     status: "",
     proof: "",
     school: "poly",
     otherSchool: "",
   });
+
+  const initialStateErrors = {
+    firstName: { isError: false, message: "" },
+    lastName: { isError: false, message: "" },
+    email: { isError: false, message: "" },
+    password: { isError: false, message: "" },
+    city: { isError: false, message: "" },
+    country: { isError: false, message: "" },
+    status: { isError: false, message: "" },
+    proof: { isError: false, message: "" },
+    school: { isError: false, message: "" },
+    otherSchool: { isError: false, message: "" },
+  };
+
+  const [stateErrors, setStateErrors] = React.useState(initialStateErrors);
+
+  const onValidation = (e: any) => {
+    let isValid = true;
+
+    const stateErrorsCopy = { ...initialStateErrors };
+    if (e.firstName.value.trim() === "") {
+      stateErrorsCopy.firstName = {
+        isError: true,
+        message: "Veuillez entrer votre prénom",
+      };
+      isValid = false;
+    }
+    if (e.lastName.value.trim() === "") {
+      stateErrorsCopy.lastName = {
+        isError: true,
+        message: "Veuillez entrer votre nom",
+      };
+      isValid = false;
+    }
+    if (!isEmailValid(e.email.value)) {
+      stateErrorsCopy.email = {
+        isError: true,
+        message: "Veuillez entrer un email valide",
+      };
+      isValid = false;
+    }
+    if (!isPasswordValid(e.password.value)) {
+      stateErrorsCopy.password = {
+        isError: true,
+        message: "Veuillez entrer un mot de passe valide (8 à 32 caractères)",
+      };
+      isValid = false;
+    }
+    if (e.city.value.trim() === "") {
+      stateErrorsCopy.city = {
+        isError: true,
+        message: "Veuillez entrer votre ville",
+      };
+      isValid = false;
+    }
+    if (e.status.value.trim() === "") {
+      stateErrorsCopy.status = {
+        isError: true,
+        message: "Veuillez entrer votre statut",
+      };
+      isValid = false;
+    }
+    if (e.status.value === "teacher" && e.proof.value === "") {
+      stateErrorsCopy.proof = {
+        isError: true,
+        message: "Veuillez entrer votre preuve de votre statut de professeur",
+      };
+      isValid = false;
+    }
+    if (e.school.value === "others" && e.otherSchool.value.trim() === "") {
+      stateErrorsCopy.otherSchool = {
+        isError: true,
+        message: "Veuillez entrer votre école",
+      };
+      isValid = false;
+    }
+
+    setStateErrors(!isValid ? stateErrorsCopy : initialStateErrors);
+
+    return isValid;
+  };
 
   const handleInputChange = (
     e:
@@ -67,7 +148,6 @@ export default function Register() {
     const target = e.target;
     const value = target.value;
     const name = target.name;
-    console.log(name, value);
     if (name == "status") {
       setShowProof(value == "teacher");
     }
@@ -76,7 +156,11 @@ export default function Register() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    //console.log(e.target.elements.firstName.value);
+    const isFormValid = onValidation(e.target.elements);
+    if (!isFormValid) {
+      return;
+    }
+
     const user: UserRegister = {
       email: e.target.elements.email.value,
       firstName: e.target.elements.firstName.value,
@@ -122,6 +206,16 @@ export default function Register() {
             euismod bibendum laoreet. Proin gravida dolor sit amet lacus
             accumsan et viverra justo commodo. Proin
           </DialogContentText>
+          <ul>
+            {Object.entries(stateErrors).map(
+              ([field, error]) =>
+                error.isError && (
+                  <li key={field} className="fieldError">
+                    {error.message}
+                  </li>
+                )
+            )}
+          </ul>
           <Box
             component="form"
             sx={{
@@ -145,6 +239,7 @@ export default function Register() {
                 name="firstName"
                 onChange={handleInputChange}
                 value={state.firstName}
+                error={stateErrors.firstName.isError}
               />
               <TextField
                 fullWidth
@@ -158,6 +253,7 @@ export default function Register() {
                 name="lastName"
                 onChange={handleInputChange}
                 value={state.lastName}
+                error={stateErrors.lastName.isError}
               />
             </div>
             <div>
@@ -169,6 +265,7 @@ export default function Register() {
                   label="status"
                   onChange={handleInputChange}
                   name="status"
+                  error={stateErrors.status.isError}
                 >
                   <MenuItem value={"teacher"}>Enseignant/Enseignante</MenuItem>
                   <MenuItem value={"student"}>Étudiant/Étudiante</MenuItem>
@@ -188,8 +285,10 @@ export default function Register() {
                     onChange={handleImageUpload}
                     name="proof"
                   />
-                  <PhotoCamera />
-                  <FormLabel>{uploadedImage}</FormLabel>
+                  <PhotoCamera/>
+                  <FormLabel error={stateErrors.proof.isError}>
+                    {uploadedImage}
+                  </FormLabel>
                 </IconButton>
               )}
             </div>
@@ -205,6 +304,7 @@ export default function Register() {
                 name="email"
                 onChange={handleInputChange}
                 value={state.email}
+                error={stateErrors.email.isError}
               />
               <TextField
                 required
@@ -217,6 +317,7 @@ export default function Register() {
                 name="password"
                 onChange={handleInputChange}
                 value={state.password}
+                error={stateErrors.password.isError}
               />
             </div>
             <FormControl className="formControl" fullWidth required>
@@ -228,6 +329,7 @@ export default function Register() {
                 label="school"
                 onChange={handleInputChange}
                 name="school"
+                error={stateErrors.school.isError}
               >
                 <MenuItem value={"ets"}>
                   École de technologie supérieur
@@ -274,13 +376,14 @@ export default function Register() {
                   required
                   autoFocus
                   margin="dense"
-                  id="school"
+                  //id="school"
                   label="Université"
                   type="text"
                   variant="outlined"
                   name="otherSchool"
                   onChange={handleInputChange}
                   value={state.otherSchool}
+                  error={stateErrors.otherSchool.isError}
                 />
               )}
             </div>
@@ -298,6 +401,7 @@ export default function Register() {
                   label="country"
                   onChange={handleInputChange}
                   name="country"
+                  error={stateErrors.country.isError}
                 >
                   {countryListOptions.map((country) => (
                     <MenuItem value={country.label}>{country.label}</MenuItem>
@@ -314,6 +418,8 @@ export default function Register() {
                 variant="outlined"
                 name="city"
                 onChange={handleInputChange}
+                value={state.city}
+                error={stateErrors.city.isError}
               />
             </div>
           </Box>
