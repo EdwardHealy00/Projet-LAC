@@ -1,5 +1,6 @@
 import { CookieOptions, Router, Request, Response, NextFunction } from 'express';
 import { UserService } from '@app/services/database/user.service';
+import { EmailService } from '@app/services/email.service';
 import Container, { Service } from 'typedi';
 import { ACCESS_TOKEN_EXPIRES_IN } from '@app/constant/constant';
 //import { User } from '@app/models/user.model';
@@ -18,7 +19,7 @@ export const excludedFields = ['password'];
 export class AuthController {
     router: Router;
 
-    constructor(private userService: UserService) { 
+    constructor(private userService: UserService, private emailService: EmailService) { 
         this.configureRouter();
         this.userService = Container.get(UserService);
     }
@@ -45,7 +46,8 @@ export class AuthController {
                     //fs.writeFileSync(path.join(__dirname + '/uploads/' + fileProof.filename))
                 }
                 const user = await this.userService.createUser(userInfo);
-
+                this.emailService.sendEmail();
+                
                 res.status(201).json({
                     status: 'success',
                     data: {
