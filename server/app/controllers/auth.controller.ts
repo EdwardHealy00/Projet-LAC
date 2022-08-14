@@ -5,6 +5,8 @@ import { ACCESS_TOKEN_EXPIRES_IN } from '@app/constant/constant';
 //import { User } from '@app/models/user.model';
 import { AnyZodObject, ZodError } from 'zod';
 import { createUserSchema, loginUserSchema } from '@app/schemas/user.schema';
+//import * as fs from 'fs';
+//import * as path from 'path';
 
 // import AppError from '../utils/appError';
 
@@ -24,13 +26,25 @@ export class AuthController {
     private configureRouter(): void {
         this.router = Router();
 
-        this.router.post('/register', this.middlewareValidate(createUserSchema) , async (req: Request, res: Response) => {
+        this.router.post('/register', this.middlewareValidate(createUserSchema), async (req: Request, res: Response) => {
             try {
-                const user = await this.userService.createUser({
+
+                const fileProof = req.files && req.files.length > 0 ? req.files[0] : undefined;
+                const userInfo = {
                     email: req.body.email,
-                    name: req.body.name,
+                    lastName: req.body.lastName,
+                    firstName: req.body.firstName,
                     password: req.body.password,
-                });
+                    status: req.body.status,
+                    school: req.body.school,
+                    country: req.body.country,
+                    city: req.body.city,
+                }
+                if (fileProof) {
+                    userInfo["proof"] = fileProof;
+                    //fs.writeFileSync(path.join(__dirname + '/uploads/' + fileProof.filename))
+                }
+                const user = await this.userService.createUser(userInfo);
 
                 res.status(201).json({
                     status: 'success',
@@ -90,7 +104,7 @@ export class AuthController {
                 // Send Access Token
                 res.status(200).json({
                     status: 'success',
-                    name: user!.name,
+                    name: user!.firstName + ' ' + user!.lastName,
                     role: user!.role,
                 });
             } catch (err: any) {

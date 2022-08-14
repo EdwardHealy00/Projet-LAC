@@ -24,8 +24,11 @@ import * as bcrypt from 'bcryptjs';
 
 // Export the User class to be used as TypeScript type
 export class User {
-    @prop()
-    name: string;
+    @prop({ required: true })
+    lastName: string;
+
+    @prop({ required: true })
+    firstName: string;
 
     @prop({ unique: true, required: true })
     email: string;
@@ -35,6 +38,21 @@ export class User {
 
     @prop({ default: 'user' })
     role: string;
+
+    @prop({ required: true })
+    status: string;
+
+    @prop({ required: true })
+    school: string;
+
+    @prop({ required: true })
+    country: string;
+
+    @prop({ required: true })
+    city: string;
+
+    @prop()
+    proof: any;
 
     // Instance method to check if passwords match
     async comparePasswords(hashedPassword: string, candidatePassword: string) {

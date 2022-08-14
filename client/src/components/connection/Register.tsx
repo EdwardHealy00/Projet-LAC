@@ -161,36 +161,35 @@ export default function Register() {
       return;
     }
 
-    const user: UserRegister = {
-      email: e.target.elements.email.value,
-      firstName: e.target.elements.firstName.value,
-      lastName: e.target.elements.lastName.value,
-      password: e.target.elements.password.value,
-      status: e.target.elements.status.value,
-      school: e.target.elements.school.value,
-      country: e.target.elements.country.value,
-      city: e.target.elements.city.value,
-    };
+    const formData = new FormData();
+    formData.append("firstName", e.target.elements.firstName.value);
+    formData.append("lastName", e.target.elements.lastName.value);
+    formData.append("email", e.target.elements.email.value);
+    formData.append("password", e.target.elements.password.value);
+    formData.append("city", e.target.elements.city.value);
+    formData.append("country", e.target.elements.country.value);
+    formData.append("status", e.target.elements.status.value);
+    formData.append("school", e.target.elements.school.value);
 
     if (showProof) {
-      user.proof = e.target.elements.proof.files[0];
+      formData.append("proof", e.target.elements.proof.files[0]);
     }
 
     if (state["school"] === "others") {
-      user.school = e.target.elements.otherSchool.value;
+      formData.append("school", e.target.elements.otherSchool.value);
     }
 
-    console.log(user);
-    sendRegisterForm(user);
+    sendRegisterForm(formData);
   };
 
-  const sendRegisterForm = (user: UserRegister) => {
-    // axios.post("http://localhost:3001/api/auth/register", user).then((res) => {
-    //   console.log(res);
-    //   if (res.status === 201) {
-    //     handleClose();
-    //   }
-    // });
+  const sendRegisterForm = (user: FormData) => {
+    
+    axios.post("http://localhost:3001/api/auth/register", user).then((res) => {
+      console.log(res);
+      if (res.status === 201) {
+        handleClose();
+      }
+    });
   };
 
   return (
@@ -225,6 +224,7 @@ export default function Register() {
             autoComplete="off"
             onSubmit={handleSubmit}
             id="registerForm"
+            encType="multipart/form-data"
           >
             <div>
               <TextField
@@ -285,7 +285,7 @@ export default function Register() {
                     onChange={handleImageUpload}
                     name="proof"
                   />
-                  <PhotoCamera/>
+                  <PhotoCamera />
                   <FormLabel error={stateErrors.proof.isError}>
                     {uploadedImage}
                   </FormLabel>

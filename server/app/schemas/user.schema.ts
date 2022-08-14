@@ -1,4 +1,7 @@
-import { object, string, TypeOf } from 'zod';
+import { object, string, TypeOf, z } from 'zod';
+
+//const MAX_FILE_SIZE = 500000;
+//const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 export const createUserSchema = object({
     body: object({
@@ -16,7 +19,11 @@ export const createUserSchema = object({
         firstName: string({ required_error: 'First name is required' }),
         lastName: string({ required_error: 'Last name is required' }),
         status: string({ required_error: 'Status is required' }),
-        proof: string({ required_error: 'Proof is required' }),
+        // proof: z.any().refine((files: any) => files?.length === 0, 'No files were uploaded') 
+        //     .refine((files: any) => files?.length > 1, 'Only one file can be uploaded')
+        //     .refine((files: any) => files?.length === 1 && files[0]?.size > MAX_FILE_SIZE, 'File size is too big')
+        //     .refine((files: any) => files?.length === 1 && !ACCEPTED_IMAGE_TYPES.includes(files[0].type), 'File type is not supported'),
+        proof: z.any().refine((files: any) => {return true;}),
         school: string({ required_error: 'School is required' }),
         country: string({ required_error: 'Country is required' }),
         city: string({ required_error: 'City is required' }),

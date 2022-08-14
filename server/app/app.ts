@@ -12,14 +12,18 @@ import { DatabaseService } from '@app/services/database/database.service';
 import { UserController } from '@app/controllers/user.controller';
 import { AuthController } from '@app/controllers/auth.controller';
 import { CaseStudyController } from './controllers/caseStudy.controller';
+import * as multer from 'multer';
+import path = require('path');
 
 @Service()
 export class Application {
     app: express.Application;
     private readonly internalError: number = StatusCodes.INTERNAL_SERVER_ERROR;
     private readonly swaggerOptions: swaggerJSDoc.Options;
+    upload: multer.Multer;
 
-    constructor(private readonly databaseService: DatabaseService, 
+
+    constructor(private readonly databaseService: DatabaseService,
         private readonly userController: UserController,
         private readonly authController: AuthController,
         private readonly caseStudyController: CaseStudyController) {
@@ -35,6 +39,17 @@ export class Application {
             },
             apis: ['**/*.ts'],
         };
+
+        const storage = multer.diskStorage({
+            destination: function (req, file, cb) {
+                cb(null, 'proofUploads/')
+            },
+            filename: function (req, file, cb) {
+                cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
+            }
+        });
+
+        this.upload = multer({ storage });
 
         this.config();
 
@@ -52,21 +67,21 @@ export class Application {
         this.app.use('/', (req, res) => {
             res.redirect('/api/docs');
         });
+
         this.errorHandling();
     }
 
     private config(): void {
         // Middlewares configuration
         this.app.use(logger('dev'));
-        this.app.use(express.json());
+        this.app.use(express.json( {limit: '50mb'}));
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
         this.app.use(cors({
-            credentials: true, origin: 'http://localhost:3000'}
-            ));
-        // this.app.use(bodyParser.urlencoded({
-        //     extended: false
-        // }));
+            credentials: true, origin: 'http://localhost:3000'
+        }
+        ));
+        this.app.use(this.upload.any());
     }
 
     private errorHandling(): void {

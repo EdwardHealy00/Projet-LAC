@@ -4,7 +4,7 @@ export interface UserRegister {
     lastName: string;
     password: string;
     status: string;
-    proof?: File;
+    proof?: any;
     school: string;
     country: string;
     city: string;
