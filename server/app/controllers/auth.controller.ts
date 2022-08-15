@@ -48,7 +48,7 @@ export class AuthController {
                     return next(new AppError('Error creating user', 500));
                 }
                 
-                this.emailService.sendWelcomeEmail(user);
+                this.emailService.sendWelcomeEmail(user!.email!, user!.firstName! + ' ' + user!.lastName!);
                 this.emailService.sendNewUserEmail();
                 
                 res.status(201).json({

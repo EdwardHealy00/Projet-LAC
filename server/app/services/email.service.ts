@@ -1,8 +1,6 @@
 import { Service } from 'typedi';
 import * as nodemailer from 'nodemailer';
 import { EMAIL_USERNAME, EMAIL_PASSWORD } from '@app/constant/constant';
-import { User } from '@app/models/user.model';
-
 @Service()
 export class EmailService {
 
@@ -29,12 +27,12 @@ export class EmailService {
         );
     }
 
-    sendWelcomeEmail(user: Partial<User>) {
+    sendWelcomeEmail(userEmail: string, userName: string) {
         const mailOptions = {
             from: EMAIL_USERNAME,
-            to: user.email,
+            to: userEmail,
             subject: "Welcome",
-            text: "Welcome to LAC " + user.firstName + " " + user.lastName,
+            text: "Welcome to LAC " + userName,
         }
         this.sendEmail(mailOptions);
     }
