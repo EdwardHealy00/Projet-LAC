@@ -34,7 +34,14 @@ export class UserService {
         query: FilterQuery<User>,
         options: QueryOptions = {}
     ) {
-        return userModel.findOne(query, {}, options).select(['+password', '+name']);
+        return userModel.findOne(query, {}, options).select(['+password']);
+    }
+
+    // Update password
+    async updatePassword(user: DocumentType<User>, password: string) {
+        user.password = password;
+        await user.save();
+        return omit(user.toJSON(), excludedFields);
     }
 
     // Sign Token
@@ -49,5 +56,19 @@ export class UserService {
         
         // Return access token
         return { access_token };
+    }
+
+    // Create reset token
+    async createResetToken(user: DocumentType<User>) {
+        // Create reset token
+        const reset_token = signJwt(
+            { sub: user._id },
+            {
+                expiresIn: '1h',
+            }
+        );
+        
+        // Return reset token
+        return { reset_token };
     }
 }

@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
 import * as nodemailer from 'nodemailer';
 import { EMAIL_USERNAME, EMAIL_PASSWORD } from '@app/constant/constant';
+import { User } from '@app/models/user.model';
 
 @Service()
 export class EmailService {
@@ -17,19 +18,54 @@ export class EmailService {
         });
     }
 
-    sendEmail() {
-        const mailOptions = {
-            from: EMAIL_USERNAME,
-            to: "yanis.toubal@hotmail.com",
-            subject: "New teacher signed up",
-            text: "A new teacher signed up, please check your account to validate it",
-        };
+    private sendEmail(mailOptions: nodemailer.SendMailOptions) {
         this.transporter.sendMail(mailOptions, (err, info) => {
             if (err) {
                 console.log(err);
             } else {
                 console.log(info);
             }
-        });
+        }
+        );
+    }
+
+    sendWelcomeEmail(user: Partial<User>) {
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: user.email,
+            subject: "Welcome",
+            text: "Welcome to LAC " + user.firstName + " " + user.lastName,
+        }
+        this.sendEmail(mailOptions);
+    }
+
+    sendNewUserEmail() {
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: "yanis.toubal@hotmail.com",
+            subject: "New teacher signed up",
+            text: "A new teacher signed up, please check your account to validate it",
+        };
+        this.sendEmail(mailOptions);
+    }
+
+    sendResetPasswordEmail(userEmail: string, resetToken: string) {
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: userEmail,
+            subject: "Reset your password",
+            text: `To reset your password, please click on the following link: http://localhost:3000/reset-password/${resetToken}`,
+        }
+        this.sendEmail(mailOptions);
+    }
+
+    sendConfirmPasswordReset(userEmail: string) {
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: userEmail,
+            subject: "Password reset",
+            text: "Your password has been successfully reset",
+        }
+        this.sendEmail(mailOptions);
     }
 }

@@ -3,13 +3,10 @@ import { UserService } from '@app/services/database/user.service';
 import { EmailService } from '@app/services/email.service';
 import Container, { Service } from 'typedi';
 import { ACCESS_TOKEN_EXPIRES_IN } from '@app/constant/constant';
-//import { User } from '@app/models/user.model';
 import { AnyZodObject, ZodError } from 'zod';
 import { createUserSchema, loginUserSchema } from '@app/schemas/user.schema';
-//import * as fs from 'fs';
-//import * as path from 'path';
-
-// import AppError from '../utils/appError';
+import { verifyJwt } from '@app/utils/jwt';
+import AppError from '@app/utils/appError';
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];
@@ -27,7 +24,7 @@ export class AuthController {
     private configureRouter(): void {
         this.router = Router();
 
-        this.router.post('/register', this.middlewareValidate(createUserSchema), async (req: Request, res: Response) => {
+        this.router.post('/register', this.middlewareValidate(createUserSchema), async (req: Request, res: Response, next: NextFunction) => {
             try {
 
                 const fileProof = req.files && req.files.length > 0 ? req.files[0] : undefined;
@@ -41,12 +38,18 @@ export class AuthController {
                     country: req.body.country,
                     city: req.body.city,
                 }
+                
                 if (fileProof) {
                     userInfo["proof"] = fileProof;
-                    //fs.writeFileSync(path.join(__dirname + '/uploads/' + fileProof.filename))
                 }
+                
                 const user = await this.userService.createUser(userInfo);
-                this.emailService.sendEmail();
+                if (!user) {
+                    return next(new AppError('Error creating user', 500));
+                }
+                
+                this.emailService.sendWelcomeEmail(user);
+                this.emailService.sendNewUserEmail();
                 
                 res.status(201).json({
                     status: 'success',
@@ -59,17 +62,14 @@ export class AuthController {
                 if (err.code === 11000) {
                     res.status(409).json({
                         status: 'fail',
-                        message: 'Email already exist',
+                        error: 'Email already exists',
                     });
                 }
-                res.status(400).json({
-                    status: 'fail',
-                    message: 'Email already exist'});
-                //next(err);
+                next(err);
             }
         });
 
-        this.router.post('/login', this.middlewareValidate(loginUserSchema), async (req: Request, res: Response) => {
+        this.router.post('/login', this.middlewareValidate(loginUserSchema), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 // Get the user from the collection
                 const user = await this.userService.findUser({ email: req.body.email });
@@ -78,11 +78,7 @@ export class AuthController {
                     !user ||
                     !(await user.comparePasswords(user.password, req.body.password))
                 ) {
-                    //return next(new AppError('Invalid email or password', 401));
-                    res.status(400).json({
-                        status: 'fail',
-                        message: 'Invalid email or password'
-                    });
+                    return next(new AppError('Invalid email or password', 401));
                 }
                 // Create an Access Token
                 const accessToken = await this.userService.signToken(user!);
@@ -110,7 +106,6 @@ export class AuthController {
                     role: user!.role,
                 });
             } catch (err: any) {
-                //next(err);
                 console.log(err);
                 res.status(400).json({
                     status: 'fail',
@@ -119,7 +114,7 @@ export class AuthController {
             }
         });
 
-        this.router.get('/logout', async (req: Request, res: Response) => {
+        this.router.get('/logout', async (req: Request, res: Response, next: NextFunction) => {
             try {
                 res.clearCookie('accessToken');
                 res.clearCookie('logged_in');
@@ -132,6 +127,65 @@ export class AuthController {
                 res.status(400).json({
                     status: 'fail',
                     message: 'Logout fail',
+                });
+            }
+        });
+
+        this.router.post('/forgot-password', async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const user = await this.userService.findUser({ email: req.body.email });
+                if (!user) {
+                    res.status(400).json({
+                        status: 'fail',
+                        message: 'User not found',
+                    });
+                }
+                const resetToken = await this.userService.createResetToken(user!);
+
+                res.cookie('accessToken', resetToken.reset_token, {
+                    expires: new Date(Date.now() + 60 * 60 * 1000)
+                });
+                res.cookie('logged_in', false);
+
+                this.emailService.sendResetPasswordEmail(user!.email, resetToken.reset_token);
+                res.status(200).json({
+                    status: 'success',
+                    message: 'Email sent',
+                });
+            } catch (err: any) {
+                console.log(err);
+                res.status(400).json({
+                    status: 'fail',
+                    message: 'Email not sent',
+                });
+            }
+
+        });
+
+        this.router.post('/reset-password', async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const decoded = verifyJwt<{ sub: string }>(req.body.reset_token);
+
+                if (!decoded) {
+                   return next(new AppError('Invalid token', 401));
+                }
+
+                const user = await this.userService.findUser({ _id: decoded!.sub });
+                if (!user) {
+                    return next(new AppError('User not found', 401));
+                }
+
+                await this.userService.updatePassword(user!, req.body.password);
+                this.emailService.sendConfirmPasswordReset(user!.email);
+                res.status(200).json({
+                    status: 'success',
+                    message: 'Password reset',
+                });
+            } catch (err: any) {
+                console.log(err);
+                res.status(400).json({
+                    status: 'fail',
+                    message: 'Password not reset',
                 });
             }
         });
