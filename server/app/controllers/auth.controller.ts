@@ -4,7 +4,7 @@ import { EmailService } from '@app/services/email.service';
 import Container, { Service } from 'typedi';
 import { ACCESS_TOKEN_EXPIRES_IN } from '@app/constant/constant';
 import { AnyZodObject, ZodError } from 'zod';
-import { createUserSchema, loginUserSchema } from '@app/schemas/user.schema';
+import { createUserSchema, loginUserSchema, updatePasswordSchema } from '@app/schemas/user.schema';
 import { verifyJwt } from '@app/utils/jwt';
 import AppError from '@app/utils/appError';
 
@@ -162,7 +162,7 @@ export class AuthController {
 
         });
 
-        this.router.post('/reset-password', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.post('/reset-password', this.middlewareValidate(updatePasswordSchema) ,async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const decoded = verifyJwt<{ sub: string }>(req.body.reset_token);
 
