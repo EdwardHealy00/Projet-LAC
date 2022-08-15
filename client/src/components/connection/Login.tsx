@@ -15,6 +15,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Role } from "../../model/Role";
+import ForgotPassword from "./ForgotPassword";
 
 export default function Login() {
   const [open, setOpen] = React.useState(false);
@@ -144,9 +145,9 @@ export default function Login() {
               variant="outlined"
               name="password"
             />
-            <FormControlLabel control={<Checkbox />} label="Mémoriser" />
+            {/* <FormControlLabel control={<Checkbox />} label="Mémoriser" /> */}
 
-            <a>Mot de passe oublié?</a>
+            <ForgotPassword />
           </form>
         </DialogContent>
         <DialogActions>

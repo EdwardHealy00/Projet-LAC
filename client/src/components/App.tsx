@@ -1,18 +1,19 @@
-import React from 'react';
-import Catalogue from './catalogue/Catalogue';
+import React from "react";
+import Catalogue from "./catalogue/Catalogue";
 import { Routes, Route } from "react-router-dom";
-import CaseStudyWconnection from './caseStudy/CaseStudyWconnection';
-import NavBar from './common/NavBar';
-import CollaborativeSpace from './collaborativeSpace/collaborativeSpace';
-import DashboardPaidCase from './deputy/dashboard/DashboardPaidCase';
-import Approval from './roles/approval/Approval';
-import Home from './home/Home';
-import * as env from 'dotenv';
-import NewCase from './deputy/newCase/newCase';
-import Summary from './about/Summary';
-import Mission from './about/Mission';
-import Team from './about/Team';
-import Creation from './about/creation/Creation';
+import CaseStudyWconnection from "./caseStudy/CaseStudyWconnection";
+import NavBar from "./common/NavBar";
+import CollaborativeSpace from "./collaborativeSpace/collaborativeSpace";
+import DashboardPaidCase from "./deputy/dashboard/DashboardPaidCase";
+import Approval from "./roles/approval/Approval";
+import Home from "./home/Home";
+import * as env from "dotenv";
+import NewCase from "./deputy/newCase/newCase";
+import Summary from "./about/Summary";
+import Mission from "./about/Mission";
+import Team from "./about/Team";
+import Creation from "./about/creation/Creation";
+import ResetPassword from "./connection/ResetPassword";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -41,6 +42,10 @@ function App() {
           <Route path="/mission" element={<Mission />} />
           <Route path="/team" element={<Team />} />
           <Route path="/creation" element={<Creation />} />
+          <Route
+            path="/reset-password/:resetToken"
+            element={<ResetPassword />}
+          />
         </Routes>
       </div>
     </div>

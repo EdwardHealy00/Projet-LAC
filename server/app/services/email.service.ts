@@ -21,7 +21,8 @@ export class EmailService {
             if (err) {
                 console.log(err);
             } else {
-                console.log(info);
+                //console.log(info);
+                console.log("Email sent");
             }
         }
         );
