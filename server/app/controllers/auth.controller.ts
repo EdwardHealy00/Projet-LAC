@@ -33,7 +33,7 @@ export class AuthController {
                     lastName: req.body.lastName,
                     firstName: req.body.firstName,
                     password: req.body.password,
-                    status: req.body.status,
+                    role: req.body.role,
                     school: req.body.school,
                     country: req.body.country,
                     city: req.body.city,

@@ -64,6 +64,7 @@ export class Application {
         this.app.use('/api/users', this.userController.router);
         this.app.use('/api/auth', this.authController.router);
         this.app.use('/api/caseStudies', this.caseStudyController.router);
+        //this.app.use('/api/uploads', express.static(path.join(__dirname, '../proofUploads')));
         this.app.use('/', (req, res) => {
             res.redirect('/api/docs');
         });

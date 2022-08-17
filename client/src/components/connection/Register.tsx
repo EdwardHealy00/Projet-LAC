@@ -23,6 +23,7 @@ import axios from "axios";
 import countryList from "react-select-country-list";
 import { useMemo } from "react";
 import { isEmailValid, isPasswordValid } from "../../utils/Validation";
+import { Role } from "../../model/Role";
 
 export default function Register() {
   const [open, setOpen] = React.useState(false);
@@ -53,7 +54,7 @@ export default function Register() {
     password: "",
     city: "",
     country: "Canada",
-    status: "",
+    role: "",
     proof: "",
     school: "poly",
     otherSchool: "",
@@ -66,7 +67,7 @@ export default function Register() {
     password: { isError: false, message: "" },
     city: { isError: false, message: "" },
     country: { isError: false, message: "" },
-    status: { isError: false, message: "" },
+    role: { isError: false, message: "" },
     proof: { isError: false, message: "" },
     school: { isError: false, message: "" },
     otherSchool: { isError: false, message: "" },
@@ -113,14 +114,14 @@ export default function Register() {
       };
       isValid = false;
     }
-    if (e.status.value.trim() === "") {
-      stateErrorsCopy.status = {
+    if (e.role.value.trim() === "") {
+      stateErrorsCopy.role = {
         isError: true,
         message: "Veuillez entrer votre statut",
       };
       isValid = false;
     }
-    if (e.status.value === "teacher" && e.proof.value === "") {
+    if (e.role.value === Role.ProfessorNotApproved && e.proof.value === "") {
       stateErrorsCopy.proof = {
         isError: true,
         message: "Veuillez entrer votre preuve de votre statut de professeur",
@@ -148,8 +149,8 @@ export default function Register() {
     const target = e.target;
     const value = target.value;
     const name = target.name;
-    if (name == "status") {
-      setShowProof(value == "teacher");
+    if (name == "role") {
+      setShowProof(value == Role.ProfessorNotApproved);
     }
     setState({ ...state, [name]: value });
   };
@@ -168,7 +169,7 @@ export default function Register() {
     formData.append("password", e.target.elements.password.value);
     formData.append("city", e.target.elements.city.value);
     formData.append("country", e.target.elements.country.value);
-    formData.append("status", e.target.elements.status.value);
+    formData.append("role", e.target.elements.role.value);
     formData.append("school", e.target.elements.school.value);
 
     if (showProof) {
@@ -257,18 +258,18 @@ export default function Register() {
               />
             </div>
             <div>
-              <FormControl className="formControl" id="registerStatus" required>
+              <FormControl className="formControl" id="registerRole" required>
                 <InputLabel>Statut</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
-                  value={state.status}
-                  label="status"
+                  value={state.role}
+                  label="role"
                   onChange={handleInputChange}
-                  name="status"
-                  error={stateErrors.status.isError}
+                  name="role"
+                  error={stateErrors.role.isError}
                 >
-                  <MenuItem value={"teacher"}>Enseignant/Enseignante</MenuItem>
-                  <MenuItem value={"student"}>Étudiant/Étudiante</MenuItem>
+                  <MenuItem value={Role.ProfessorNotApproved}>Enseignant/Enseignante</MenuItem>
+                  <MenuItem value={Role.Student}>Étudiant/Étudiante</MenuItem>
                 </Select>
               </FormControl>
               {showProof && (

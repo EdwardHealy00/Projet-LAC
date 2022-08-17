@@ -67,4 +67,14 @@ export class EmailService {
         }
         this.sendEmail(mailOptions);
     }
+
+    sendApprovalResultToTeacher(userEmail: string, isApproved: boolean) {
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: userEmail,
+            subject: "Your proof of identity has been reviewed",
+            text: isApproved ? "Your account has been approved" : "Your account has been rejected"
+        }
+        this.sendEmail(mailOptions);
+    }
 }

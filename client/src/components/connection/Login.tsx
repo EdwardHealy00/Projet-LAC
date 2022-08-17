@@ -88,7 +88,7 @@ export default function Login() {
     switch (role) {
       case Role.Admin:
         return "Administrateur";
-      case Role.User:
+      case Role.Student:
         return "Étudiant";
       case Role.Comity:
         return "Comité scientifique";
@@ -96,6 +96,8 @@ export default function Login() {
         return "Adjoint administratif";
       case Role.Professor:
         return "Professeur";
+      case Role.ProfessorNotApproved:
+        return "Professeur en attente d'approbation";
       default:
         return "";
     }

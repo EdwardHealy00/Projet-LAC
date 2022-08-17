@@ -7,8 +7,3 @@ export enum Role {
     ProfessorNotApproved = "professorNotApproved",
     PolyPress = "polypress",
 }
-
-export interface RoleProps {
-    role: Role[];
-    children: React.ReactNode;
-}

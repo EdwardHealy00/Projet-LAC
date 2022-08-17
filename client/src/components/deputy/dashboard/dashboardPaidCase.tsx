@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import { UnlockAccess } from "../../connection/UnlockAcess";
 import { Role } from "../../../model/Role";
 import { useNavigate } from "react-router-dom";
+import ValidateTeacherList from "./ValidateTeacher";
 
 function DashboardPaidCase() {
 
@@ -40,6 +41,7 @@ function DashboardPaidCase() {
           }
         ></UnlockAccess>
       </div>
+      <div><ValidateTeacherList /></div>
     </div>
   );
 }

@@ -29,6 +29,11 @@ export class UserService {
         return userModel.find();
     }
 
+    // Find all users by any fields
+    async findUsers(query: FilterQuery<User>, options: QueryOptions = {}) {
+        return userModel.find(query, options);
+    }
+
     // Find one user by any fields
     async findUser(
         query: FilterQuery<User>,
@@ -37,9 +42,23 @@ export class UserService {
         return userModel.findOne(query, {}, options).select(['+password']);
     }
 
+    // Find one user by any fields without password
+    async findUserWithoutPassword(
+        query: FilterQuery<User>,
+        options: QueryOptions = {}
+    ) {
+        return userModel.findOne(query, {}, options);
+    }
+
     // Update password
     async updatePassword(user: DocumentType<User>, password: string) {
         user.password = password;
+        await user.save();
+        return omit(user.toJSON(), excludedFields);
+    }
+
+    // Update user
+    async updateUser(user: DocumentType<User>) {
         await user.save();
         return omit(user.toJSON(), excludedFields);
     }

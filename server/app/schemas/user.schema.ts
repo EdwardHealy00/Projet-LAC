@@ -18,7 +18,7 @@ export const createUserSchema = object({
         // }),
         firstName: string({ required_error: 'First name is required' }),
         lastName: string({ required_error: 'Last name is required' }),
-        status: string({ required_error: 'Status is required' }),
+        role: string({ required_error: 'Status is required' }),
         // proof: z.any().refine((files: any) => files?.length === 0, 'No files were uploaded') 
         //     .refine((files: any) => files?.length > 1, 'Only one file can be uploaded')
         //     .refine((files: any) => files?.length === 1 && files[0]?.size > MAX_FILE_SIZE, 'File size is too big')
