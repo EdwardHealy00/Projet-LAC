@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/LightCatalogue.scss";
+import "./Catalogue.scss";
 import "../img/normal_search.svg";
 import SearchIcon from "../common/SearchIcon";
 import Results from "./Results";
@@ -18,6 +18,7 @@ import {
 import axios from "axios";
 import { CaseStudy } from "../../model/CaseStudy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AddCaseStudy from "./AddCaseStudy";
 
 interface Filter {
   name: string;
@@ -295,7 +296,7 @@ export default function Catalogue() {
     filter.checkboxRef.click();
     newFilters.splice(filters.indexOf(filter), 1);
     setFilters(newFilters);
-  }
+  };
 
   return (
     <div>
@@ -319,10 +320,17 @@ export default function Catalogue() {
             />
           </div>
         </div>
+        <div id="addCaseRectangle">
+          <AddCaseStudy />
+        </div>
         <div className="smallRectangle">
           <div id="type-de-contenu">Type de contenu :</div>
           {filters.map((filter) => (
-            <Chip label={filter.name} variant="outlined" onDelete={() => onDeleteChip(filter)} />
+            <Chip
+              label={filter.name}
+              variant="outlined"
+              onDelete={() => onDeleteChip(filter)}
+            />
           ))}
           <div id="effacer-tous-les-fil" onClick={onResetFilters}>
             Effacer tous les filtres
@@ -396,7 +404,9 @@ export default function Catalogue() {
                 <Typography>
                   {dates.map((date) => (
                     <FormControlLabel
-                      control={<Checkbox onChange={onCheckboxChangeDate} key={date}/>}
+                      control={
+                        <Checkbox onChange={onCheckboxChangeDate} key={date} />
+                      }
                       label={date}
                     />
                   ))}
@@ -416,7 +426,10 @@ export default function Catalogue() {
                   {numberPages.map((nbPage) => (
                     <FormControlLabel
                       control={
-                        <Checkbox onChange={onCheckboxChangeNumberPages} key={nbPage}/>
+                        <Checkbox
+                          onChange={onCheckboxChangeNumberPages}
+                          key={nbPage}
+                        />
                       }
                       label={nbPage}
                     />
