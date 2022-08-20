@@ -6,9 +6,69 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { FormLabel } from "@mui/material";
 
 export default function AddCaseStudy() {
   const [open, setOpen] = React.useState(false);
+  const [caseStudyFileName, setCaseStudyFileName] = React.useState(
+    "Aucune étude de cas n'a été téléversée"
+  );
+
+  const [state, setState] = React.useState({
+    caseStudyFile: "",
+    title: "",
+    author: "",
+    course: "",
+  });
+
+  const initialStateErrors = {
+    caseStudyFile: { isError: false, message: "" },
+    title: { isError: false, message: "" },
+    author: { isError: false, message: "" },
+    course: { isError: false, message: "" },
+  };
+
+  const [stateErrors, setStateErrors] = React.useState(initialStateErrors);
+
+  const onValidation = (e: any) => {
+    let isValid = true;
+    const stateErrorsCopy = { ...initialStateErrors };
+
+    if (e.caseStudyFile.value === "") {
+      stateErrorsCopy.caseStudyFile = {
+        isError: true,
+        message: "Veuillez entrer votre étude de cas",
+      };
+      isValid = false;
+    }
+
+    if (e.title.value === "") {
+      stateErrorsCopy.title = {
+        isError: true,
+        message: "Veuillez entrer le titre de votre étude de cas",
+      };
+      isValid = false;
+    }
+
+    if (e.author.value === "") {
+      stateErrorsCopy.author = {
+        isError: true,
+        message: "Veuillez entrer le ou les auteurs de votre étude de cas",
+      };
+      isValid = false;
+    }
+
+    if (e.course.value === "") {
+      stateErrorsCopy.course = {
+        isError: true,
+        message: "Veuillez entrer le cours associé à votre étude de cas",
+      };
+      isValid = false;
+    }
+
+    setStateErrors(!isValid ? stateErrorsCopy : initialStateErrors);
+    return isValid;
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -18,31 +78,112 @@ export default function AddCaseStudy() {
     setOpen(false);
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setCaseStudyFileName(e.target.files[0].name);
+    }
+  };
+
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+    const isFormValid = onValidation(e.target.elements);
+    if (!isFormValid) {
+      return;
+    }
+
+    const formData = new FormData();
+
+    sendAddCaseStudy(formData);
+  };
+
+  const sendAddCaseStudy = (caseStudy: FormData) => {
+    // axios.post("http://localhost:3001/api/auth/register", user).then((res) => {
+    //   console.log(res);
+    //   if (res.status === 201) {
+    //     handleClose();
+    //   }
+    // });
+  };
+
   return (
     <div>
       <Button variant="contained" onClick={handleClickOpen}>
         Ajouter une étude de cas
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
+        <DialogTitle>Ajouter une étude de cas</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
+            Entrez les informations de l'étude de cas.
           </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          />
+          <ul>
+            {Object.entries(stateErrors).map(
+              ([field, error]) =>
+                error.isError && (
+                  <li key={field} className="fieldError">
+                    {error.message}
+                  </li>
+                )
+            )}
+          </ul>
+          <form onSubmit={onSubmit} id="caseStudyForm">
+            <div>
+              <Button variant="contained" component="label">
+                Téléverser l'étude de cas
+                <input
+                  hidden
+                  accept=".doc,.docx,.pdf"
+                  type="file"
+                  onChange={handleFileUpload}
+                  name="caseStudyFile"
+                />
+              </Button>
+              <FormLabel error={stateErrors.caseStudyFile.isError}>
+                {caseStudyFileName && <span>{caseStudyFileName}</span>}
+              </FormLabel>
+            </div>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="title"
+              label="Titre"
+              name="title"
+              type="text"
+              fullWidth
+              error={stateErrors.title.isError}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="author"
+              label="Auteur(s)"
+              name="author"
+              type="text"
+              helperText="John Doe, Jane Doe"
+              fullWidth
+              error={stateErrors.author.isError}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="course"
+              label="Cours"
+              name="course"
+              type="text"
+              inputProps={{ maxLength: 8 }}
+              helperText="IND1000"
+              fullWidth
+              error={stateErrors.course.isError}
+            />
+          </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
+          <Button variant="contained" onClick={handleClose}>
+            Annuler
+          </Button>
+          <Button variant="contained" type="submit" form="caseStudyForm">
+            Ajouter
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
