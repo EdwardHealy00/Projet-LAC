@@ -6,17 +6,15 @@ import { ACCESS_TOKEN_EXPIRES_IN } from '@app/constant/constant';
 import { AnyZodObject, ZodError } from 'zod';
 import { createUserSchema, loginUserSchema, updatePasswordSchema } from '@app/schemas/user.schema';
 import { verifyJwt } from '@app/utils/jwt';
-import AppError from '@app/utils/appError';
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];
-
 
 @Service()
 export class AuthController {
     router: Router;
 
-    constructor(private userService: UserService, private emailService: EmailService) { 
+    constructor(private userService: UserService, private emailService: EmailService) {
         this.configureRouter();
         this.userService = Container.get(UserService);
     }
@@ -38,19 +36,20 @@ export class AuthController {
                     country: req.body.country,
                     city: req.body.city,
                 }
-                
+
                 if (fileProof) {
                     userInfo["proof"] = fileProof;
                 }
-                
+
                 const user = await this.userService.createUser(userInfo);
                 if (!user) {
-                    return next(new AppError('Error creating user', 500));
+                    res.status(500).json('Error creating user');
+                    return;
                 }
-                
+
                 this.emailService.sendWelcomeEmail(user!.email!, user!.firstName! + ' ' + user!.lastName!);
                 this.emailService.sendNewUserEmail();
-                
+
                 res.status(201).json({
                     status: 'success',
                     data: {
@@ -59,13 +58,12 @@ export class AuthController {
                 });
             } catch (err: any) {
                 console.log(err);
-                if (err.code === 11000) {
-                    res.status(409).json({
-                        status: 'fail',
-                        error: 'Email already exists',
-                    });
-                }
-                next(err);
+                //if (err.code === 11000) {
+                    res.status(409).json(
+                        'Email already exists'
+                    );
+                //}
+                //next(err);
             }
         });
 
@@ -78,7 +76,8 @@ export class AuthController {
                     !user ||
                     !(await user.comparePasswords(user.password, req.body.password))
                 ) {
-                    return next(new AppError('Invalid email or password', 401));
+                    res.status(401).json('Invalid email or password');
+                    return;
                 }
                 // Create an Access Token
                 const accessToken = await this.userService.signToken(user!);
@@ -107,10 +106,8 @@ export class AuthController {
                 });
             } catch (err: any) {
                 console.log(err);
-                res.status(400).json({
-                    status: 'fail',
-                    message: 'Email already exist'
-                });
+                res.status(400).json(
+                    'Email already exist');
             }
         });
 
@@ -118,16 +115,13 @@ export class AuthController {
             try {
                 res.clearCookie('accessToken');
                 res.clearCookie('logged_in');
-                res.status(200).json({
-                    status: 'success',
-                    message: 'Logout success',
-                });
+                res.status(200).json(
+                    'Logout success'
+                );
             } catch (err: any) {
                 console.log(err);
-                res.status(400).json({
-                    status: 'fail',
-                    message: 'Logout fail',
-                });
+                res.status(400).json(
+                    'Logout fail');
             }
         });
 
@@ -135,10 +129,9 @@ export class AuthController {
             try {
                 const user = await this.userService.findUser({ email: req.body.email });
                 if (!user) {
-                    res.status(400).json({
-                        status: 'fail',
-                        message: 'User not found',
-                    });
+                    res.status(400).json(
+                        'User not found',
+                    );
                 }
                 const resetToken = await this.userService.createResetToken(user!);
 
@@ -148,45 +141,42 @@ export class AuthController {
                 res.cookie('logged_in', false);
 
                 this.emailService.sendResetPasswordEmail(user!.email, resetToken.reset_token);
-                res.status(200).json({
-                    status: 'success',
-                    message: 'Email sent',
-                });
+                res.status(200).json(
+                    'Email sent'
+                );
             } catch (err: any) {
                 console.log(err);
-                res.status(400).json({
-                    status: 'fail',
-                    message: 'Email not sent',
-                });
+                res.status(400).json(
+                    'Email not sent'
+                );
             }
 
         });
 
-        this.router.post('/reset-password', this.middlewareValidate(updatePasswordSchema) ,async (req: Request, res: Response, next: NextFunction) => {
+        this.router.post('/reset-password', this.middlewareValidate(updatePasswordSchema), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const decoded = verifyJwt<{ sub: string }>(req.body.reset_token);
 
                 if (!decoded) {
-                   return next(new AppError('Invalid token', 401));
+                    res.status(401).json('Invalid token');
+                    return;
                 }
 
                 const user = await this.userService.findUser({ _id: decoded!.sub });
                 if (!user) {
-                    return next(new AppError('User not found', 401));
+                    res.status(401).json('User not found');
+                    return;
                 }
 
                 await this.userService.updatePassword(user!, req.body.password);
                 this.emailService.sendConfirmPasswordReset(user!.email);
-                res.status(200).json({
-                    status: 'success',
-                    message: 'Password reset',
-                });
+                res.status(200).json('Password reset',
+                );
             } catch (err: any) {
                 console.log(err);
-                res.status(400).json({
-                    status: 'fail',
-                    message: 'Password not reset',
-                });
+                res.status(400).json(
+                    'Password not reset',
+                );
             }
         });
     }
@@ -202,12 +192,9 @@ export class AuthController {
 
                 return next();
             } catch (err: any) {
-                console.log(err);
+                //console.log(err);
                 if (err instanceof ZodError) {
-                    return res.status(400).json({
-                        status: 'fail',
-                        error: err.errors,
-                    });
+                    return res.status(400).json("Nom d'utilisateur ou mot de passe incorrect");
                 }
                 return next(err);
             }

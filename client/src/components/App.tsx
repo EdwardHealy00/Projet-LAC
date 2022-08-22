@@ -32,9 +32,14 @@ function App() {
       console.group("Error");
       console.log(error);
       console.groupEnd();
+      
+      let message = "Une erreur s'est produite, veuillez réessayer";
+      if (error.response.data) {
+        message = error.response.data;
+      } 
       snackBarRef.current!.handleClick(
         true,
-        "Une erreur s'est produite, veuillez réessayer"
+        message
       );
       return Promise.reject(error);
     }

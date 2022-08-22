@@ -3,7 +3,6 @@ import { verifyJwt } from '@app/utils/jwt';
 import { UserService } from '@app/services/database/user.service';
 import { Service } from 'typedi';
 import { Role } from '@app/models/Role';
-import AppError from '@app/utils/appError';
 import { EmailService } from '@app/services/email.service';
 
 @Service()
@@ -30,11 +29,7 @@ export class UserController {
                 });
             } catch (err: any) {
                 console.log(err);
-                res.status(500).json({
-                    status: 'fail',
-                    message: 'Internal server error',
-                });
-                //next(err);
+                next(err);
             }
         });
 
@@ -76,11 +71,13 @@ export class UserController {
             try {
                 const user = await this.userService.findUser({ email: req.params.email });
                 if (!user) {
-                    return next(new AppError('User not found', 404));
+                    res.status(404).json('User not found');
+                    return;  
                 }
                 const proof = user.proof;
                 if (!proof) {
-                    return next(new AppError('Proof not found', 404));
+                    res.status(401).json('Proof not found');
+                    return;  
                 }
                 res.sendFile(proof.filename, { root: './proofUploads' });
             } catch (err: any) {
@@ -94,7 +91,8 @@ export class UserController {
                 const { email, approved } = req.body;
                 const user = await this.userService.findUserWithoutPassword({ email: email });
                 if (!user) {
-                    return next(new AppError('User not found', 404));
+                    res.status(404).json('User not found');
+                    return;  
                 }
 
                 user.role = approved ? Role.Professor : Role.Student;
@@ -125,21 +123,30 @@ export class UserController {
             }
 
             if (!access_token) {
-                return next('You are not logged in');
+                res.status(401).json(
+                    'You are not logged in'
+                );
+                return;
             }
 
             // Validate Access Token
             const decoded = verifyJwt<{ sub: string }>(access_token);
 
             if (!decoded) {
-                return next(`Invalid token or user doesn't exist`);
+                res.status(401).json(
+                    `Invalid token or user doesn't exist`
+                );
+                return;
             }
 
             // Check if user still exist
             const user = await this.userService.findUser({ _id: decoded!.sub });
 
             if (!user) {
-                return next(`User with that token no longer exist`);
+                res.status(401).json(
+                    `User with that token no longer exist`
+                );
+                return;
             }
 
             next();
@@ -167,9 +174,10 @@ export class UserController {
         return (req: Request, res: Response, next: NextFunction) => {
             const user = res.locals.user;
             if (!allowedRoles.includes(user.role)) {
-                return next('You are not allowed to perform this action'
-                    //new AppError('You are not allowed to perform this action', 403)
+                res.status(403).json(
+                    'You are not allowed to perform this action'
                 );
+                return;
             }
 
             next();
