@@ -24,7 +24,7 @@ export class CaseStudyService {
     }
 
     async getAllPaidCaseStudies() {
-        return this.databaseService.bucket.find({}).toArray();
+        return PaidCaseStudyModel.find();
     }
 
     // CreateCaseStudy service

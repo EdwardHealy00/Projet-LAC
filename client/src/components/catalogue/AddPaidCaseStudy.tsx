@@ -36,7 +36,7 @@ export default function AddPaidCaseStudy() {
     let isValid = true;
     const stateErrorsCopy = { ...initialStateErrors };
 
-    if (e.caseStudyFile.value === "") {
+    if (e.caseStudyFile.value.trim() === "") {
       stateErrorsCopy.caseStudyFile = {
         isError: true,
         message: "Veuillez entrer votre étude de cas",
@@ -44,7 +44,7 @@ export default function AddPaidCaseStudy() {
       isValid = false;
     }
 
-    if (e.title.value === "") {
+    if (e.title.value.trim() === "") {
       stateErrorsCopy.title = {
         isError: true,
         message: "Veuillez entrer le titre de votre étude de cas",
@@ -52,7 +52,7 @@ export default function AddPaidCaseStudy() {
       isValid = false;
     }
 
-    if (e.author.value === "") {
+    if (e.author.value.trim() === "") {
       stateErrorsCopy.author = {
         isError: true,
         message: "Veuillez entrer le ou les auteurs de votre étude de cas",
@@ -60,10 +60,19 @@ export default function AddPaidCaseStudy() {
       isValid = false;
     }
 
-    if (e.course.value === "") {
+    if (e.course.value.trim() === "") {
       stateErrorsCopy.course = {
         isError: true,
         message: "Veuillez entrer le cours associé à votre étude de cas",
+      };
+      isValid = false;
+    }
+
+    const courseIdPattern = new RegExp("^[A-Z]{3}[0-9]{4}\\s?$");
+    if (!courseIdPattern.test(e.course.value)) {
+      stateErrorsCopy.course = {
+        isError: true,
+        message: "Veuillez entrer un sigle de cours valide",
       };
       isValid = false;
     }
@@ -106,7 +115,6 @@ export default function AddPaidCaseStudy() {
     for (key in caseStudy) {
       formData.append(key, caseStudy[key]);
     }
-
     sendAddCaseStudy(formData);
   };
 
@@ -165,7 +173,6 @@ export default function AddPaidCaseStudy() {
             <TextField
               autoFocus
               margin="dense"
-              id="title"
               label="Titre"
               name="title"
               type="text"
@@ -175,7 +182,6 @@ export default function AddPaidCaseStudy() {
             <TextField
               autoFocus
               margin="dense"
-              id="author"
               label="Auteur(s)"
               name="author"
               type="text"
@@ -186,7 +192,6 @@ export default function AddPaidCaseStudy() {
             <TextField
               autoFocus
               margin="dense"
-              id="course"
               label="Cours"
               name="course"
               type="text"
