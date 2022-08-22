@@ -13,7 +13,6 @@ import { UserController } from '@app/controllers/user.controller';
 import { AuthController } from '@app/controllers/auth.controller';
 import { CaseStudyController } from './controllers/caseStudy.controller';
 import * as multer from 'multer';
-import path = require('path');
 
 @Service()
 export class Application {
@@ -42,10 +41,16 @@ export class Application {
 
         const storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                cb(null, 'proofUploads/')
+                const folderName = req.originalUrl.includes("caseStudies") ? 'paidCaseStudies/' : 'proofUploads/';
+                cb(null, folderName)
             },
             filename: function (req, file, cb) {
-                cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
+                const isCaseStudyReq = req.originalUrl.includes("caseStudies");
+                const fileName = Date.now().toString() + "-" + (isCaseStudyReq ? file.originalname : "");
+                if (isCaseStudyReq && req.files) {
+                    req.files[0]["serverFileName"] = fileName;
+                }
+                cb(null, fileName ) //Appending extension
             }
         });
 

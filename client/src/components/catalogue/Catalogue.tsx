@@ -18,7 +18,8 @@ import {
 import axios from "axios";
 import { CaseStudy } from "../../model/CaseStudy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddCaseStudy from "./AddCaseStudy";
+import AddPaidCaseStudy from "./AddPaidCaseStudy";
+import AddFreeCaseStudy from "./AddFreeCaseStudy";
 
 interface Filter {
   name: string;
@@ -321,7 +322,8 @@ export default function Catalogue() {
           </div>
         </div>
         <div id="addCaseRectangle">
-          <AddCaseStudy />
+          <AddPaidCaseStudy />
+          <AddFreeCaseStudy />
         </div>
         <div className="smallRectangle">
           <div id="type-de-contenu">Type de contenu :</div>

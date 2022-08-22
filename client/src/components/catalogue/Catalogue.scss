@@ -9,6 +9,8 @@
 
 #addCaseRectangle {
     margin: 15px 0;
+    display: flex;
+    place-content: space-around;
 }
 
 #rectangleFilter {

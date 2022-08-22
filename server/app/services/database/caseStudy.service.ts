@@ -1,20 +1,41 @@
 import { FilterQuery, QueryOptions } from 'mongoose';
-import CaseStudyModel, { CaseStudy } from '@app/models/caseStudy.model';
+import { CaseStudy, PaidCaseStudy, CaseStudyModel, PaidCaseStudyModel } from '@app/models/caseStudy.model';
 import { Service } from 'typedi';
+import { DatabaseService } from '@app/services/database/database.service';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Service()
 export class CaseStudyService {
 
-    constructor() { }
+    constructor(private readonly databaseService: DatabaseService) { }
+
+    saveCaseStudyFile(fileName: string) {
+        const filePath = path.join(__dirname, '../../../paidCaseStudies/', fileName);
+        fs.createReadStream(filePath).pipe(this.databaseService.bucket.openUploadStream(filePath,
+            {
+                metadata: { name: fileName }
+            }
+        )).on('finish', () => {
+            fs.rmSync(filePath);
+        });
+
+
+    }
+
+    async getAllPaidCaseStudies() {
+        return this.databaseService.bucket.find({}).toArray();
+    }
 
     // CreateCaseStudy service
-    async createCaseStudy(input: Partial<CaseStudy>) {
-        return await CaseStudyModel.create(input);
+    async createPaidCaseStudy(input: Partial<PaidCaseStudy>) {
+        const caseStudy = await PaidCaseStudyModel.create(input);
+        return caseStudy;
     }
 
     // Find CaseStudy by Id
     async findCaseStudyById(id: string) {
-       return CaseStudyModel.findById(id).lean();
+        return CaseStudyModel.findById(id).lean();
     }
 
     // Find All CaseStudys

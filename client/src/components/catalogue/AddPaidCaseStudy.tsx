@@ -7,8 +7,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { FormLabel } from "@mui/material";
+import { PaidNewCaseStudy } from "../../model/CaseStudy";
+import axios from "axios";
 
-export default function AddCaseStudy() {
+export default function AddPaidCaseStudy() {
   const [open, setOpen] = React.useState(false);
   const [caseStudyFileName, setCaseStudyFileName] = React.useState(
     "Aucune étude de cas n'a été téléversée"
@@ -91,24 +93,38 @@ export default function AddCaseStudy() {
       return;
     }
 
+    const caseStudy = {
+      title: e.target.elements.title.value,
+      authors: e.target.elements.author.value,
+      classId: e.target.elements.course.value,
+      file: e.target.elements.caseStudyFile.files[0],
+      isPaidCase: true,
+    } as PaidNewCaseStudy;
+
     const formData = new FormData();
+    let key: keyof PaidNewCaseStudy;
+    for (key in caseStudy) {
+      formData.append(key, caseStudy[key]);
+    }
 
     sendAddCaseStudy(formData);
   };
 
   const sendAddCaseStudy = (caseStudy: FormData) => {
-    // axios.post("http://localhost:3001/api/auth/register", user).then((res) => {
-    //   console.log(res);
-    //   if (res.status === 201) {
-    //     handleClose();
-    //   }
-    // });
+    axios.post("http://localhost:3001/api/caseStudies", caseStudy, {
+      withCredentials: true
+    }).then((res) => {
+      console.log(res);
+      if (res.status === 201) {
+        handleClose();
+      }
+    });
   };
 
   return (
     <div>
       <Button variant="contained" onClick={handleClickOpen}>
-        Ajouter une étude de cas
+        Ajouter une étude de cas payante
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Ajouter une étude de cas</DialogTitle>
@@ -126,7 +142,11 @@ export default function AddCaseStudy() {
                 )
             )}
           </ul>
-          <form onSubmit={onSubmit} id="caseStudyForm">
+          <form
+            onSubmit={onSubmit}
+            id="caseStudyForm"
+            encType="multipart/form-data"
+          >
             <div>
               <Button variant="contained" component="label">
                 Téléverser l'étude de cas

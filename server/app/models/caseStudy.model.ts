@@ -48,7 +48,31 @@ export class CaseStudy {
     votes: number;
 }
 
-// Create the user model from the User class
-const caseStudyModel = getModelForClass(CaseStudy);
-export default caseStudyModel;
+export class PaidCaseStudy {
 
+    @prop({ default: true}) 
+    isPaidCase: boolean;
+
+    @prop({ default: new Date().toISOString() })
+    date: string;
+
+    @prop({ unique: true, required: true })
+    title: string;
+
+    @prop({ required: true })
+    authors: string;
+
+    @prop({ required: true })
+    classId: string;
+
+    @prop({ required: true })
+    file: any;
+}
+
+// Create the user model from the User class
+const CaseStudyModel = getModelForClass(CaseStudy);
+export {CaseStudyModel};
+
+// Create the user model from the User class
+const PaidCaseStudyModel = getModelForClass(PaidCaseStudy);
+export {PaidCaseStudyModel};
