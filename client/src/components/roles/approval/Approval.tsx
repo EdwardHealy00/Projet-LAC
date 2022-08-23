@@ -7,6 +7,7 @@ import { UnlockAccess } from "../../connection/UnlockAcess";
 import { ApprovalComity } from "./comity/Approval";
 import { ApprovalDeputy } from "./deputy/Approval";
 import { ApprovalPolyPress } from "./polyPress/Approval";
+import { Document } from "../../../model/Document";
 
 function createData(
   id_: number,
@@ -18,6 +19,18 @@ function createData(
   classId: string,
   file: any
 ): Case {
+  const [ filename, extension ] = file.originalname.split(".") as string[];
+  const documents: Document[] = [
+    {
+      id_: 1,
+      documentType: "Étude de cas",
+      title: filename,
+      type: "Obligatoire",
+      format: extension,
+      addedOn: submitted,
+      file: file
+    },
+  ];
   return {
     id_,
     title,
@@ -26,7 +39,7 @@ function createData(
     status,
     isPaidCase,
     classId,
-    file,
+    documents,
   };
 }
 
@@ -44,7 +57,6 @@ export default function Approval() {
     axios.get("http://localhost:3001/api/casestudies/paid").then((res) => {
       const cases: Case[] = [];
       for (const caseStudy of res.data) {
-        console.log(caseStudy);
         cases.push(
           createData(
             caseStudy._id,
@@ -57,6 +69,7 @@ export default function Approval() {
             caseStudy.file
           )
         );
+        console.log(cases);
       }
       setCaseStudies(cases);
       setCaseStudiesStep1(filterByStep(cases, CaseStep.WaitingPreApproval));

@@ -5,4 +5,5 @@ export interface Document {
   type: string;
   format: string;
   addedOn: string;
+  file: any;
 }

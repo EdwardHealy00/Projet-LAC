@@ -27,7 +27,6 @@ export interface Case {
   isPaidCase: boolean;
   classId: string;
   documents?: Document[];
-  file: string;
 }
 
 interface NewCaseStudy {
