@@ -1,11 +1,12 @@
 import { Accordion, AccordionSummary, Typography, AccordionDetails, Button, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import React from "react";
-import { Case } from "../../../model/Case";
 import { Document } from "../../../model/Document";
 import "./NewCase.scss";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import NewCaseTable from "./NewCaseTable";
+import { CaseStep } from "../../../model/enum/CaseStatus";
+import { Case } from "../../../model/CaseStudy";
 
 function createData(
   id_: number,
@@ -54,13 +55,16 @@ const documents: Document[] = [
 ];
 
 const newCase: Case = {
-    id_: 53,
-    title: "Mesurer la qualité des produits dans les simulations ABC",
-    author: "Jane Doe",
-    submittedDate: "2022/05/23",
-    status: "Nouveau",
-    documents: documents
-}
+  id_: 53,
+  title: "Mesurer la qualité des produits dans les simulations ABC",
+  author: "Jane Doe",
+  submittedDate: "2022/05/23",
+  status: CaseStep.WaitingPreApproval,
+  documents: documents,
+  isPaidCase: true,
+  classId: "INF1900",
+  file: "",
+};
 
 const checkList: string[] = [
     "L’étude de cas est en format Word.",

@@ -3,6 +3,7 @@ import {
     modelOptions,
     prop,
 } from '@typegoose/typegoose';
+import { CaseStep } from './CaseStatus';
 
 @modelOptions({
     schemaOptions: {
@@ -67,6 +68,9 @@ export class PaidCaseStudy {
 
     @prop({ required: true })
     file: any;
+
+    @prop({ default: CaseStep.WaitingPreApproval })
+    status: CaseStep;
 }
 
 // Create the user model from the User class

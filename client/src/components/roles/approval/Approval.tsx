@@ -1,26 +1,97 @@
+import axios from "axios";
 import React from "react";
-import { Role, RoleProps } from "../../../model/enum/Role";
+import { Case } from "../../../model/CaseStudy";
+import { CaseStep } from "../../../model/enum/CaseStatus";
+import { Role } from "../../../model/enum/Role";
 import { UnlockAccess } from "../../connection/UnlockAcess";
 import { ApprovalComity } from "./comity/Approval";
 import { ApprovalDeputy } from "./deputy/Approval";
 import { ApprovalPolyPress } from "./polyPress/Approval";
 
+function createData(
+  id_: number,
+  title: string,
+  author: string,
+  submitted: string,
+  status: CaseStep,
+  isPaidCase: boolean,
+  classId: string,
+  file: any
+): Case {
+  return {
+    id_,
+    title,
+    author,
+    submittedDate: submitted,
+    status,
+    isPaidCase,
+    classId,
+    file,
+  };
+}
+
+function filterByStep(caseStudies: Case[], step: CaseStep) {
+  return caseStudies.filter((caseStudy) => caseStudy.status == step);
+}
+
 export default function Approval() {
+  const [caseStudies, setCaseStudies] = React.useState<Case[]>([]);
+  const [caseStudiesStep1, setCaseStudiesStep1] = React.useState<Case[]>([]);
+  const [caseStudiesStep2, setCaseStudiesStep2] = React.useState<Case[]>([]);
+  const [caseStudiesStep3, setCaseStudiesStep3] = React.useState<Case[]>([]);
+  const [caseStudiesStep4, setCaseStudiesStep4] = React.useState<Case[]>([]);
+  const getCaseStudies = async () => {
+    axios.get("http://localhost:3001/api/casestudies/paid").then((res) => {
+      const cases: Case[] = [];
+      for (const caseStudy of res.data) {
+        console.log(caseStudy);
+        cases.push(
+          createData(
+            caseStudy._id,
+            caseStudy.title,
+            caseStudy.authors,
+            caseStudy.date,
+            CaseStep.WaitingPreApproval,
+            caseStudy.isPaidCase,
+            caseStudy.classId,
+            caseStudy.file
+          )
+        );
+      }
+      setCaseStudies(cases);
+      setCaseStudiesStep1(filterByStep(cases, CaseStep.WaitingPreApproval));
+      setCaseStudiesStep2(filterByStep(cases, CaseStep.WaitingComity));
+      setCaseStudiesStep3(filterByStep(cases, CaseStep.WaitingPolyPress));
+      setCaseStudiesStep4(filterByStep(cases, CaseStep.WaitingCatalogue));
+    });
+  };
+
+  React.useEffect(() => {
+    getCaseStudies();
+  }, []);
+
   return (
     <div>
       <UnlockAccess
         role={[Role.Admin, Role.Comity]}
-        children={<ApprovalComity />}
+        children={<ApprovalComity caseStudies={caseStudiesStep2} />}
       ></UnlockAccess>
-      
+
       <UnlockAccess
         role={[Role.Admin, Role.Deputy]}
-        children={<ApprovalDeputy />}
+        children={
+          <ApprovalDeputy
+            step1={caseStudiesStep1}
+            step2={caseStudiesStep2}
+            step3={caseStudiesStep3}
+            step4={caseStudiesStep4}
+          />
+        }
       ></UnlockAccess>
 
       <UnlockAccess
         role={[Role.Admin, Role.PolyPress]}
-        children={<ApprovalPolyPress />}
+        children={<ApprovalPolyPress caseStudies={caseStudiesStep3} />}
       ></UnlockAccess>
     </div>
   );

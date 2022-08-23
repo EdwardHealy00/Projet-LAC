@@ -7,14 +7,15 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { Case } from "../../../../model/Case";
+import { CaseStep } from "../../../../model/enum/CaseStatus";
+import { Case } from "../../../../model/CaseStudy";
+import { getStatus } from "../../../../utils/Status";
 
 interface CaseProp {
-    cases: Case[];
+  cases: Case[];
 }
 
 export default function CaseTable(rows: CaseProp) {
-
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -40,7 +41,7 @@ export default function CaseTable(rows: CaseProp) {
               <TableCell align="right">{row.title}</TableCell>
               <TableCell align="right">{row.author}</TableCell>
               <TableCell align="right">{row.submittedDate}</TableCell>
-              <TableCell align="right">{row.status}</TableCell>
+              <TableCell align="right">{getStatus(row.status)}</TableCell>
               <TableCell align="right">
                 <Button variant={getButtonVariant(row.status)}>
                   {getButtonMessage(row.status)}
@@ -54,23 +55,23 @@ export default function CaseTable(rows: CaseProp) {
   );
 }
 
-function getButtonMessage(status: string): string { 
-    switch (status) {
-      case "Nouveau":
-        return "Traiter";
-      case "Édité":
-        return "Ajouter";
-      default:
-        return "Faire un suivi";
-    }
+function getButtonMessage(status: CaseStep): string {
+  switch (status) {
+    case CaseStep.WaitingPreApproval:
+      return "Traiter";
+    case CaseStep.WaitingCatalogue:
+      return "Ajouter";
+    default:
+      return "Faire un suivi";
+  }
 }
 
 function getButtonVariant(
-  status: string
+  status: CaseStep
 ): "text" | "outlined" | "contained" | undefined {
   switch (status) {
-    case "Nouveau":
-    case "Édité":
+    case CaseStep.WaitingPreApproval:
+    case CaseStep.WaitingCatalogue:
       return "contained";
     default:
       return "outlined";
