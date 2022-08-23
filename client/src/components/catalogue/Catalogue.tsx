@@ -19,6 +19,8 @@ import { CaseStudy } from "../../model/CaseStudy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddPaidCaseStudy from "./AddPaidCaseStudy";
 import AddFreeCaseStudy from "./AddFreeCaseStudy";
+import { Role } from "../../model/enum/Role";
+import { UnlockAccess } from "../connection/UnlockAcess";
 
 interface Filter {
   name: string;
@@ -319,10 +321,16 @@ export default function Catalogue() {
             />
           </div>
         </div>
-        <div id="addCaseRectangle">
-          <AddPaidCaseStudy />
-          <AddFreeCaseStudy />
-        </div>
+        <UnlockAccess
+          role={[Role.Admin, Role.Professor]}
+          children={
+            <div id="addCaseRectangle">
+              <AddPaidCaseStudy />
+              <AddFreeCaseStudy />
+            </div>
+          }
+        ></UnlockAccess>
+
         <div className="smallRectangle">
           <div id="type-de-contenu">Type de contenu :</div>
           {filters.map((filter) => (

@@ -23,7 +23,7 @@ import axios from "axios";
 import countryList from "react-select-country-list";
 import { useMemo } from "react";
 import { isEmailValid, isPasswordValid } from "../../utils/Validation";
-import { Role } from "../../model/Role";
+import { Role } from "../../model/enum/Role";
 
 export default function Register() {
   const [open, setOpen] = React.useState(false);

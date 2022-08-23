@@ -5,6 +5,8 @@ import Login from "../connection/Login";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
+import { Role } from "../../model/enum/Role";
+import { UnlockAccess } from "../connection/UnlockAcess";
 
 interface Props {}
 
@@ -19,7 +21,7 @@ const NavBar: React.FC<Props> = ({}) => {
   };
 
   const navigate = useNavigate();
-  
+
   const navigateSummary = useCallback(() => {
     navigate("/summary");
     handleClose();
@@ -48,7 +50,10 @@ const NavBar: React.FC<Props> = ({}) => {
           aria-label="outlined primary button group"
         >
           <Button href="/catalogue">Catalogue</Button>
-          <Button href="/dashboard">Tableau de board</Button>
+          <UnlockAccess
+            role={[Role.Admin, Role.Deputy]}
+            children={<Button href="/dashboard">Tableau de board</Button>}
+          ></UnlockAccess>
           <div>
             <Button
               id="basic-button"

@@ -1,5 +1,5 @@
 import React from "react";
-import { Role, RoleProps } from "../../../model/Role";
+import { Role, RoleProps } from "../../../model/enum/Role";
 import { UnlockAccess } from "../../connection/UnlockAcess";
 import { ApprovalComity } from "./comity/Approval";
 import { ApprovalDeputy } from "./deputy/Approval";

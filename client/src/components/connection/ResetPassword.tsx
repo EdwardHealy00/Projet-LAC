@@ -38,7 +38,7 @@ export default function ResetPassword() {
   const handleSubmitNewPassword = (e: any) => {
     e.preventDefault();
     const password = e.target.password.value.trim();
-    if (!validatePassword(password)) return;
+    if (validatePassword(password)) return;
     const newPassword: UserPasswordReset = {
       reset_token: resetToken!,
       password: e.target.password.value,
@@ -53,6 +53,7 @@ export default function ResetPassword() {
       })
       .then((res) => {
         console.log(res);
+        
       })
       .catch((err) => {
         console.log(err);

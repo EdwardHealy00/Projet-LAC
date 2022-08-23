@@ -4,7 +4,7 @@ import CasesRecieved from "./CasesRecieved";
 import CasesWaitingApproval from "./CasesWaitingApproval";
 import Button from "@mui/material/Button";
 import { UnlockAccess } from "../../connection/UnlockAcess";
-import { Role } from "../../../model/Role";
+import { Role } from "../../../model/enum/Role";
 import { useNavigate } from "react-router-dom";
 import ValidateTeacherList from "./ValidateTeacher";
 

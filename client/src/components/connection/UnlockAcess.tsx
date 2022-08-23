@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Role, RoleProps } from "../../model/Role";
+import { Role, RoleProps } from "../../model/enum/Role";
 
 const grantPermission = (requestedRoles: Role[]) => {
   const permittedRoles = localStorage.getItem("role") as Role;

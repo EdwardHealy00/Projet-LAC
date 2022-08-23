@@ -14,7 +14,7 @@ import { UserLogin } from "../../model/User";
 import axios from "axios";
 import Cookies from "js-cookie";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { Role } from "../../model/Role";
+import { Role } from "../../model/enum/Role";
 import ForgotPassword from "./ForgotPassword";
 
 export default function Login() {

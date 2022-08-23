@@ -6,7 +6,6 @@ import NavBar from "./common/NavBar";
 import CollaborativeSpace from "./collaborativeSpace/CollaborativeSpace";
 import DashboardPaidCase from "./deputy/dashboard/DashboardPaidCase";
 import Approval from "./roles/approval/Approval";
-import Home from "./home/Home";
 import * as env from "dotenv";
 import NewCase from "./deputy/newCase/NewCase";
 import Summary from "./about/Summary";
@@ -51,11 +50,10 @@ function App() {
       <div id="content">
         <ResponseSnackbar ref={snackBarRef} />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Catalogue />} />
           <Route path="/catalogue" element={<Catalogue />} />
           {/* <Route path="/etude-de-cas" element={<CaseStudyWTconnection />} /> */}
           <Route path="/etude-de-cas" element={<CaseStudyWconnection />} />
-          {/* <Route path="/contact" element={< />} /> */}
           <Route
             path="/espace-de-collaboration"
             element={<CollaborativeSpace />}
@@ -63,10 +61,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPaidCase />} />
           <Route path="/approval" element={<Approval />} />
           <Route path="/new-case-approval" element={<NewCase />} />
-          {/* <Route
-            path="/espace-de-collaboration/etude-de-cas"
-            element={<CaseStudy />}
-          /> */}
+
           <Route path="/summary" element={<Summary />} />
           <Route path="/mission" element={<Mission />} />
           <Route path="/team" element={<Team />} />
