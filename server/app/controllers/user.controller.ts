@@ -17,23 +17,24 @@ export class UserController {
         this.router = Router();
 
         this.router.use(this.middlewareDeserializeUser.bind(this));
+        this.router.use(this.middlewareRequireUser.bind(this));
 
-        this.router.get('/me', async (req: Request, res: Response, next: NextFunction) => {
-            try {
-                const user = res.locals.user;
-                res.status(200).json({
-                    status: 'success',
-                    data: {
-                        user,
-                    },
-                });
-            } catch (err: any) {
-                console.log(err);
-                next(err);
-            }
-        });
+        // this.router.get('/me', async (req: Request, res: Response, next: NextFunction) => {
+        //     try {
+        //         const user = res.locals.user;
+        //         res.status(200).json({
+        //             status: 'success',
+        //             data: {
+        //                 user,
+        //             },
+        //         });
+        //     } catch (err: any) {
+        //         console.log(err);
+        //         next(err);
+        //     }
+        // });
 
-        this.router.get('/', this.middlewareRestrictTo("admin"), async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const users = await this.userService.findAllUsers();
                 res.status(200).json({
@@ -49,7 +50,7 @@ export class UserController {
             }
         });
 
-        this.router.get('/approval', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/approval', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response, next: NextFunction) => {
 
             try {
                 const users = await this.userService.findUsers({ role: Role.ProfessorNotApproved });
@@ -67,17 +68,17 @@ export class UserController {
             }
         });
 
-        this.router.get('/proof/:email', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/proof/:email', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const user = await this.userService.findUser({ email: req.params.email });
                 if (!user) {
                     res.status(404).json('User not found');
-                    return;  
+                    return;
                 }
                 const proof = user.proof;
                 if (!proof) {
                     res.status(401).json('Proof not found');
-                    return;  
+                    return;
                 }
                 res.sendFile(proof.filename, { root: './proofUploads' });
             } catch (err: any) {
@@ -86,13 +87,13 @@ export class UserController {
             }
         });
 
-        this.router.post('/approvalResult', async (req: Request, res: Response, next: NextFunction) => {
+        this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const { email, approved } = req.body;
                 const user = await this.userService.findUserWithoutPassword({ email: email });
                 if (!user) {
                     res.status(404).json('User not found');
-                    return;  
+                    return;
                 }
 
                 user.role = approved ? Role.Professor : Role.Student;
@@ -149,6 +150,8 @@ export class UserController {
                 return;
             }
 
+            res.locals.user = user;
+
             next();
         } catch (err: any) {
             next(err);
@@ -156,19 +159,18 @@ export class UserController {
     }
 
 
-    // private async middlewareRequireUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-    //     try {
-    //         const user = res.locals.user;
-    //         if (!user) {
-    //             //return;
-    //             return next(`Invalid token or session has expired`);
-    //         }
+    private async middlewareRequireUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const user = res.locals.user;
+            if (!user) {
+                return next(`Invalid token or session has expired`);
+            }
 
-    //         next();
-    //     } catch (err: any) {
-    //         next(err);
-    //     }
-    // }
+            next();
+        } catch (err: any) {
+            next(err);
+        }
+    }
 
     private middlewareRestrictTo(...allowedRoles: string[]) {
         return (req: Request, res: Response, next: NextFunction) => {
