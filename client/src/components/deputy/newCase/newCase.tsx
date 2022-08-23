@@ -2,10 +2,10 @@ import { Accordion, AccordionSummary, Typography, AccordionDetails, Button, Chec
 import React from "react";
 import { Case } from "../../../model/Case";
 import { Document } from "../../../model/Document";
-import "./newCase.scss";
+import "./NewCase.scss";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import NewCaseTable from "./newCaseTable";
+import NewCaseTable from "./NewCaseTable";
 
 function createData(
   id_: number,

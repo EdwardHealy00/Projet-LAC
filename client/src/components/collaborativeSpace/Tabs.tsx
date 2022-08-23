@@ -3,9 +3,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import FormStudy from './formStudy';
-import EditFormStudy from './editFormStudy';
 import CaseStudy from './caseStudy/CaseStudy';
+import FormStudy from './FormStudy';
+import EditFormStudy from './EditFormStudy';
 
 interface TabPanelProps {
   children?: React.ReactNode;

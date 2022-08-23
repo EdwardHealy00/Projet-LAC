@@ -1,7 +1,7 @@
 import React from "react";
-import "../../styles/LightResults.scss";
-import Button from "../common/Button";
+import "./Results.scss";
 import StarIcon from "@mui/icons-material/Star";
+import { Button } from "@mui/material";
 
 interface Props {
   //   onClick: () => void;
@@ -43,11 +43,7 @@ const Results: React.FC<Props> = ({
         <div id="placement">
           <div id="discipline"> Discipline : {discipline}</div>
           <div id="positionButton">
-            <Button
-              children="Consulter"
-              styleName="consulter"
-              onClick={() => console.log("You clicked")}
-            ></Button>
+            <Button className="consulter">Consulter</Button>
           </div>
         </div>
         <div id="tags"> Sujet(s) : {tags.map((tag) => (tag + ','))}</div>

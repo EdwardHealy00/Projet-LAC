@@ -2,7 +2,7 @@ import React from "react";
 import LockIcon from '@mui/icons-material/Lock';
 import Button from "@mui/material/Button";
 
-function FormStudy() {
+function EditFormStudy() {
   return (
     <div id="formStudyLayout">
       <div id="formStudy">
@@ -184,4 +184,4 @@ function FormStudy() {
   );
 }
 
-export default FormStudy;
+export default EditFormStudy;

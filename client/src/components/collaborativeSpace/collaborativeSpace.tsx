@@ -1,7 +1,7 @@
 import { InputAdornment, TextField } from '@mui/material';
 import React from 'react';
-import SearchIcon from '../common/SearchIcon';
-import "../../styles/CollaborativeSpace.scss";
+import "./CollaborativeSpace.scss";
+import SearchIcon from "@mui/icons-material/Search";
 import Tabs from './Tabs';
 
 function CollaborativeSpace() {

@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import "../../styles/LightCaseStudy.scss";
+import "./CaseStudy.scss";
 import Button from "@mui/material/Button";
 import "../img/normal_search.svg";
 // import { useNavigate } from "react-router-dom";

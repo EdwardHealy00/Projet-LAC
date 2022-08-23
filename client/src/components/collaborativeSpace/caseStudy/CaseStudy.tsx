@@ -1,6 +1,4 @@
 import React from "react";
-import LockIcon from "@mui/icons-material/Lock";
-import Button from "@mui/material/Button";
 
 function FormStudy() {
     

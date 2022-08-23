@@ -1,7 +1,6 @@
 import React from "react";
 import "./Catalogue.scss";
-import "../img/normal_search.svg";
-import SearchIcon from "../common/SearchIcon";
+import SearchIcon from "@mui/icons-material/Search";
 import Results from "./Results";
 import {
   Accordion,

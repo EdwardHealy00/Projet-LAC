@@ -1,8 +1,7 @@
 import React, { useCallback } from "react";
-import "../../styles/LightCaseStudy.scss";
+import "./CaseStudy.scss";
 import Button from "@mui/material/Button";
-import "../img/normal_search.svg";
-import AccountCircle from "@mui/icons-material/AccountCircle";
+import "../img/normal_search.svg";;
 import { PieChart } from "react-minimal-pie-chart";
 import Table from './Table';
 import { useNavigate } from 'react-router-dom';
