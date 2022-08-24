@@ -19,8 +19,14 @@ export class CaseStudyService {
         )).on('finish', () => {
             fs.rmSync(filePath);
         });
+    }
 
-
+    async getCaseStudyFile(fileName: string) {
+        const files = await this.databaseService.bucket.find({"metadata.name": fileName}).toArray();
+        if (files.length > 0) {
+            return this.databaseService.bucket.openDownloadStream(files[0]._id);
+        }
+        return null;
     }
 
     async getAllPaidCaseStudies() {

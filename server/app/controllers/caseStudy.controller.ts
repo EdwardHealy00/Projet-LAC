@@ -44,6 +44,19 @@ export class CaseStudyController {
             }
         });
 
+        this.router.get('/download/:filename', async (req: Request, res: Response) => {
+            try {
+                const caseStudyStream = await this.caseStudyService.getCaseStudyFile(req.params.filename);
+                if (!caseStudyStream) {
+                    res.status(404).json('Le fichier n\'a pas été trouvé');
+                    return;
+                }
+
+                caseStudyStream.pipe(res);
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
 
         this.router.post('/', async (req: Request, res: Response) => {
             try {

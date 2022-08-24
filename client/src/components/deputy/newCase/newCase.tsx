@@ -9,13 +9,13 @@ import {
   FormGroup,
 } from "@mui/material";
 import React from "react";
-import { Document } from "../../../model/Document";
 import "./NewCase.scss";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { Case } from "../../../model/CaseStudy";
 import { useLocation } from "react-router-dom";
 import NewCaseTable from "./NewCaseTable";
+import axios from "axios";
 
 const checkList: string[] = [
   "L’étude de cas est en format Word.",
@@ -33,7 +33,22 @@ const checkList: string[] = [
 function NewCase() {
   const state = useLocation().state as any;
   const newCase = state ? state.caseStudy as Case : state;
-  console.log(newCase);
+  
+  const handleFileDownload = (documentName: string) => {
+    console.log(documentName)
+    axios
+      .get("http://localhost:3001/api/caseStudies/download/" + documentName, {
+        withCredentials: true, responseType: 'arraybuffer'
+      })
+      .then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "file.pdf"); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      });
+  }
 
   return (
     newCase && (
@@ -46,7 +61,11 @@ function NewCase() {
             <div>Reçu le: {newCase.submittedDate} </div>
           </div>
         </div>
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleFileDownload(newCase.documents[0].file.filename)}
+        >
           <FileDownloadIcon /> TOUT TÉLÉCHARGER
         </Button>
         <Accordion>
@@ -76,7 +95,11 @@ function NewCase() {
             <Typography>
               <FormGroup>
                 {checkList.map((criteria, index) => (
-                  <FormControlLabel control={<Checkbox />} label={criteria} key={index} />
+                  <FormControlLabel
+                    control={<Checkbox />}
+                    label={criteria}
+                    key={index}
+                  />
                 ))}
               </FormGroup>
               <div>
