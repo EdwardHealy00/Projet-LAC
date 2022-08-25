@@ -12,10 +12,8 @@ function DashboardPaidCase() {
 
   const navigate = useNavigate();
 
-  const onConsult = (role: Role) => {
-    if (role === Role.Deputy) {
+  const onConsult = () => {
       navigate("/approval");
-    }
   }
 
   return (
@@ -33,9 +31,9 @@ function DashboardPaidCase() {
       </div>
       <div>
         <UnlockAccess
-          role={[Role.Deputy]}
+          role={[Role.Deputy, Role.Comity, Role.PolyPress]}
           children={
-            <Button variant="contained" onClick={() => onConsult(Role.Deputy)}>
+            <Button variant="contained" onClick={() => onConsult()}>
               Consulter
             </Button>
           }
