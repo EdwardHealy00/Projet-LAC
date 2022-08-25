@@ -4,7 +4,7 @@ import { Service } from 'typedi';
 import { DatabaseService } from '@app/services/database/database.service';
 import * as fs from 'fs';
 import * as path from 'path';
-
+import { DocumentType } from '@typegoose/typegoose';
 @Service()
 export class CaseStudyService {
 
@@ -31,6 +31,16 @@ export class CaseStudyService {
 
     async getAllPaidCaseStudies() {
         return PaidCaseStudyModel.find();
+    }
+
+    // Find PaidCaseStudy by Id
+    async findPaidCaseStudyById(id: string) {
+        return PaidCaseStudyModel.findById(id);
+    }
+
+    async updatePaidCaseStudy(paidCaseStudy: DocumentType<PaidCaseStudy>) {
+        await paidCaseStudy.save();
+        return paidCaseStudy;
     }
 
     // CreateCaseStudy service

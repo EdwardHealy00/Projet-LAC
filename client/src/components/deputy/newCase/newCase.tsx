@@ -32,13 +32,13 @@ const checkList: string[] = [
 
 function NewCase() {
   const state = useLocation().state as any;
-  const newCase = state ? state.caseStudy as Case : state;
-  
+  const newCase = state ? (state.caseStudy as Case) : state;
+
   const handleFileDownload = (documentName: string) => {
-    console.log(documentName)
     axios
       .get("http://localhost:3001/api/caseStudies/download/" + documentName, {
-        withCredentials: true, responseType: 'arraybuffer'
+        withCredentials: true,
+        responseType: "arraybuffer",
       })
       .then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -48,7 +48,25 @@ function NewCase() {
         document.body.appendChild(link);
         link.click();
       });
-  }
+  };
+
+  const sendCaseStudyResponse = () => {
+    const isCaseStudyApproved = true;
+    axios
+      .post(
+        "http://localhost:3001/api/caseStudies/approvalResult",
+        {
+          case: newCase.id_,
+          approved: isCaseStudyApproved,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  };
 
   return (
     newCase && (
@@ -110,7 +128,9 @@ function NewCase() {
                   avisé des modifications à effectuer.
                 </b>
               </div>
-              <Button variant="contained">Compléter</Button>
+              <Button variant="contained" onClick={sendCaseStudyResponse}>
+                Compléter
+              </Button>
             </Typography>
           </AccordionDetails>
         </Accordion>

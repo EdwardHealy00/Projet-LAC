@@ -76,5 +76,28 @@ export class CaseStudyController {
             }
         });
 
+        this.router.post('/approvalResult', async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.body.case;
+                const isApproved = req.body.approved;
+
+                let caseStudy;
+                if (isApproved) {
+                    caseStudy = await this.caseStudyService.findPaidCaseStudyById(caseStudyId);
+                    if (!caseStudy) {
+                        res.status(404).json('L\'étude de cas n\'a pas été trouvé');
+                        return;
+                    }
+                    caseStudy.status += 1;
+                    await this.caseStudyService.updatePaidCaseStudy(caseStudy);
+                }
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
     }
 }

@@ -63,13 +63,13 @@ export default function Approval() {
             caseStudy.title,
             caseStudy.authors,
             caseStudy.date,
-            CaseStep.WaitingPreApproval,
+            caseStudy.status,
             caseStudy.isPaidCase,
             caseStudy.classId,
             caseStudy.file
           )
         );
-        console.log(cases);
+
       }
       setCaseStudies(cases);
       setCaseStudiesStep1(filterByStep(cases, CaseStep.WaitingPreApproval));

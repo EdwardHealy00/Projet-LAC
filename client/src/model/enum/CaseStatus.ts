@@ -3,4 +3,5 @@ export enum CaseStep {
     WaitingComity,
     WaitingPolyPress,
     WaitingCatalogue,
+    Posted
 }
