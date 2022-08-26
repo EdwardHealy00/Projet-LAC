@@ -21,8 +21,8 @@ export interface CaseStudy {
 export interface Case {
   id_: number;
   title: string;
-  author: string;
-  submittedDate: string;
+  authors: string;
+  date: string;
   status: CaseStep;
   isPaidCase: boolean;
   classId: string;

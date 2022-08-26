@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { CaseStudy } from "../../model/CaseStudy";
+import { CaseStudy, Case } from "../../model/CaseStudy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddPaidCaseStudy from "./AddPaidCaseStudy";
 import AddFreeCaseStudy from "./AddFreeCaseStudy";
@@ -70,9 +70,13 @@ export default function Catalogue() {
     []
   );
 
-  const [caseStudies, setCaseStudies] = React.useState<CaseStudy[]>([]);
+  const [caseStudies, setCaseStudies] = React.useState<(CaseStudy | Case)[]>(
+    []
+  );
 
-  const [showCaseStudies, setShowCaseStudies] = React.useState<CaseStudy[]>([]);
+  const [showCaseStudies, setShowCaseStudies] = React.useState<
+    (CaseStudy | Case)[]
+  >([]);
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
@@ -89,7 +93,7 @@ export default function Catalogue() {
     }
   };
 
-  const onFilter = (caseStudy: CaseStudy, searchFilter: string) => {
+  const onFilter = (caseStudy: CaseStudy | Case, searchFilter: string) => {
     for (const property in caseStudy) {
       if (caseStudy.hasOwnProperty(property)) {
         if (
@@ -171,16 +175,23 @@ export default function Catalogue() {
 
     if (disciplineFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        return disciplineFilters.includes(caseStudy.discipline.toLowerCase());
+        if ((caseStudy as CaseStudy).discipline) {
+          return false;
+        }
+        return disciplineFilters.includes(
+          (caseStudy as CaseStudy).discipline.toLowerCase()
+        );
       });
     }
 
     if (subjectFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
         return subjectFilters.some((subject) => {
-          console.log(caseStudy.tags, subject);
+          if ((caseStudy as CaseStudy).tags) {
+            return false;
+          }
           return (
-            caseStudy.tags.find(
+            (caseStudy as CaseStudy).tags.find(
               (tag) => tag.toLowerCase() === subject.toLowerCase()
             ) !== undefined
           );
@@ -190,13 +201,19 @@ export default function Catalogue() {
 
     if (dateFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        return verifyDates(caseStudy.date, dateFilters);
+        if ((caseStudy as CaseStudy).date) {
+          return false;
+        }
+        return verifyDates((caseStudy as CaseStudy).date, dateFilters);
       });
     }
 
     if (numberPagesFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        return verifyPages(caseStudy.page, numberPagesFilters);
+        if ((caseStudy as CaseStudy).page) {
+          return false;
+        }
+        return verifyPages((caseStudy as CaseStudy).page, numberPagesFilters);
       });
     }
 
@@ -283,6 +300,7 @@ export default function Catalogue() {
 
   const getCaseStudies = async () => {
     axios.get("http://localhost:3001/api/casestudies/").then((res) => {
+      console.log(res);
       setShowCaseStudies(res.data);
       setCaseStudies(res.data);
     });
@@ -459,21 +477,39 @@ export default function Catalogue() {
             </Accordion>
           </div>
           <div id="articles">
-            {showCaseStudies.map((caseStudy) => (
-              <Results
-                title={caseStudy.title}
-                auteurs={caseStudy.authors}
-                content={caseStudy.content}
-                date={caseStudy.date}
-                page={caseStudy.page}
-                discipline={caseStudy.discipline}
-                tags={caseStudy.tags}
-                classNumber={caseStudy.classIds}
-                className={caseStudy.classNames}
-                rating={caseStudy.ratings}
-                vote={caseStudy.votes}
-              ></Results>
-            ))}
+            {showCaseStudies.map(
+              (caseStudy) =>
+                ((caseStudy as Case).isPaidCase && (
+                  <Results
+                    title={(caseStudy as Case).title}
+                    auteurs={(caseStudy as Case).authors}
+                    content={"No content at the moment"}
+                    date={(caseStudy as Case).date.substring(0, 10)}
+                    page={0}
+                    discipline={"None"}
+                    tags={[]}
+                    classNumber={(caseStudy as Case).classId}
+                    className={"Unknown"}
+                    rating={0}
+                    vote={0}
+                  ></Results>
+                )) ||
+                (!(caseStudy as Case).isPaidCase && (
+                  <Results
+                    title={(caseStudy as CaseStudy).title}
+                    auteurs={(caseStudy as CaseStudy).authors}
+                    content={(caseStudy as CaseStudy).content}
+                    date={(caseStudy as CaseStudy).date}
+                    page={(caseStudy as CaseStudy).page}
+                    discipline={(caseStudy as CaseStudy).discipline}
+                    tags={(caseStudy as CaseStudy).tags}
+                    classNumber={(caseStudy as CaseStudy).classIds}
+                    className={(caseStudy as CaseStudy).classNames}
+                    rating={(caseStudy as CaseStudy).ratings}
+                    vote={(caseStudy as CaseStudy).votes}
+                  ></Results>
+                ))
+            )}
           </div>
         </div>
       </div>

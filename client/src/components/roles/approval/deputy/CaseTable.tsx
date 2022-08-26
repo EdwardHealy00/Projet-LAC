@@ -52,8 +52,8 @@ export default function CaseTable(rows: CaseProp) {
                 {row.id_}
               </TableCell>
               <TableCell align="right">{row.title}</TableCell>
-              <TableCell align="right">{row.author}</TableCell>
-              <TableCell align="right">{row.submittedDate}</TableCell>
+              <TableCell align="right">{row.authors}</TableCell>
+              <TableCell align="right">{row.date}</TableCell>
               <TableCell align="right">{getStatus(row.status)}</TableCell>
               <TableCell align="right">
                 <Button

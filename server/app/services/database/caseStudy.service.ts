@@ -5,6 +5,8 @@ import { DatabaseService } from '@app/services/database/database.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { DocumentType } from '@typegoose/typegoose';
+import { CaseStep } from '@app/models/CaseStatus';
+
 @Service()
 export class CaseStudyService {
 
@@ -22,7 +24,7 @@ export class CaseStudyService {
     }
 
     async getCaseStudyFile(fileName: string) {
-        const files = await this.databaseService.bucket.find({"metadata.name": fileName}).toArray();
+        const files = await this.databaseService.bucket.find({ "metadata.name": fileName }).toArray();
         if (files.length > 0) {
             return this.databaseService.bucket.openDownloadStream(files[0]._id);
         }
@@ -55,8 +57,12 @@ export class CaseStudyService {
     }
 
     // Find All CaseStudys
-    async findAllCaseStudys() {
-        return CaseStudyModel.find();
+    async findAllCaseStudys(): Promise<(PaidCaseStudy | CaseStudy)[]> {
+        const caseStudies: CaseStudy[] = await CaseStudyModel.find();
+        const paidCaseStudies: PaidCaseStudy[] = await PaidCaseStudyModel.find({
+            status: CaseStep.Posted
+        });
+        return [...caseStudies, ...paidCaseStudies];
     }
 
     // Find one CaseStudy by any fields

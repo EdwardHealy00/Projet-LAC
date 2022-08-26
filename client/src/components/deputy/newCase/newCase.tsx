@@ -78,7 +78,7 @@ function NewCase() {
           <div>Titre: {newCase.title}</div>
           <div id="caseLastRow">
             <div>Auteur: {newCase.author} </div>
-            <div>Reçu le: {newCase.submittedDate} </div>
+            <div>Reçu le: {newCase.date} </div>
           </div>
         </div>
         <Button

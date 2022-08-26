@@ -12,8 +12,8 @@ import { Document } from "../../../model/Document";
 function createData(
   id_: number,
   title: string,
-  author: string,
-  submitted: string,
+  authors: string,
+  date: string,
   status: CaseStep,
   isPaidCase: boolean,
   classId: string,
@@ -27,15 +27,15 @@ function createData(
       title: filename,
       type: "Obligatoire",
       format: extension,
-      addedOn: submitted,
+      addedOn: date,
       file: file
     },
   ];
   return {
     id_,
     title,
-    author,
-    submittedDate: submitted,
+    authors,
+    date,
     status,
     isPaidCase,
     classId,
