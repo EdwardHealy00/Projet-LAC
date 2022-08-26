@@ -13,7 +13,9 @@ export default function CustomizedTimeline() {
   return (
     <Timeline position="alternate">
       <TimelineItem>
-        <TimelineOppositeContent>Printemps et été 2021</TimelineOppositeContent>
+        <TimelineOppositeContent>
+          <b>Printemps et été 2021</b>
+        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -29,7 +31,9 @@ export default function CustomizedTimeline() {
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
-        <TimelineOppositeContent>Septembre 2021</TimelineOppositeContent>
+        <TimelineOppositeContent>
+          <b>Septembre 2021</b>
+        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -45,7 +49,9 @@ export default function CustomizedTimeline() {
       </TimelineItem>
 
       <TimelineItem>
-        <TimelineOppositeContent>Octobre 2021</TimelineOppositeContent>
+        <TimelineOppositeContent>
+          <b>Octobre 2021</b>
+        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -59,7 +65,9 @@ export default function CustomizedTimeline() {
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
-        <TimelineOppositeContent>Novembre 2021</TimelineOppositeContent>
+        <TimelineOppositeContent>
+          <b>Novembre 2021</b>
+        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -67,7 +75,22 @@ export default function CustomizedTimeline() {
         <TimelineContent sx={{ py: "12px", px: 2 }}>
           <div className="eventsList">
             <ul>
-              <li>Sondages et entrevues avec les parties prenantes</li>
+              <li>
+                <a
+                  href="http://localhost:3001/api/images/revue-de-litterature.png"
+                  target="_blank"
+                >
+                  Revue de la littérature
+                </a>
+              </li>
+              <li>
+                <a
+                  href="http://localhost:3001/api/images/sondage-et-entrevues.png"
+                  target="_blank"
+                >
+                  Sondages et entrevues avec les parties prenantes
+                </a>
+              </li>
               <li>Analyse des résultats</li>
               <li>Définition des besoins du LAC</li>
             </ul>
@@ -76,7 +99,9 @@ export default function CustomizedTimeline() {
       </TimelineItem>
 
       <TimelineItem>
-        <TimelineOppositeContent>Décembre 2021</TimelineOppositeContent>
+        <TimelineOppositeContent>
+          <b>Décembre 2021</b>
+        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -85,15 +110,22 @@ export default function CustomizedTimeline() {
           <Typography>
             <ul>
               <li>
-                Définition des fonctions utilisateurs de la plateforme et la
-                méthdologie pour la conception
+                <a
+                  href="http://localhost:3001/api/images/methodologie-conception.png"
+                  target="_blank"
+                >
+                  Définition des fonctions utilisateurs de la plateforme et la
+                  méthdologie pour la conception
+                </a>
               </li>
             </ul>
           </Typography>
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
-        <TimelineOppositeContent>Janvier 2022</TimelineOppositeContent>
+        <TimelineOppositeContent>
+          <b>Janvier 2022</b>
+        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -101,14 +133,23 @@ export default function CustomizedTimeline() {
         <TimelineContent sx={{ py: "12px", px: 2 }}>
           <div className="eventsList">
             <ul>
-              <li>Cartographies des processus</li>
+              <li>
+                <a
+                  href="http://localhost:3001/api/images/processus.png"
+                  target="_blank"
+                >
+                  Cartographies des processus
+                </a>
+              </li>
             </ul>
           </div>
         </TimelineContent>
       </TimelineItem>
 
       <TimelineItem>
-        <TimelineOppositeContent>Février 2022</TimelineOppositeContent>
+        <TimelineOppositeContent>
+          <b>Février 2022</b>
+        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -122,7 +163,9 @@ export default function CustomizedTimeline() {
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
-        <TimelineOppositeContent>Mars 2022</TimelineOppositeContent>
+        <TimelineOppositeContent>
+          <b>Mars 2022</b>
+        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -138,7 +181,9 @@ export default function CustomizedTimeline() {
       </TimelineItem>
 
       <TimelineItem>
-        <TimelineOppositeContent>Été 2022</TimelineOppositeContent>
+        <TimelineOppositeContent>
+          <b>Été 2022</b>
+        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -154,7 +199,9 @@ export default function CustomizedTimeline() {
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
-        <TimelineOppositeContent>Automne 2022</TimelineOppositeContent>
+        <TimelineOppositeContent>
+          <b>Automne 2022</b>
+        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />

@@ -51,7 +51,7 @@ const NavBar: React.FC<Props> = ({}) => {
         >
           <Button href="/catalogue">Catalogue</Button>
           <UnlockAccess
-            role={[Role.Admin, Role.Deputy, Role.Comity, Role.PolyPress]}
+            role={[Role.Deputy, Role.Comity, Role.PolyPress]}
             children={<Button href="/dashboard">Tableau de board</Button>}
           ></UnlockAccess>
           <div>

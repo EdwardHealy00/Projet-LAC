@@ -86,12 +86,12 @@ export default function Approval() {
   return (
     <div>
       <UnlockAccess
-        role={[Role.Admin, Role.Comity]}
+        role={[Role.Comity]}
         children={<ApprovalComity caseStudies={caseStudiesStep2} />}
       ></UnlockAccess>
 
       <UnlockAccess
-        role={[Role.Admin, Role.Deputy]}
+        role={[Role.Deputy]}
         children={
           <ApprovalDeputy
             step1={caseStudiesStep1}
@@ -103,7 +103,7 @@ export default function Approval() {
       ></UnlockAccess>
 
       <UnlockAccess
-        role={[Role.Admin, Role.PolyPress]}
+        role={[Role.PolyPress]}
         children={<ApprovalPolyPress caseStudies={caseStudiesStep3} />}
       ></UnlockAccess>
     </div>

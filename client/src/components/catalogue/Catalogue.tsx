@@ -322,7 +322,7 @@ export default function Catalogue() {
           </div>
         </div>
         <UnlockAccess
-          role={[Role.Admin, Role.Professor]}
+          role={[Role.Professor]}
           children={
             <div id="addCaseRectangle">
               <AddPaidCaseStudy />

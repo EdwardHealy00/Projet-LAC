@@ -34,12 +34,17 @@ function DashboardPaidCase() {
           role={[Role.Deputy, Role.Comity, Role.PolyPress]}
           children={
             <Button variant="contained" onClick={() => onConsult()}>
-              Consulter
+              Consulter les études de cas
             </Button>
           }
         ></UnlockAccess>
       </div>
-      <div><ValidateTeacherList /></div>
+      <div>
+        <UnlockAccess
+          role={[Role.Deputy]}
+          children={<ValidateTeacherList />}
+        ></UnlockAccess>
+      </div>
     </div>
   );
 }
