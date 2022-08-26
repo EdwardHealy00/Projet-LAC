@@ -177,7 +177,7 @@ export default function Register() {
     }
 
     if (state["school"] === "others") {
-      formData.append("school", e.target.elements.otherSchool.value);
+      formData.set("school", e.target.elements.otherSchool.value);
     }
 
     sendRegisterForm(formData);

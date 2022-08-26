@@ -70,7 +70,7 @@ export class CaseStudyController {
 
                 const newCaseStudy = caseStudy.isPaidCase ? await this.caseStudyService.createPaidCaseStudy(caseStudy) :
                     undefined;
-                res.json(newCaseStudy);
+                res.status(201).json(newCaseStudy);
             } catch (err: any) {
                 console.log(err);
             }
