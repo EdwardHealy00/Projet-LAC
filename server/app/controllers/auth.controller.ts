@@ -192,9 +192,9 @@ export class AuthController {
 
                 return next();
             } catch (err: any) {
-                //console.log(err);
+                console.log(err);
                 if (err instanceof ZodError) {
-                    return res.status(400).json("Nom d'utilisateur ou mot de passe incorrect");
+                    return res.status(400).json("Il y a une erreur dans le formulaire");
                 }
                 return next(err);
             }

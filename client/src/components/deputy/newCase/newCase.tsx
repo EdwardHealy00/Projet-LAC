@@ -13,7 +13,7 @@ import "./NewCase.scss";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { Case } from "../../../model/CaseStudy";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import NewCaseTable from "./NewCaseTable";
 import axios from "axios";
 
@@ -33,6 +33,7 @@ const checkList: string[] = [
 function NewCase() {
   const state = useLocation().state as any;
   const newCase = state ? (state.caseStudy as Case) : state;
+  const navigate = useNavigate();
 
   const handleFileDownload = (documentName: string) => {
     axios
@@ -65,6 +66,7 @@ function NewCase() {
       )
       .then((res) => {
         console.log(res);
+        navigate("/approval");
       });
   };
 

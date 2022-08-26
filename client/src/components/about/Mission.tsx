@@ -65,7 +65,10 @@ export default function Mission() {
               développement des nouvelles compétences à acquérir pour les
               ingénieures et ingénieurs de demain. À la lumière des tendances
               qui affecteront la profession de génie, le plus récent
-              <a href="https://www.oiq.qc.ca/wp-content/uploads/documents/public/Etude_OIQ_Profil_Ing_2021.pdf">
+              <a
+                href="https://www.oiq.qc.ca/wp-content/uploads/documents/public/Etude_OIQ_Profil_Ing_2021.pdf"
+                target="_blank"
+              >
                 rapport de l’Ordre des ingénieurs
               </a>
               &nbsp; (2021) confirme que la communauté étudiante devra non
@@ -131,7 +134,8 @@ export default function Mission() {
             <div>
               <div>
                 <StarRateIcon fontSize="large" />
-                Donner <b>son appreciation</b> sur les cas pour offrir de la&nbsp;
+                Donner <b>son appreciation</b> sur les cas pour offrir de
+                la&nbsp;
                 <b>retroaction</b> aux auteurs de cas
               </div>
               <div>
@@ -140,8 +144,8 @@ export default function Mission() {
               </div>
               <div>
                 <WorkspacesIcon fontSize="large" />
-                <b>Créer des ponts</b> entre les enseignants, les étudiants
-                et les organisations
+                <b>Créer des ponts</b> entre les enseignants, les étudiants et
+                les organisations
               </div>
             </div>
           </div>

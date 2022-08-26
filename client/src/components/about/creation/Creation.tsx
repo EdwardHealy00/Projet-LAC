@@ -63,8 +63,13 @@ export default function Creation() {
       <div className="creationContent">
         <p>
           Dans le cadre du projet intégrateur&nbsp;
-          <a href="https://www.polymtl.ca/programmes/cours/prisme">PRISME</a>,
-          six étudiantes et étudiants de baccalauréat en génie industriel ont
+          <a
+            href="https://www.polymtl.ca/programmes/cours/prisme"
+            target="_blank"
+          >
+            PRISME
+          </a>
+          , six étudiantes et étudiants de baccalauréat en génie industriel ont
           aidé à la conception du LAC. Le projet, étalé sur deux trimestres
           (automne 2021 et hiver 2022) à portée notamment sur l'identification
           des besoins, l’élaboration d’un plan stratégique et la détermination
@@ -98,7 +103,7 @@ export default function Creation() {
       <div className="creationContent">
         <p>
           Dans le cadre d’une subvention du&nbsp;
-          <a href="https://www.polymtl.ca/appui-pedagogique/">
+          <a href="https://www.polymtl.ca/appui-pedagogique/" target="_blank">
             Fonds d’actions pédagogiques stratégiques
           </a>
           &nbsp; (FAPS), des étudiants de génie logiciel ont eu le mandat de
