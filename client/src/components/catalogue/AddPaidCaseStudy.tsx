@@ -122,7 +122,6 @@ export default function AddPaidCaseStudy() {
     axios.post("http://localhost:3001/api/caseStudies", caseStudy, {
       withCredentials: true
     }).then((res) => {
-      console.log(res);
       if (res.status === 201) {
         handleClose();
       }

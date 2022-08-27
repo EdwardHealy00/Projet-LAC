@@ -65,7 +65,6 @@ function NewCase() {
         }
       )
       .then((res) => {
-        console.log(res);
         navigate("/approval");
       });
   };

@@ -186,7 +186,6 @@ export default function Register() {
   const sendRegisterForm = (user: FormData) => {
     
     axios.post("http://localhost:3001/api/auth/register", user).then((res) => {
-      console.log(res);
       if (res.status === 201) {
         handleClose();
       }

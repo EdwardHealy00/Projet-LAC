@@ -300,7 +300,6 @@ export default function Catalogue() {
 
   const getCaseStudies = async () => {
     axios.get("http://localhost:3001/api/casestudies/").then((res) => {
-      console.log(res);
       setShowCaseStudies(res.data);
       setCaseStudies(res.data);
     });

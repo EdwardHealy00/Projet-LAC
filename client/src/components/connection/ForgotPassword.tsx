@@ -36,7 +36,6 @@ export default function ForgotPassword() {
         }
       )
       .then((res) => {
-        console.log(res);
         handleClose();
       })
       .catch((err) => {

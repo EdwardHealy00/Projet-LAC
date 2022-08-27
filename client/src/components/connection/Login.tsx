@@ -44,7 +44,6 @@ export default function Login() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    //console.log(e.target.elements.firstName.value);
     const user: UserLogin = {
       email: e.target.elements.email.value,
       password: e.target.elements.password.value,
@@ -59,7 +58,6 @@ export default function Login() {
       }
       )
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           handleClose();
           localStorage.setItem("name", res.data.name);
@@ -75,7 +73,6 @@ export default function Login() {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           localStorage.removeItem("name");
           localStorage.removeItem("role");
