@@ -9,7 +9,7 @@ services:
       dockerfile: ./nginx/Dockerfile
       context: ./client
     ports:
-      - "3050:80"
+      - "80:80"
 
   server:
     ports:
