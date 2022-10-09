@@ -84,8 +84,9 @@ export class Application {
         this.app.use(express.json( {limit: '50mb'}));
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
+        // TODO: change cors origin when deployed
         this.app.use(cors({
-            credentials: true, origin: 'http://localhost:3000'
+            credentials: true, origin: '*'
         }
         ));
         this.app.use(this.upload.any());
@@ -101,6 +102,7 @@ export class Application {
         // development error handler
         // will print stacktrace
         if (this.app.get('env') === 'development') {
+            console.log('dev');
             this.app.use((err: HttpException, req: express.Request, res: express.Response) => {
                 res.status(err.status || this.internalError);
                 res.send({
