@@ -25,7 +25,7 @@ export default function ValidateTeacherList() {
 
   const getTeachersToValidate = async () => {
     axios
-      .get("http://localhost:3001/api/users/approval", {
+      .get(`${process.env.REACT_APP_BASE_API_URL}/api/users/approval`, {
         withCredentials: true,
       })
       .then((res) => {

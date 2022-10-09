@@ -119,13 +119,19 @@ export default function AddPaidCaseStudy() {
   };
 
   const sendAddCaseStudy = (caseStudy: FormData) => {
-    axios.post("http://localhost:3001/api/caseStudies", caseStudy, {
-      withCredentials: true
-    }).then((res) => {
-      if (res.status === 201) {
-        handleClose();
-      }
-    });
+    axios
+      .post(
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies`,
+        caseStudy,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        if (res.status === 201) {
+          handleClose();
+        }
+      });
   };
 
   return (

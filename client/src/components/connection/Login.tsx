@@ -53,10 +53,9 @@ export default function Login() {
 
   const sendLoginForm = (user: UserLogin) => {
     axios
-      .post("http://localhost:3001/api/auth/login", user, {
+      .post(`${process.env.REACT_APP_BASE_API_URL}/api/auth/login`, user, {
         withCredentials: true,
-      }
-      )
+      })
       .then((res) => {
         if (res.status === 200) {
           handleClose();
@@ -69,7 +68,7 @@ export default function Login() {
 
   const onLogout = () => {
     axios
-      .get("http://localhost:3001/api/auth/logout", {
+      .get(`${process.env.REACT_APP_BASE_API_URL}/api/auth/logout`, {
         withCredentials: true,
       })
       .then((res) => {

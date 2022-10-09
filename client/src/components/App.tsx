@@ -17,6 +17,7 @@ import axios from "axios";
 import { ResponseSnackbar, SnackbarObject } from "../utils/ResponseSnackbar";
 
 function App() {
+  env.config({ path: `.env.${process.env.NODE_ENV}`})
   const snackBarRef = useRef<SnackbarObject>(null);
 
   axios.interceptors.response.use(

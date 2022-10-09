@@ -27,7 +27,7 @@ export default function ForgotPassword() {
   const sendForgotPasswordForm = (email: string) => {
     axios
       .post(
-        "http://localhost:3001/api/auth/forgot-password",
+        `${process.env.REACT_APP_BASE_API_URL}/api/auth/forgot-password`,
         {
           email: email,
         },

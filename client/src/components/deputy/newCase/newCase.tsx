@@ -37,10 +37,14 @@ function NewCase() {
 
   const handleFileDownload = (documentName: string) => {
     axios
-      .get("http://localhost:3001/api/caseStudies/download/" + documentName, {
-        withCredentials: true,
-        responseType: "arraybuffer",
-      })
+      .get(
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/download/` +
+          documentName,
+        {
+          withCredentials: true,
+          responseType: "arraybuffer",
+        }
+      )
       .then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement("a");
@@ -55,7 +59,7 @@ function NewCase() {
     const isCaseStudyApproved = true;
     axios
       .post(
-        "http://localhost:3001/api/caseStudies/approvalResult",
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/approvalResult`,
         {
           case: newCase.id_,
           approved: isCaseStudyApproved,

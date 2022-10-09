@@ -54,29 +54,30 @@ export default function Approval() {
   const [caseStudiesStep3, setCaseStudiesStep3] = React.useState<Case[]>([]);
   const [caseStudiesStep4, setCaseStudiesStep4] = React.useState<Case[]>([]);
   const getCaseStudies = async () => {
-    axios.get("http://localhost:3001/api/casestudies/paid").then((res) => {
-      const cases: Case[] = [];
-      for (const caseStudy of res.data) {
-        cases.push(
-          createData(
-            caseStudy._id,
-            caseStudy.title,
-            caseStudy.authors,
-            caseStudy.date,
-            caseStudy.status,
-            caseStudy.isPaidCase,
-            caseStudy.classId,
-            caseStudy.file
-          )
-        );
-
-      }
-      setCaseStudies(cases);
-      setCaseStudiesStep1(filterByStep(cases, CaseStep.WaitingPreApproval));
-      setCaseStudiesStep2(filterByStep(cases, CaseStep.WaitingComity));
-      setCaseStudiesStep3(filterByStep(cases, CaseStep.WaitingPolyPress));
-      setCaseStudiesStep4(filterByStep(cases, CaseStep.WaitingCatalogue));
-    });
+    axios
+      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/paid`)
+      .then((res) => {
+        const cases: Case[] = [];
+        for (const caseStudy of res.data) {
+          cases.push(
+            createData(
+              caseStudy._id,
+              caseStudy.title,
+              caseStudy.authors,
+              caseStudy.date,
+              caseStudy.status,
+              caseStudy.isPaidCase,
+              caseStudy.classId,
+              caseStudy.file
+            )
+          );
+        }
+        setCaseStudies(cases);
+        setCaseStudiesStep1(filterByStep(cases, CaseStep.WaitingPreApproval));
+        setCaseStudiesStep2(filterByStep(cases, CaseStep.WaitingComity));
+        setCaseStudiesStep3(filterByStep(cases, CaseStep.WaitingPolyPress));
+        setCaseStudiesStep4(filterByStep(cases, CaseStep.WaitingCatalogue));
+      });
   };
 
   React.useEffect(() => {

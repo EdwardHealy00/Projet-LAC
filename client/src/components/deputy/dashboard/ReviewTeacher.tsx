@@ -23,7 +23,7 @@ function ReviewDialog(props: ReviewTeacherProps) {
   const sendResult = async (isApproved: boolean) => {
     axios
       .post(
-        "http://localhost:3001/api/users/approvalResult",
+        `${process.env.REACT_APP_BASE_API_URL}/api/users/approvalResult`,
         {
           email: teacher.email,
           approved: isApproved,
@@ -73,10 +73,13 @@ export default function ReviewTeacher(teacherProp: TeacherProps) {
 
   const getTeacherProof = (teacherEmail: string) => {
     axios
-      .get(`http://localhost:3001/api/users/proof/${teacherEmail}`, {
-        withCredentials: true,
-        responseType: "arraybuffer",
-      })
+      .get(
+        `${process.env.REACT_APP_BASE_API_URL}/api/users/proof/${teacherEmail}`,
+        {
+          withCredentials: true,
+          responseType: "arraybuffer",
+        }
+      )
       .then((res) => {
         setOpen(true);
         const base64 = window.btoa(

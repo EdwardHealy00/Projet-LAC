@@ -76,18 +76,12 @@ export default function CustomizedTimeline() {
           <div className="eventsList">
             <ul>
               <li>
-                <a
-                  href="http://localhost:3001/api/images/revue-de-litterature.png"
-                  target="_blank"
-                >
+                <a href={`${process.env.REACT_APP_BASE_API_URL}/api/images/revue-de-litterature.png`} target="_blank">
                   Revue de la littérature
                 </a>
               </li>
               <li>
-                <a
-                  href="http://localhost:3001/api/images/sondage-et-entrevues.png"
-                  target="_blank"
-                >
+                <a href={`${process.env.REACT_APP_BASE_API_URL}/api/images/sondage-et-entrevues.png`} target="_blank">
                   Sondages et entrevues avec les parties prenantes
                 </a>
               </li>
@@ -111,7 +105,7 @@ export default function CustomizedTimeline() {
             <ul>
               <li>
                 <a
-                  href="http://localhost:3001/api/images/methodologie-conception.png"
+                  href={`${process.env.REACT_APP_BASE_API_URL}/api/images/methodologie-conception.png`}
                   target="_blank"
                 >
                   Définition des fonctions utilisateurs de la plateforme et la
@@ -135,7 +129,7 @@ export default function CustomizedTimeline() {
             <ul>
               <li>
                 <a
-                  href="http://localhost:3001/api/images/processus.png"
+                  href={`${process.env.REACT_APP_BASE_API_URL}/api/images/processus.png/`}
                   target="_blank"
                 >
                   Cartographies des processus
