@@ -102,7 +102,6 @@ export class Application {
         // development error handler
         // will print stacktrace
         if (this.app.get('env') === 'development') {
-            console.log('dev');
             this.app.use((err: HttpException, req: express.Request, res: express.Response) => {
                 res.status(err.status || this.internalError);
                 res.send({
