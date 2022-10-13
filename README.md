@@ -29,17 +29,10 @@
 - **public_images**: Utiliser pour stocker les images publiques (ex: les images utilisés dans la page "À propos")
 
 ## Procédure pour configurer le projet 
-
 0. Suivre les procédures du client et du server (npm install)
-1. Ajouter un fichier .env au niveau du répertoire server/
-```.env
-MONGODB_URI="<MONGODB URI>"
-NODE_ENV=development
+1. Ajouter un fichier .env.development et un fichier .env.production au niveau du répertoire client/ et ajouter un fichier .env au niveau du répertoire server/
+2. Utiliser le template fourni dans le fichier example.env pour initialiser les variables d'environnement
+3. Démarer le client et le serveur (npm start)
 
-ACCESS_TOKEN_PRIVATE_KEY=<PRIVATE KEY in base64>
-ACCESS_TOKEN_PUBLIC_KEY=<PUBLIC KEY in base64>
-
-EMAIL_USERNAME='<EMAIL>'
-EMAIL_PASSWORD='<PASSWORD'
-```
-2. Démarer le client et le serveur (npm start)
+## Déploiement sur Docker
+**Launch the client and server:** docker compose up --build -d
