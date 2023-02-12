@@ -68,8 +68,8 @@ export default function AddPaidCaseStudy() {
       isValid = false;
     }
 
-    const courseIdPattern = new RegExp("^[A-Z]{3}[0-9]{4}\\s?$");
-    if (!courseIdPattern.test(e.course.value)) {
+    const courseIdPattern = new RegExp("^[A-Z]{2,4}\\d{3,5}\\s?$");
+    if (!courseIdPattern.test(e.course.value.toUpperCase())) {
       stateErrorsCopy.course = {
         isError: true,
         message: "Veuillez entrer un sigle de cours valide",
