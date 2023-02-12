@@ -118,7 +118,7 @@ export default function Login() {
         <DialogTitle>Se connecter</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Veuillez fournir vos identifiants pour accéder aux études de cas non publiques.
           </DialogContentText>
           <Register />
 

@@ -26,6 +26,7 @@ import { isEmailValid, isPasswordValid } from "../../utils/Validation";
 import { Role } from "../../model/enum/Role";
 
 export default function Register() {
+  const acceptedFileTypes = ".jpg,.jpeg,.pdf,.png,.svg,.tiff,.webp"
   const [open, setOpen] = React.useState(false);
   const [uploadedImage, setUploadedImage] = React.useState(
     "Preuve de votre statut de professeur"
@@ -33,8 +34,17 @@ export default function Register() {
   const [showProof, setShowProof] = React.useState(false);
   const countryListOptions = useMemo(() => countryList().getData(), []);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => { //TODO: https://kainikhil.medium.com/nodejs-file-upload-and-virus-scan-9f23691394f3
+    if (e.target.files && e.target.files.length === 1) {
+      const ext = e.target.files[0].name.substring(e.target.files[0].name.lastIndexOf('.'))
+
+      if(!acceptedFileTypes.includes(ext.toLowerCase())){
+        e.target.value = ''
+        alert('Type de fichier invalide. Types supportés: ' + acceptedFileTypes)
+        setUploadedImage('Preuve de votre statut de professeur');
+        return
+      }
+
       setUploadedImage(e.target.files[0].name);
     }
   };
@@ -203,9 +213,7 @@ export default function Register() {
         <DialogTitle>S'inscrire</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-            euismod bibendum laoreet. Proin gravida dolor sit amet lacus
-            accumsan et viverra justo commodo. Proin
+            Veuillez fournir les informations suivantes. Si le statut désiré n'est pas offert, contacter l'administrateur.
           </DialogContentText>
           <ul>
             {Object.entries(stateErrors).map(
@@ -282,7 +290,7 @@ export default function Register() {
                 >
                   <input
                     hidden
-                    accept="image/*"
+                    accept={acceptedFileTypes}
                     type="file"
                     onChange={handleImageUpload}
                     name="proof"
