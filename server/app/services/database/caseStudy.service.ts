@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { DocumentType } from '@typegoose/typegoose';
 import { CaseStep } from '@app/models/CaseStatus';
+import * as ClamScan from 'clamscan';
 
 @Service()
 export class CaseStudyService {
@@ -14,6 +15,19 @@ export class CaseStudyService {
 
     saveCaseStudyFile(fileName: string) {
         const filePath = path.join(__dirname, '../../../paidCaseStudies/', fileName);
+        const clamScan = new ClamScan({remove_infected: false, scan_archives: true, debug_mode: false, file_list: []});
+        clamScan.is_infected(filePath, (err: Error | null, file: string, result: boolean) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+
+            if (result) {
+                console.log(`The file ${file} is infected!`);
+            } else {
+                console.log(`The file ${file} is clean.`);
+            }
+        });
         fs.createReadStream(filePath).pipe(this.databaseService.bucket.openUploadStream(filePath,
             {
                 metadata: { name: fileName }
