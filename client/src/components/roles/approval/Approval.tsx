@@ -55,7 +55,7 @@ export default function Approval() {
   const [caseStudiesStep4, setCaseStudiesStep4] = React.useState<Case[]>([]);
   const getCaseStudies = async () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/paid`)
+      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/paid`, {withCredentials: true})
       .then((res) => {
         const cases: Case[] = [];
         for (const caseStudy of res.data) {

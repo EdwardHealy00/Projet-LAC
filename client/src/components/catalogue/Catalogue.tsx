@@ -300,7 +300,7 @@ export default function Catalogue() {
 
   const getCaseStudies = async () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/`)
+      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/all-catalog`)
       .then((res) => {
         setShowCaseStudies(res.data);
         setCaseStudies(res.data);

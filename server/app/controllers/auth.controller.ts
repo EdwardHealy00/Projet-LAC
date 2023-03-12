@@ -6,6 +6,7 @@ import { ACCESS_TOKEN_EXPIRES_IN } from '@app/constant/constant';
 import { AnyZodObject, ZodError } from 'zod';
 import { createUserSchema, loginUserSchema, updatePasswordSchema } from '@app/schemas/user.schema';
 import { verifyJwt } from '@app/utils/jwt';
+import {Role} from "@app/models/Role";
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];
@@ -37,8 +38,15 @@ export class AuthController {
                     city: req.body.city,
                 }
 
-                if (fileProof) {
+                if (fileProof && userInfo.role == Role.ProfessorNotApproved) {
                     userInfo["proof"] = fileProof;
+                }
+
+                if (userInfo.role != Role.Student && userInfo.role != Role.ProfessorNotApproved) {
+                    res.status(422).json({
+                        status: 'It is not possible to create this type of account from the signup form. This will be reported.'
+                    });
+                    return;
                 }
 
                 const user = await this.userService.createUser(userInfo);
@@ -87,15 +95,14 @@ export class AuthController {
                         Date.now() + parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000
                     ),
                     maxAge: parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000,
-                    //httpOnly: true,
-                    sameSite: 'lax',
+       //             httpOnly: true,
+                    sameSite: 'strict',
                 };
 
                 // Send Access Token in Cookie
                 res.cookie('accessToken', accessToken.access_token, accessTokenCookieOptions);
                 res.cookie('logged_in', true, {
                     ...accessTokenCookieOptions,
-                    //httpOnly: true,
                 });
 
                 // Send Access Token
