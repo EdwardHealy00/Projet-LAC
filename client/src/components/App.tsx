@@ -71,6 +71,10 @@ function App() {
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
           />
+          <Route
+              path="/*"
+              element={<div>Error 404</div>}
+          />
         </Routes>
       </div>
     </div>

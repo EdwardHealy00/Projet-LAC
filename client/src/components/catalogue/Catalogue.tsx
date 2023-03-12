@@ -20,7 +20,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddPaidCaseStudy from "./AddPaidCaseStudy";
 import AddFreeCaseStudy from "./AddFreeCaseStudy";
 import { Role } from "../../model/enum/Role";
-import { UnlockAccess } from "../connection/UnlockAcess";
+import { UnlockAccess } from "../connection/UnlockAccess";
 
 interface Filter {
   name: string;
