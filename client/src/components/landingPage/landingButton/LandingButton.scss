@@ -1,0 +1,38 @@
+.hover-underline-animation {
+  margin: 0;
+  padding: 0;
+  font-family: 'Gotu', sans-serif;
+  line-height: 1.15;
+  background-color: transparent;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  position: relative;
+  color: #131313;
+  font-size: 2rem;
+}
+
+.hover-underline-animation::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0.5);
+  height: 1px;
+  top: 50px;
+  left: 0;
+  background-color: #131313;
+  transform-origin: center;
+  transition: transform 0.25s ease-out;
+}
+
+.hover-underline-animation:hover::after {
+  transform: scaleX(1.5);
+  transform-origin: center;
+}
+
+.nav-container {
+  width: min-content;
+  padding: 8px;
+  display: inline-block;
+}

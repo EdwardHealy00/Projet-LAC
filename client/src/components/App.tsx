@@ -15,6 +15,7 @@ import Creation from "./about/creation/Creation";
 import ResetPassword from "./connection/ResetPassword";
 import axios from "axios";
 import { ResponseSnackbar, SnackbarObject } from "../utils/ResponseSnackbar";
+import AboutPage from "./landingPage/AboutPage";
 
 function App() {
   env.config({ path: `.env.${process.env.NODE_ENV}`})
@@ -47,11 +48,11 @@ function App() {
 
   return (
     <div id="main">
-      <NavBar />
       <div id="content">
         <ResponseSnackbar ref={snackBarRef} />
         <Routes>
-          <Route path="/" element={<Catalogue />} />
+          <Route path="/" element={<AboutPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/catalogue" element={<Catalogue />} />
           {/* <Route path="/etude-de-cas" element={<CaseStudyWTconnection />} /> */}
           <Route path="/etude-de-cas" element={<CaseStudyWconnection />} />
