@@ -47,7 +47,7 @@ function App() {
   );
 
   return (
-    <div id="main">
+    <div>
       <div id="content">
         <ResponseSnackbar ref={snackBarRef} />
         <Routes>

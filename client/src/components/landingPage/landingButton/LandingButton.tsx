@@ -9,7 +9,7 @@ type LandingButtonProps = {
 };
 
 const LandingButton = ({text, onClick}: LandingButtonProps) => {
-    return <div className="nav-container">
+    return <div className="button-container">
         <button onClick={onClick} className="hover-underline-animation">{text}</button>
     </div>;
 }
