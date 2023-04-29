@@ -305,7 +305,6 @@ export default function Catalogue() {
       .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/all-catalog`)
       .then((res) => {
         setShowCaseStudies(res.data);
-        console.log('it\'s alive!!!');
         setCaseStudies(res.data);
       });
   };
