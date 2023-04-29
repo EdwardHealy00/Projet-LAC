@@ -114,13 +114,14 @@ export class UserController {
             // Get the token
             let access_token;
 
-            if (
+            if ( //TODO: WHY
                 req.headers.authorization &&
                 req.headers.authorization.startsWith('Bearer')
             ) {
                 access_token = req.headers.authorization.split(' ')[1];
             } else if (req.cookies.accessToken) {
                 access_token = req.cookies.accessToken;
+                console.log(access_token);
             }
 
             if (!access_token) {
@@ -131,7 +132,7 @@ export class UserController {
             }
 
             // Validate Access Token
-            const decoded = verifyJwt<{ sub: string }>(access_token);
+            const decoded = verifyJwt<{ sub: string, role: string }>(access_token);
 
             if (!decoded) {
                 res.status(401).json(
@@ -149,6 +150,17 @@ export class UserController {
                 );
                 return;
             }
+
+            if(user.role != decoded!.role) {
+                console.log('ca va pas bien');
+                res.status(401).json(
+                    `Role and user do not match`
+                );
+                return;
+            }
+            console.log('ca va bien');
+            console.log(user.role);
+            console.log(decoded!.role);
 
             res.locals.user = user;
 

@@ -20,7 +20,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddPaidCaseStudy from "./AddPaidCaseStudy";
 import AddFreeCaseStudy from "./AddFreeCaseStudy";
 import { Role } from "../../model/enum/Role";
-import { UnlockAccess } from "../connection/UnlockAcess";
+import { UnlockAccess } from "../connection/UnlockAccess";
 
 interface Filter {
   name: string;
@@ -29,7 +29,7 @@ interface Filter {
 
 export default function Catalogue() {
   const disciplines = [
-    "aérospatiale",
+    "aérospatial",
     "biomédical",
     "chimique",
     "civil",
@@ -42,8 +42,8 @@ export default function Catalogue() {
   const subjects = [
     "Automatisation",
     "Chaîne logistique",
-    "Économie appliqué",
-    "Entreprenariat",
+    "Économie appliquée",
+    "Entrepreneuriat",
     "Ergonomie du travail",
     "Gestion de projet",
     "Gestion de la qualité",
@@ -172,12 +172,14 @@ export default function Catalogue() {
 
   const onFilterChange = () => {
     let caseStudiesToFilter = [...caseStudies];
-
+    console.log(caseStudiesToFilter.length);
     if (disciplineFilters.length > 0) {
+      console.log(caseStudiesToFilter);
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
         if ((caseStudy as CaseStudy).discipline) {
           return false;
         }
+        console.log((caseStudy as CaseStudy).discipline);
         return disciplineFilters.includes(
           (caseStudy as CaseStudy).discipline.toLowerCase()
         );
@@ -300,7 +302,7 @@ export default function Catalogue() {
 
   const getCaseStudies = async () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/`)
+      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/all-catalog`)
       .then((res) => {
         setShowCaseStudies(res.data);
         setCaseStudies(res.data);

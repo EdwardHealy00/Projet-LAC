@@ -67,7 +67,7 @@ export class UserService {
     async signToken(user: DocumentType<User>) {
         // Sign the access token
         const access_token = signJwt(
-            { sub: user._id },
+            { sub: user._id, role: user.role },
             {
                 expiresIn: ACCESS_TOKEN_EXPIRES_IN,
             }

@@ -3,7 +3,7 @@ import React from "react";
 import { Case } from "../../../model/CaseStudy";
 import { CaseStep } from "../../../model/enum/CaseStatus";
 import { Role } from "../../../model/enum/Role";
-import { UnlockAccess } from "../../connection/UnlockAcess";
+import { UnlockAccess } from "../../connection/UnlockAccess";
 import { ApprovalComity } from "./comity/Approval";
 import { ApprovalDeputy } from "./deputy/Approval";
 import { ApprovalPolyPress } from "./polyPress/Approval";
@@ -55,7 +55,7 @@ export default function Approval() {
   const [caseStudiesStep4, setCaseStudiesStep4] = React.useState<Case[]>([]);
   const getCaseStudies = async () => {
     axios
-      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/paid`)
+      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/paid`, {withCredentials: true})
       .then((res) => {
         const cases: Case[] = [];
         for (const caseStudy of res.data) {

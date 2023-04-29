@@ -1,0 +1,35 @@
+.value-group-separator {
+  height: 1px;
+  width: 140px;
+  background-color: black;
+  border: none;
+  margin: 6px 0 12px 0;
+  padding: 0;
+}
+
+.value-group-content {
+  font-family: 'Yaldevi', sans-serif;
+  font-size: 0.9rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  line-clamp: 2;
+}
+
+.value-group-paragraph-container {
+  width: 250px;
+}
+
+.value-group-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.2rem;
+  max-lines: 2;
+}
+
+table {
+  border-collapse: collapse;
+  width: 500px;
+  margin: 0 15%;
+}
+td {
+  padding: 10px;
+}

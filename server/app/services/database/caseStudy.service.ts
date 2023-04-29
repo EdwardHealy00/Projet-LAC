@@ -6,6 +6,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { DocumentType } from '@typegoose/typegoose';
 import { CaseStep } from '@app/models/CaseStatus';
+import {excludedFields} from "@app/controllers/caseStudy.controller";
+import {omit} from "lodash";
 
 @Service()
 export class CaseStudyService {
@@ -35,6 +37,34 @@ export class CaseStudyService {
         return PaidCaseStudyModel.find();
     }
 
+    async getRestrictedPaidCaseStudies() {
+        const paidCaseStudies: PaidCaseStudy[] = await PaidCaseStudyModel.find().lean();
+        const filteredCaseStudies: Partial<PaidCaseStudy>[] = [];
+        paidCaseStudies.forEach((study, index) => {
+            filteredCaseStudies.push(omit(study, excludedFields));
+            console.log(omit(study,excludedFields));
+        });
+        return filteredCaseStudies;
+    }
+
+
+    async findRestrictedCaseStudys(): Promise<(Partial<CaseStudy> | Partial<PaidCaseStudy>)[]> {
+        const caseStudies: CaseStudy[] = await CaseStudyModel.find().lean();
+        const paidCaseStudies: PaidCaseStudy[] = await PaidCaseStudyModel.find({
+            status: CaseStep.Posted
+        }).lean();
+        const filteredCaseStudies: Partial<CaseStudy>[] = [];
+        const filteredPaidCaseStudies: Partial<PaidCaseStudy>[] = [];
+        paidCaseStudies.forEach((study, index) => {
+            filteredPaidCaseStudies.push(omit(study, excludedFields));
+        });
+        caseStudies.forEach((study, index) => {
+            filteredCaseStudies.push(omit(study, excludedFields));
+        });
+
+        return [...filteredCaseStudies, ...filteredPaidCaseStudies];
+    }
+
     // Find PaidCaseStudy by Id
     async findPaidCaseStudyById(id: string) {
         return PaidCaseStudyModel.findById(id);
@@ -53,7 +83,8 @@ export class CaseStudyService {
 
     // Find CaseStudy by Id
     async findCaseStudyById(id: string) {
-        return CaseStudyModel.findById(id).lean();
+        const study = CaseStudyModel.findById(id).lean();
+        return omit(study, excludedFields);
     }
 
     // Find All CaseStudys

@@ -6,9 +6,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { FormLabel } from "@mui/material";
+import {FormLabel, InputLabel, Select} from "@mui/material";
 import { PaidNewCaseStudy } from "../../model/CaseStudy";
 import axios from "axios";
+import MenuItem from "@mui/material/MenuItem";
 
 export default function AddPaidCaseStudy() {
   const [open, setOpen] = React.useState(false);
@@ -21,6 +22,7 @@ export default function AddPaidCaseStudy() {
     title: "",
     author: "",
     course: "",
+    discipline: "",
   });
 
   const initialStateErrors = {
@@ -28,6 +30,7 @@ export default function AddPaidCaseStudy() {
     title: { isError: false, message: "" },
     author: { isError: false, message: "" },
     course: { isError: false, message: "" },
+    discipline: { isError: false, message: ""}
   };
 
   const [stateErrors, setStateErrors] = React.useState(initialStateErrors);
@@ -68,8 +71,16 @@ export default function AddPaidCaseStudy() {
       isValid = false;
     }
 
-    const courseIdPattern = new RegExp("^[A-Z]{3}[0-9]{4}\\s?$");
-    if (!courseIdPattern.test(e.course.value)) {
+    if (e.course.value.trim() === "") {
+      stateErrorsCopy.discipline = {
+        isError: true,
+        message: "Veuillez entrer la discipline",
+      };
+      isValid = false;
+    }
+
+    const courseIdPattern = new RegExp("^[A-Z]{2,4}\\d{3,5}\\s?$");
+    if (!courseIdPattern.test(e.course.value.toUpperCase())) {
       stateErrorsCopy.course = {
         isError: true,
         message: "Veuillez entrer un sigle de cours valide",
@@ -107,6 +118,7 @@ export default function AddPaidCaseStudy() {
       authors: e.target.elements.author.value,
       classId: e.target.elements.course.value,
       file: e.target.elements.caseStudyFile.files[0],
+      discipline : e.target.elements.discipline.value,
       isPaidCase: true,
     } as PaidNewCaseStudy;
 
@@ -205,6 +217,20 @@ export default function AddPaidCaseStudy() {
               fullWidth
               error={stateErrors.course.isError}
             />
+            <InputLabel
+                id="demo-simple-select-label"
+            >Age</InputLabel>
+            <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={1}
+                label="Age"
+                onChange={undefined}
+            >
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </Select>
           </form>
         </DialogContent>
         <DialogActions>

@@ -1,19 +1,26 @@
-import { Request, Response, Router } from 'express';
+import {NextFunction, Request, Response, Router} from 'express';
 import { Service } from 'typedi';
 import { CaseStudyService } from '@app/services/database/caseStudy.service';
+import {Role} from "@app/models/Role";
+import {verifyJwt} from "@app/utils/jwt";
+import {UserService} from "@app/services/database/user.service";
+
+export const excludedFields = ['_id', 'file', 'fieldName', 'encoding', 'mimetype', 'destination', 'filename', 'path', ];
 
 @Service()
 export class CaseStudyController {
     router: Router;
 
-    constructor(private readonly caseStudyService: CaseStudyService) {
+    constructor(private readonly userService: UserService, private readonly caseStudyService: CaseStudyService) {
         this.configureRouter();
     }
 
     private configureRouter(): void {
         this.router = Router();
+        this.router.use(this.middlewareDeserializeUser.bind(this));
 
-        this.router.get('/', async (req: Request, res: Response) => {
+
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response) => {
             try {
                 const caseStudies = await this.caseStudyService.findAllCaseStudys();
 
@@ -24,9 +31,31 @@ export class CaseStudyController {
 
         });
 
-        this.router.get('/paid', async (req: Request, res: Response) => {
+        this.router.get('/all-catalog', async (req: Request, res: Response) => {
+            try {
+                const caseStudies = await this.caseStudyService.findRestrictedCaseStudys();
+
+                res.json(caseStudies);
+            } catch (err: any) {
+                console.log(err);
+            }
+
+        });
+
+        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const caseStudies = await this.caseStudyService.getAllPaidCaseStudies();
+
+                res.json(caseStudies);
+            } catch (err: any) {
+                next(err);
+            }
+
+        });
+
+        this.router.get('/catalog-paid', async (req: Request, res: Response) => {
+            try {
+                const caseStudies = await this.caseStudyService.getRestrictedPaidCaseStudies();
 
                 res.json(caseStudies);
             } catch (err: any) {
@@ -58,7 +87,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.post('/', async (req: Request, res: Response) => {
+        this.router.post('/', this.middlewareRestrictTo(Role.Professor, Role.Deputy, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudy = req.body;
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
@@ -99,5 +128,95 @@ export class CaseStudyController {
             }
         });
 
+
+
     }
+    private middlewareRestrictTo(...allowedRoles: string[]) {
+        console.log('F')
+        return (req: Request, res: Response, next: NextFunction) => {
+            const user = res.locals.user;
+            if (!user) {
+                res.status(401).json(
+                    'Authentication error'
+                );
+                return;
+            }
+            if (!allowedRoles.includes(user.role)) {
+                res.status(403).json(
+                    'You are not allowed to perform this action'
+                );
+                return;
+            }
+
+            next();
+        };
+    }
+
+    private async middlewareDeserializeUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            // Get the token
+            let access_token;
+
+            if ( //TODO: WHY
+                req.headers.authorization &&
+                req.headers.authorization.startsWith('Bearer')
+            ) {
+                access_token = req.headers.authorization.split(' ')[1];
+            } else if (req.cookies.accessToken) {
+                console.log('C');
+                access_token = req.cookies.accessToken;
+            }
+
+            if (access_token) {
+                // Validate Access Token
+                const decoded = verifyJwt<{ sub: string, role: string }>(access_token);
+
+                if (!decoded) {
+                    res.status(401).json(
+                        `Invalid token or user doesn't exist`
+                    );
+                    return;
+                }
+
+                // Check if user still exist
+                const user = await this.userService.findUser({ _id: decoded!.sub });
+
+                if (!user) {
+                    res.status(401).json(
+                        `User with that token no longer exist`
+                    );
+                    return;
+                }
+
+                if(user.role != decoded!.role) {
+                    res.status(401).json(
+                        `Role and user do not match`
+                    );
+                    return;
+                }
+
+                res.locals.user = user;
+                console.log('A');
+            }
+            console.log('V');
+
+            next();
+        } catch (err: any) {
+            next(err);
+        }
+    }
+
+
+   /* private async middlewareRequireUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const user = res.locals.user;
+            if (!user) {
+                return next(`Invalid token or session has expired`);
+            }
+
+            next();
+        } catch (err: any) {
+            next(err);
+        }
+    }*/
 }
