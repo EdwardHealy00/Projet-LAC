@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import "./CaseStudy.scss";
 import Button from "@mui/material/Button";
-import "../img/normal_search.svg";;
+import "../img/normal_search.svg";
 import { PieChart } from "react-minimal-pie-chart";
 import Table from './Table';
 import { useNavigate } from 'react-router-dom';

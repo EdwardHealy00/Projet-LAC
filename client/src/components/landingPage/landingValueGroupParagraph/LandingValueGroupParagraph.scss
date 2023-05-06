@@ -1,6 +1,6 @@
 .value-group-separator {
   height: 1px;
-  width: 140px;
+  width: 180px;
   background-color: black;
   border: none;
   margin: 6px 0 12px 0;
@@ -9,27 +9,16 @@
 
 .value-group-content {
   font-family: 'Yaldevi', sans-serif;
-  font-size: 0.9rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* number of lines to show */
-  line-clamp: 2;
+  font-size: 1.2rem;
+  width: 20vw;
 }
 
 .value-group-paragraph-container {
-  width: 250px;
+  width: 25vw;
 }
 
 .value-group-title {
   font-family: 'Syne', sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   max-lines: 2;
-}
-
-table {
-  border-collapse: collapse;
-  width: 500px;
-  margin: 0 15%;
-}
-td {
-  padding: 10px;
 }

@@ -6,8 +6,25 @@
   background-image: url("../../img/students.jpg");
 }
 .value-paragraphs-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  margin: 2% 15% 2% 15%;
+  display: inline-grid;
+  grid-column-gap: 8%;
+  grid-template-columns: min-content min-content;
+  grid-template-rows: min-content min-content;
+  margin: 2% 0;
+}
+
+.landing-segment-container {
+  display: flex;
+  justify-content: center;
+}
+
+.landing-segment-column-left {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-family: 'Gotu', sans-serif;
+  margin-bottom: 0;
+  display: inline-block;
 }
