@@ -38,16 +38,23 @@ h1 {
 }
 
 .colored-tag-pair-container div {
-
+  font-size: 1.2rem;
   font-family: 'Yaldevi', sans-serif;
 }
 
 .paragraph-font {
+  font-size: 1.2rem;
   font-family: 'Yaldevi', sans-serif;
 }
 
 .needs-container {
   margin-bottom: 3rem;
+}
+
+.item-font {
+  font-family: 'Yaldevi', sans-serif;
+  font-size: 1.5rem;
+  max-width: 40vw;
 }
 
 .paragraph-font a {
@@ -66,6 +73,20 @@ h1 {
   flex-direction: row;
 }
 
+.all-items-margins {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2vh;
+}
+
+.item-lists-container {
+  display: flex;
+  column-gap: 2vw;
+  flex-direction: row;
+  align-items: center;
+}
+
 .bullet-lists-container ul li {
+  font-size: 1.2rem;
   text-align: left;
 }

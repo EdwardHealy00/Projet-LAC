@@ -5,6 +5,14 @@ import LandingNavBar from "./landingNavBar/LandingNavBar";
 import LandingValueGroupParagraph from "./landingValueGroupParagraph/LandingValueGroupParagraph";
 import BrainSeparator from "./brainSeparator/BrainSeparator";
 import ColoredTag from "./coloredTag/ColoredTag";
+import CircleIcon from "./circleIcon/CircleIcon";
+import TEACH from "../../img/icons/teach.svg";
+import CATALOG from "../../img/icons/catalog.svg";
+import HEART from "../../img/icons/heart.svg";
+import LIGHT from "../../img/icons/light.svg";
+import MEDIA from "../../img/icons/media.svg";
+import PENCIL from "../../img/icons/pencil.svg";
+import SPELL from "../../img/icons/spell.svg";
 export default function AboutPage() {
     return <div>
             <LandingNavBar></LandingNavBar>
@@ -75,7 +83,37 @@ export default function AboutPage() {
             <div className="landing-segment-container">
                 <div className="landing-segment-column-left">
                     <h1 id="mission">Spécificités du LAC</h1>
-                </div>
+                    <div className="all-items-margins">
+                        <div className="item-lists-container">
+                            <CircleIcon color="#C3272E" href={TEACH}></CircleIcon>
+                            <div className="item-font">Promouvoir l'enseignement par les cas</div>
+                        </div>
+                        <div className="item-lists-container">
+                            <CircleIcon color="#FA961E" href={MEDIA}></CircleIcon>
+                            <div className="item-font">Proposer une variété de format (cas court, cas long, multimédia, podcase…)</div>
+                        </div>
+                        <div className="item-lists-container">
+                            <CircleIcon color="#7FC348" href={CATALOG}></CircleIcon>
+                            <div className="item-font">Offrir un catalogue de cas (payant et en libre accès)</div>
+                        </div>
+                        <div className="item-lists-container">
+                            <CircleIcon color="#C3272E" href={SPELL}></CircleIcon>
+                            <div className="item-font">Collaborer avec un éditeur reconnu, les Presses internationales Polytechnique, qui assure une révision linguistique rigoureuse</div>
+                        </div>
+                        <div className="item-lists-container">
+                            <CircleIcon color="#41AAE6" href={HEART}></CircleIcon>
+                            <div className="item-font">Donner son appréciation sur les cas pour offrir de la rétroaction aux autrices et auteurs de cas</div>
+                        </div>
+                        <div className="item-lists-container">
+                            <CircleIcon color="#FA961E" href={PENCIL}></CircleIcon>
+                            <div className="item-font">Jumeler l’expérience entre génie et sciences sociales et humaines</div>
+                        </div>
+                        <div className="item-lists-container">
+                            <CircleIcon color="#7FC348" href={LIGHT}></CircleIcon>
+                            <div className="item-font">Créer des ponts entre les enseignant·e·s, les étudiant·e·s et les organisations </div>
+                        </div>
+                    </div>
+                    </div>
             </div>
         </div>;
 }

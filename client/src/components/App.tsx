@@ -78,6 +78,10 @@ function App() {
           />
         </Routes>
       </div>
+      <footer style={{height: "50px", width: "100%", backgroundColor: "#06091f", display: "flex", justifyContent: "center", marginTop: "5vh"}}>
+        <div style={{display:"inline-block", color: "whitesmoke"}}>&copy; 2023</div>
+
+      </footer>
     </div>
   );
 }
