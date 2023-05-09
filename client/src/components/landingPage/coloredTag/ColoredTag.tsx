@@ -8,11 +8,11 @@ type ColoredTagProps = {
 
 const ColoredTag = ({tag, backgroundColor}: ColoredTagProps) => {
     return <div className="colored-tag-container">
-        <div className="over-square">
-            <span>{tag}</span>
+        <div style={{backgroundColor}} className="over-square">
+            <div>{tag}</div>
         </div>
-        <div style={{backgroundColor}} className="under-square">
-            <span>{tag}</span>
+        <div className="under-square">
+            <div>{tag}</div>
         </div>
     </div>
 }

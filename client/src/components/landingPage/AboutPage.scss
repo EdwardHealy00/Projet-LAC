@@ -20,11 +20,52 @@
 
 .landing-segment-column-left {
   display: flex;
+  width: 55vw;
   flex-direction: column;
 }
 
 h1 {
   font-family: 'Gotu', sans-serif;
-  margin-bottom: 0;
+  margin-bottom: 1rem;
   display: inline-block;
+}
+
+.colored-tag-pair-container {
+  display: flex;
+  flex-direction: row;
+  column-gap: 55px;
+  margin-bottom: 3rem;
+}
+
+.colored-tag-pair-container div {
+
+  font-family: 'Yaldevi', sans-serif;
+}
+
+.paragraph-font {
+  font-family: 'Yaldevi', sans-serif;
+}
+
+.needs-container {
+  margin-bottom: 3rem;
+}
+
+.paragraph-font a {
+  text-decoration: none;
+  font-weight: bolder;
+  color: #C21F39;
+}
+
+.paragraph-font a:hover {
+  color: #ff4e6d;
+}
+
+.bullet-lists-container {
+  display: flex;
+  column-gap: 8vw;
+  flex-direction: row;
+}
+
+.bullet-lists-container ul li {
+  text-align: left;
 }
