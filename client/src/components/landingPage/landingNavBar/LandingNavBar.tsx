@@ -5,12 +5,15 @@ import logo from "../../../img/logo-lac.png";
 
 const LandingNavBar = () => {
     return <div className="nav-container">
-        <LandingButton onClick={()=>null} text={'À propos'}></LandingButton>
-        <LandingButton onClick={()=>null} text={'Mission'}></LandingButton>
+        <LandingButton onClick={()=> { // @ts-ignore
+            document.getElementById("a-propos").scrollIntoView({alignToTop:true, behavior: "smooth"});}} text={'À propos'}></LandingButton>
         <img src={logo} alt="LAC logo" />
+        <LandingButton onClick={()=>{ // @ts-ignore
+            document.getElementById("mission").scrollIntoView({alignToTop:true, behavior: "smooth"});}} text={'Mission'}></LandingButton>
+        {/*
         <LandingButton onClick={()=>null} text={'Équipe'}></LandingButton>
         <LandingButton onClick={()=>null} text={'Histoire'}></LandingButton>
-    </div>;
+*/}    </div>;
 };
 
 export default LandingNavBar;

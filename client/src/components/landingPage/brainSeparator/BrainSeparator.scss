@@ -1,0 +1,57 @@
+.all-length-red {
+  width: 100%;
+  height: 4px;
+  background-color: #B91E32;
+  margin-bottom: 4px;
+  z-index: 1;
+}
+
+.all-length-orange {
+  width: 100%;
+  height: 4px;
+  background-color: #FA961E;
+  margin-bottom: 4px;
+  z-index: 1;
+}
+
+.all-length-green {
+  width: 100%;
+  height: 4px;
+  background-color: #8cc83c;
+  margin-bottom: 4px;
+  z-index: 1;
+}
+
+.all-length-blue {
+  width: 100%;
+  height: 4px;
+  background-color: #41aae6;
+  margin-bottom: 4px;
+  z-index: 1;
+}
+
+.brain {
+  position: absolute;
+  left: calc(50% - 40px);
+  transform-origin: center center;
+  top: calc(50% - 40px);
+  height: 80px;
+  width: 80px;
+  z-index: 2;
+  display: block;
+}
+
+.arrow {
+  position: absolute;
+  width: 36px;
+  left: calc(50% - 18px);
+  top: calc(100% + 40px);
+}
+
+.separator-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  margin-bottom: 72px;
+}

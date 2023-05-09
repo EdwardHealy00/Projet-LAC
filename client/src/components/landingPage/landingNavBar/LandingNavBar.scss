@@ -1,14 +1,15 @@
 .nav-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  column-gap: 50px;
   flex-direction: row;
   margin: 0 348px 0 348px;
-  padding: 2% 0 2% 0;
+  padding: 1% 0 1% 0;
 }
 
 @media screen and (max-width: 1400px) {
   .nav-container {
     margin: 0 15% 0 15%;
-    padding: 2% 0 2% 0;
+    padding: 1% 0 1% 0;
   }
 }
