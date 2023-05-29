@@ -21,6 +21,7 @@ import AddPaidCaseStudy from "./AddPaidCaseStudy";
 import AddFreeCaseStudy from "./AddFreeCaseStudy";
 import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
+import NavBar from "../common/NavBar";
 
 interface Filter {
   name: string;
@@ -322,6 +323,7 @@ export default function Catalogue() {
 
   return (
     <div>
+      <NavBar></NavBar>
       <div id="content">
         <div id="rectangle">
           <div id="catalogue-des-cas">Catalogue des cas</div>
