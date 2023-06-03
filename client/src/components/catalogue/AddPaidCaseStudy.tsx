@@ -142,7 +142,7 @@ export default function AddPaidCaseStudy() {
       classId: e.target.elements.course.value,
       file: e.target.elements.caseStudyFile.files[0],
       discipline : e.target.elements.discipline.value,
-      subject: e.target.elements.subject.value,
+      subjects: [e.target.elements.subject.value],
       isPaidCase: true,
     } as PaidNewCaseStudy;
 

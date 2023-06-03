@@ -70,7 +70,7 @@ export class PaidCaseStudy {
     discipline: string;
 
     @prop({ required: true })
-    subject: string;
+    subjects: string[];
 
     @prop({ required: true })
     file: any;
