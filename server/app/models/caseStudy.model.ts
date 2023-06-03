@@ -67,6 +67,12 @@ export class PaidCaseStudy {
     classId: string;
 
     @prop({ required: true })
+    discipline: string;
+
+    @prop({ required: true })
+    subject: string;
+
+    @prop({ required: true })
     file: any;
 
     @prop({ default: CaseStep.WaitingPreApproval })

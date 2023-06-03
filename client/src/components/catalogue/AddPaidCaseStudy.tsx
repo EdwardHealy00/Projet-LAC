@@ -10,7 +10,7 @@ import {FormLabel, InputLabel, Select} from "@mui/material";
 import { PaidNewCaseStudy } from "../../model/CaseStudy";
 import axios from "axios";
 import MenuItem from "@mui/material/MenuItem";
-import { Disciplines } from "./Catalogue";
+import { Disciplines, Subjects } from "./Catalogue";
 
 export default function AddPaidCaseStudy() {
   const [open, setOpen] = React.useState(false);
@@ -24,12 +24,19 @@ export default function AddPaidCaseStudy() {
     setSelectedDiscipline(e.target.value);
   };
 
+  const [selectedSubject, setSelectedSubject] = React.useState("");
+
+  const onSubjectChanged = (e: any) => {
+    setSelectedSubject(e.target.value);
+  };
+
   const [state, setState] = React.useState({
     caseStudyFile: "",
     title: "",
     author: "",
     course: "",
     discipline: "",
+    subject: "",
   });
 
   const initialStateErrors = {
@@ -37,7 +44,8 @@ export default function AddPaidCaseStudy() {
     title: { isError: false, message: "" },
     author: { isError: false, message: "" },
     course: { isError: false, message: "" },
-    discipline: { isError: false, message: ""}
+    discipline: { isError: false, message: ""},
+    subject: { isError: false, message: ""},
   };
 
   const [stateErrors, setStateErrors] = React.useState(initialStateErrors);
@@ -86,6 +94,14 @@ export default function AddPaidCaseStudy() {
       isValid = false;
     }
 
+    if (e.subject.value.trim() === "") {
+      stateErrorsCopy.subject = {
+        isError: true,
+        message: "Veuillez entrer le sujet",
+      };
+      isValid = false;
+    }
+
     const courseIdPattern = new RegExp("^[A-Z]{2,4}\\d{3,5}\\s?$");
     if (!courseIdPattern.test(e.course.value.toUpperCase())) {
       stateErrorsCopy.course = {
@@ -126,6 +142,7 @@ export default function AddPaidCaseStudy() {
       classId: e.target.elements.course.value,
       file: e.target.elements.caseStudyFile.files[0],
       discipline : e.target.elements.discipline.value,
+      subject: e.target.elements.subject.value,
       isPaidCase: true,
     } as PaidNewCaseStudy;
 
@@ -253,6 +270,23 @@ export default function AddPaidCaseStudy() {
             >
               {Disciplines.map((discipline) => (
                 <MenuItem value={discipline}>{"Génie " + discipline}</MenuItem>
+              ))}
+            </Select>
+            <InputLabel
+                id="demo-simple-select-label"
+                error={stateErrors.subject.isError}
+            >Sujet</InputLabel>
+            <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Sujet"
+                name="subject"
+                value={selectedSubject}
+                onChange={onSubjectChanged}
+                error={stateErrors.subject.isError}
+            >
+              {Subjects.map((subject) => (
+                <MenuItem value={subject}>{subject}</MenuItem>
               ))}
             </Select>
           </form>

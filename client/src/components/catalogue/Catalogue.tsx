@@ -40,18 +40,19 @@ export const Disciplines = [
   "des mines",
 ];
 
+export const Subjects = [
+  "Automatisation",
+  "Chaîne logistique",
+  "Économie appliquée",
+  "Entrepreneuriat",
+  "Ergonomie du travail",
+  "Gestion de projet",
+  "Gestion de la qualité",
+  "Gestion du changement",
+  "Recherche opérationnelle",
+];
+
 export default function Catalogue() {
-  const subjects = [
-    "Automatisation",
-    "Chaîne logistique",
-    "Économie appliquée",
-    "Entrepreneuriat",
-    "Ergonomie du travail",
-    "Gestion de projet",
-    "Gestion de la qualité",
-    "Gestion du changement",
-    "Recherche opérationnelle",
-  ];
   const dates = [
     "0-3 mois",
     "4-8 mois",
@@ -410,7 +411,7 @@ export default function Catalogue() {
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>
-                  {subjects.map((subject) => (
+                  {Subjects.map((subject) => (
                     <FormControlLabel
                       control={
                         <Checkbox
