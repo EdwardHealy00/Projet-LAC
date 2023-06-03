@@ -175,9 +175,7 @@ export default function Catalogue() {
 
   const onFilterChange = () => {
     let caseStudiesToFilter = [...caseStudies];
-    console.log(caseStudiesToFilter.length);
     if (disciplineFilters.length > 0) {
-      console.log(caseStudiesToFilter);
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
         if ((caseStudy as CaseStudy).discipline) {
           return false;
@@ -493,8 +491,8 @@ export default function Catalogue() {
                     content={"No content at the moment"}
                     date={(caseStudy as Case).date.substring(0, 10)}
                     page={0}
-                    discipline={"None"}
-                    tags={[]}
+                    discipline={"Génie " + (caseStudy as Case).discipline}
+                    tags={(caseStudy as Case).subjects}
                     classNumber={(caseStudy as Case).classId}
                     className={"Unknown"}
                     rating={0}
