@@ -10,12 +10,19 @@ import {FormLabel, InputLabel, Select} from "@mui/material";
 import { PaidNewCaseStudy } from "../../model/CaseStudy";
 import axios from "axios";
 import MenuItem from "@mui/material/MenuItem";
+import { Disciplines } from "./Catalogue";
 
 export default function AddPaidCaseStudy() {
   const [open, setOpen] = React.useState(false);
   const [caseStudyFileName, setCaseStudyFileName] = React.useState(
     "Aucune étude de cas n'a été téléversée"
   );
+
+  const [selectedDiscipline, setSelectedDiscipline] = React.useState("");
+
+  const onDisciplineChanged = (e: any) => {
+    setSelectedDiscipline(e.target.value);
+  };
 
   const [state, setState] = React.useState({
     caseStudyFile: "",
@@ -71,7 +78,7 @@ export default function AddPaidCaseStudy() {
       isValid = false;
     }
 
-    if (e.course.value.trim() === "") {
+    if (e.discipline.value.trim() === "") {
       stateErrorsCopy.discipline = {
         isError: true,
         message: "Veuillez entrer la discipline",
@@ -217,19 +224,36 @@ export default function AddPaidCaseStudy() {
               fullWidth
               error={stateErrors.course.isError}
             />
-            <InputLabel
+            {/* Seems like age is useless, TODO remove? */}
+            {/*<InputLabel
                 id="demo-simple-select-label"
             >Age</InputLabel>
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={1}
                 label="Age"
                 onChange={undefined}
             >
               <MenuItem value={10}>Ten</MenuItem>
               <MenuItem value={20}>Twenty</MenuItem>
               <MenuItem value={30}>Thirty</MenuItem>
+            </Select>*/}
+            <InputLabel
+                id="demo-simple-select-label"
+                error={stateErrors.discipline.isError}
+            >Discipline</InputLabel>
+            <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Discipline"
+                name="discipline"
+                value={selectedDiscipline}
+                onChange={onDisciplineChanged}
+                error={stateErrors.discipline.isError}
+            >
+              {Disciplines.map((discipline) => (
+                <MenuItem value={discipline}>{"Génie " + discipline}</MenuItem>
+              ))}
             </Select>
           </form>
         </DialogContent>

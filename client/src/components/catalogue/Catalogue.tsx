@@ -28,18 +28,19 @@ interface Filter {
   checkboxRef: EventTarget & HTMLInputElement;
 }
 
+export const Disciplines = [
+  "aérospatial",
+  "biomédical",
+  "chimique",
+  "civil",
+  "électrique",
+  "géologique",
+  "industriel",
+  "mécanique",
+  "des mines",
+];
+
 export default function Catalogue() {
-  const disciplines = [
-    "aérospatial",
-    "biomédical",
-    "chimique",
-    "civil",
-    "électrique",
-    "géologique",
-    "industriel",
-    "mécanique",
-    "des mines",
-  ];
   const subjects = [
     "Automatisation",
     "Chaîne logistique",
@@ -384,7 +385,7 @@ export default function Catalogue() {
               <AccordionDetails>
                 <Typography>
                   <FormGroup>
-                    {disciplines.map((discipline) => (
+                    {Disciplines.map((discipline) => (
                       <FormControlLabel
                         control={
                           <Checkbox
