@@ -10,6 +10,7 @@ export interface CaseStudy {
   date: string;
   page: number;
   discipline: string;
+  subjects: string[];
   tags: string[];
   classNames: string;
   classIds: string;
@@ -26,6 +27,8 @@ export interface Case {
   status: CaseStep;
   isPaidCase: boolean;
   classId: string;
+  discipline: string;
+  subjects: string[];
   documents?: Document[];
 }
 

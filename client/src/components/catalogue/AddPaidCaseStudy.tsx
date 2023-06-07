@@ -6,10 +6,11 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import {FormLabel, InputLabel, Select} from "@mui/material";
+import { FormLabel, InputLabel, Select, Checkbox, ListItemText } from "@mui/material";
 import { PaidNewCaseStudy } from "../../model/CaseStudy";
 import axios from "axios";
 import MenuItem from "@mui/material/MenuItem";
+import { Disciplines, Subjects } from "./Catalogue";
 
 export default function AddPaidCaseStudy() {
   const [open, setOpen] = React.useState(false);
@@ -17,12 +18,25 @@ export default function AddPaidCaseStudy() {
     "Aucune étude de cas n'a été téléversée"
   );
 
+  const [selectedDiscipline, setSelectedDiscipline] = React.useState("");
+
+  const onDisciplineChanged = (e: any) => {
+    setSelectedDiscipline(e.target.value);
+  };
+
+  const [selectedSubjects, setSelectedSubject] = React.useState<string[]>([]);
+
+  const onSubjectChanged = (e: any) => {
+    setSelectedSubject(e.target.value);
+  };
+
   const [state, setState] = React.useState({
     caseStudyFile: "",
     title: "",
     author: "",
     course: "",
     discipline: "",
+    subject: "",
   });
 
   const initialStateErrors = {
@@ -30,7 +44,8 @@ export default function AddPaidCaseStudy() {
     title: { isError: false, message: "" },
     author: { isError: false, message: "" },
     course: { isError: false, message: "" },
-    discipline: { isError: false, message: ""}
+    discipline: { isError: false, message: ""},
+    subject: { isError: false, message: ""},
   };
 
   const [stateErrors, setStateErrors] = React.useState(initialStateErrors);
@@ -71,10 +86,18 @@ export default function AddPaidCaseStudy() {
       isValid = false;
     }
 
-    if (e.course.value.trim() === "") {
+    if (e.discipline.value.trim() === "") {
       stateErrorsCopy.discipline = {
         isError: true,
         message: "Veuillez entrer la discipline",
+      };
+      isValid = false;
+    }
+
+    if (selectedSubjects.length <= 0) {
+      stateErrorsCopy.subject = {
+        isError: true,
+        message: "Veuillez entrer le(s) sujet(s)",
       };
       isValid = false;
     }
@@ -127,6 +150,8 @@ export default function AddPaidCaseStudy() {
     for (key in caseStudy) {
       formData.append(key, caseStudy[key]);
     }
+    selectedSubjects.forEach(subject => formData.append('subjects[]', subject));
+
     sendAddCaseStudy(formData);
   };
 
@@ -217,19 +242,60 @@ export default function AddPaidCaseStudy() {
               fullWidth
               error={stateErrors.course.isError}
             />
-            <InputLabel
+            {/* Seems like age is useless, TODO remove? */}
+            {/*<InputLabel
                 id="demo-simple-select-label"
             >Age</InputLabel>
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={1}
                 label="Age"
                 onChange={undefined}
             >
               <MenuItem value={10}>Ten</MenuItem>
               <MenuItem value={20}>Twenty</MenuItem>
               <MenuItem value={30}>Thirty</MenuItem>
+            </Select>*/}
+            <InputLabel
+                id="demo-simple-select-label"
+                error={stateErrors.discipline.isError}
+            >Discipline</InputLabel>
+            <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Discipline"
+                name="discipline"
+                value={selectedDiscipline}
+                onChange={onDisciplineChanged}
+                error={stateErrors.discipline.isError}
+                style={{width: '250px'}}
+            >
+              {Disciplines.map((discipline) => (
+                <MenuItem value={discipline}>{"Génie " + discipline}</MenuItem>
+              ))}
+            </Select>
+            <InputLabel
+                id="demo-simple-select-label"
+                error={stateErrors.subject.isError}
+            >Sujet</InputLabel>
+            <Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                multiple
+                label="Sujet"
+                name="subject"
+                value={selectedSubjects}
+                onChange={onSubjectChanged}
+                error={stateErrors.subject.isError}
+                renderValue={(selected) => selected.join(', ')}
+                style={{width: '250px'}}
+            >
+              {Subjects.map((subject) => (
+                <MenuItem value={subject}>
+                  <Checkbox checked={selectedSubjects.indexOf(subject) > -1} />
+                  <ListItemText primary={subject} />
+                </MenuItem>
+              ))}
             </Select>
           </form>
         </DialogContent>

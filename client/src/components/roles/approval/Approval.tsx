@@ -17,6 +17,8 @@ function createData(
   status: CaseStep,
   isPaidCase: boolean,
   classId: string,
+  discipline: string,
+  subjects: string[],
   file: any
 ): Case {
   const [ filename, extension ] = file.originalname.split(".") as string[];
@@ -39,6 +41,8 @@ function createData(
     status,
     isPaidCase,
     classId,
+    discipline,
+    subjects,
     documents,
   };
 }
@@ -68,6 +72,8 @@ export default function Approval() {
               caseStudy.status,
               caseStudy.isPaidCase,
               caseStudy.classId,
+              caseStudy.discipline,
+              caseStudy.subjects,
               caseStudy.file
             )
           );

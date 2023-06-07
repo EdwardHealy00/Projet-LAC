@@ -46,7 +46,7 @@ const Results: React.FC<Props> = ({
             <Button className="consulter">Consulter</Button>
           </div>
         </div>
-        <div id="tags"> Sujet(s) : {tags.map((tag) => (tag + ','))}</div>
+        <div id="tags"> Sujet(s) : {tags.join(", ")}</div>
       </div>
       <div id="second">
         <div id="ratings">

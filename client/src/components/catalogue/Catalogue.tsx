@@ -28,29 +28,31 @@ interface Filter {
   checkboxRef: EventTarget & HTMLInputElement;
 }
 
+export const Disciplines = [
+  "aérospatial",
+  "biomédical",
+  "chimique",
+  "civil",
+  "électrique",
+  "géologique",
+  "industriel",
+  "mécanique",
+  "des mines",
+];
+
+export const Subjects = [
+  "Automatisation",
+  "Chaîne logistique",
+  "Économie appliquée",
+  "Entrepreneuriat",
+  "Ergonomie du travail",
+  "Gestion de projet",
+  "Gestion de la qualité",
+  "Gestion du changement",
+  "Recherche opérationnelle",
+];
+
 export default function Catalogue() {
-  const disciplines = [
-    "aérospatial",
-    "biomédical",
-    "chimique",
-    "civil",
-    "électrique",
-    "géologique",
-    "industriel",
-    "mécanique",
-    "des mines",
-  ];
-  const subjects = [
-    "Automatisation",
-    "Chaîne logistique",
-    "Économie appliquée",
-    "Entrepreneuriat",
-    "Ergonomie du travail",
-    "Gestion de projet",
-    "Gestion de la qualité",
-    "Gestion du changement",
-    "Recherche opérationnelle",
-  ];
   const dates = [
     "0-3 mois",
     "4-8 mois",
@@ -173,9 +175,7 @@ export default function Catalogue() {
 
   const onFilterChange = () => {
     let caseStudiesToFilter = [...caseStudies];
-    console.log(caseStudiesToFilter.length);
     if (disciplineFilters.length > 0) {
-      console.log(caseStudiesToFilter);
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
         if ((caseStudy as CaseStudy).discipline) {
           return false;
@@ -384,7 +384,7 @@ export default function Catalogue() {
               <AccordionDetails>
                 <Typography>
                   <FormGroup>
-                    {disciplines.map((discipline) => (
+                    {Disciplines.map((discipline) => (
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -409,7 +409,7 @@ export default function Catalogue() {
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>
-                  {subjects.map((subject) => (
+                  {Subjects.map((subject) => (
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -491,8 +491,8 @@ export default function Catalogue() {
                     content={"No content at the moment"}
                     date={(caseStudy as Case).date.substring(0, 10)}
                     page={0}
-                    discipline={"None"}
-                    tags={[]}
+                    discipline={"Génie " + (caseStudy as Case).discipline}
+                    tags={(caseStudy as Case).subjects}
                     classNumber={(caseStudy as Case).classId}
                     className={"Unknown"}
                     rating={0}
