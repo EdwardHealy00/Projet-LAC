@@ -22,7 +22,7 @@ export default function AboutPage() {
                     <h1 id="a-propos">À propos</h1>
                     <div className="value-paragraphs-container">
                         <LandingValueGroupParagraph content="des connaissances grâce à une plateforme collaborative" title={"Partager".toUpperCase()}></LandingValueGroupParagraph>
-                        <LandingValueGroupParagraph content="à un catalogue d’études de cas gratuites et payantes pour faciliter l’enseignement par les cas" title={"Accéder".toUpperCase()}></LandingValueGroupParagraph>
+                        <LandingValueGroupParagraph content="à un catalogue d’études de cas pour faciliter l’enseignement par les cas" title={"Accéder".toUpperCase()}></LandingValueGroupParagraph>
                         <LandingValueGroupParagraph content="les compétences entre génie et sciences sociales pour faire le pont entre le milieu universitaire et la pratique" title={"Jumeler".toUpperCase()}></LandingValueGroupParagraph>
                         <LandingValueGroupParagraph content="la communauté étudiante et professorale pour déployer des solutions d’apprentissage renouvelées et innovantes" title={"Rassembler".toUpperCase()}></LandingValueGroupParagraph>
                     </div>
@@ -110,7 +110,7 @@ export default function AboutPage() {
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#7FC348" href={LIGHT}></CircleIcon>
-                            <div className="item-font">Créer des ponts entre les enseignant·e·s, les étudiant·e·s et les organisations </div>
+                            <div className="item-font">Créer des ponts entre les enseignant·e·s, les étudiant·e·s et tous les types d'organisation (privé, public, parapublic, organisme sans but lucratif)</div>
                         </div>
                     </div>
                     </div>
