@@ -1,5 +1,5 @@
 import { FilterQuery, QueryOptions } from 'mongoose';
-import { CaseStudy, PaidCaseStudy, CaseStudyModel, PaidCaseStudyModel } from '@app/models/caseStudy.model';
+import { CaseStudy, PaidCaseStudy, FreeCaseStudyModel, PaidCaseStudyModel } from '@app/models/caseStudy.model';
 import { Service } from 'typedi';
 import { DatabaseService } from '@app/services/database/database.service';
 import * as fs from 'fs';
@@ -49,7 +49,7 @@ export class CaseStudyService {
 
 
     async findRestrictedCaseStudys(): Promise<(Partial<CaseStudy> | Partial<PaidCaseStudy>)[]> {
-        const caseStudies: CaseStudy[] = await CaseStudyModel.find().lean();
+        const caseStudies: CaseStudy[] = await FreeCaseStudyModel.find().lean();
         const paidCaseStudies: PaidCaseStudy[] = await PaidCaseStudyModel.find({
             status: CaseStep.Posted
         }).lean();
@@ -81,15 +81,20 @@ export class CaseStudyService {
         return caseStudy;
     }
 
+    async createFreeCaseStudy(input: Partial<CaseStudy>) {
+        const caseStudy = await FreeCaseStudyModel.create(input);
+        return caseStudy;
+    }
+
     // Find CaseStudy by Id
     async findCaseStudyById(id: string) {
-        const study = CaseStudyModel.findById(id).lean();
+        const study = FreeCaseStudyModel.findById(id).lean();
         return omit(study, excludedFields);
     }
 
     // Find All CaseStudys
     async findAllCaseStudys(): Promise<(PaidCaseStudy | CaseStudy)[]> {
-        const caseStudies: CaseStudy[] = await CaseStudyModel.find();
+        const caseStudies: CaseStudy[] = await FreeCaseStudyModel.find();
         const paidCaseStudies: PaidCaseStudy[] = await PaidCaseStudyModel.find({
             status: CaseStep.Posted
         });
@@ -101,6 +106,6 @@ export class CaseStudyService {
         query: FilterQuery<CaseStudy>,
         options: QueryOptions = {}
     ) {
-        return CaseStudyModel.findOne(query, {}, options);
+        return FreeCaseStudyModel.findOne(query, {}, options);
     }
 }

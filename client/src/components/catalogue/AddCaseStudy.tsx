@@ -12,7 +12,7 @@ import axios from "axios";
 import MenuItem from "@mui/material/MenuItem";
 import { Disciplines, Subjects } from "./Catalogue";
 
-export default function AddPaidCaseStudy() {
+export default function AddCaseStudy() {
   const [open, setOpen] = React.useState(false);
   const [caseStudyFileName, setCaseStudyFileName] = React.useState(
     "Aucune étude de cas n'a été téléversée"
@@ -142,7 +142,7 @@ export default function AddPaidCaseStudy() {
       classId: e.target.elements.course.value,
       file: e.target.elements.caseStudyFile.files[0],
       discipline : e.target.elements.discipline.value,
-      isPaidCase: true,
+      isPaidCase: e.target.elements.paid.checked,
     } as PaidNewCaseStudy;
 
     const formData = new FormData();
@@ -174,7 +174,7 @@ export default function AddPaidCaseStudy() {
   return (
     <div>
       <Button variant="contained" onClick={handleClickOpen}>
-        Ajouter une étude de cas payante
+        Ajouter une étude de cas
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Ajouter une étude de cas</DialogTitle>
@@ -197,6 +197,13 @@ export default function AddPaidCaseStudy() {
             id="caseStudyForm"
             encType="multipart/form-data"
           >
+            <div>
+              <Checkbox
+                autoFocus
+                name="paid"
+              />
+              <FormLabel>Étude de cas payante</FormLabel>
+            </div>
             <div>
               <Button variant="contained" component="label">
                 Téléverser l'étude de cas
@@ -222,7 +229,6 @@ export default function AddPaidCaseStudy() {
               error={stateErrors.title.isError}
             />
             <TextField
-              autoFocus
               margin="dense"
               label="Auteur(s)"
               name="author"
@@ -232,7 +238,6 @@ export default function AddPaidCaseStudy() {
               error={stateErrors.author.isError}
             />
             <TextField
-              autoFocus
               margin="dense"
               label="Cours"
               name="course"

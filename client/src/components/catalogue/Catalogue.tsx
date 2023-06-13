@@ -17,8 +17,7 @@ import {
 import axios from "axios";
 import { CaseStudy, Case } from "../../model/CaseStudy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddPaidCaseStudy from "./AddPaidCaseStudy";
-import AddFreeCaseStudy from "./AddFreeCaseStudy";
+import AddCaseStudy from "./AddCaseStudy";
 import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
 import NavBar from "../common/NavBar";
@@ -348,8 +347,7 @@ export default function Catalogue() {
           role={[Role.Professor]}
           children={
             <div id="addCaseRectangle">
-              <AddPaidCaseStudy />
-              <AddFreeCaseStudy />
+              <AddCaseStudy />
             </div>
           }
         ></UnlockAccess>

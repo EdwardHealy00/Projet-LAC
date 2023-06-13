@@ -15,32 +15,39 @@ import { CaseStep } from './CaseStatus';
 // Export the User class to be used as TypeScript type
 export class CaseStudy {
 
+    @prop({ default: true}) 
+    isPaidCase: boolean;
+
     @prop({ unique: true, required: true })
     title: string;
 
-    @prop({ required: true })
-    authors: string;
-
-    @prop({ required: true })
-    content: string;
-
-    @prop({ })
+    @prop({ default: new Date().toISOString() })
     date: string;
 
-    @prop({})
-    page: number;
+    @prop({ required: true })
+    file: any;
+
+    @prop({ required: true })
+    authors: string;
 
     @prop({})
     discipline: string;
 
     @prop({})
-    tags: string[];
-
-    @prop({})
-    classNames?: string;
+    subjects: string[];
 
     @prop({})
     classIds?: string;
+
+}
+
+export class FreeCaseStudy extends CaseStudy {
+
+    @prop({})
+    page: number;
+
+    @prop({})
+    classNames?: string;
 
     @prop({ default: 0 })
     ratings: number;
@@ -49,39 +56,15 @@ export class CaseStudy {
     votes: number;
 }
 
-export class PaidCaseStudy {
-
-    @prop({ default: true}) 
-    isPaidCase: boolean;
-
-    @prop({ default: new Date().toISOString() })
-    date: string;
-
-    @prop({ unique: true, required: true })
-    title: string;
-
-    @prop({ required: true })
-    authors: string;
-
-    @prop({ required: true })
-    classId: string;
-
-    @prop({ required: true })
-    discipline: string;
-
-    @prop({ required: true })
-    subjects: string[];
-
-    @prop({ required: true })
-    file: any;
+export class PaidCaseStudy extends CaseStudy {
 
     @prop({ default: CaseStep.WaitingPreApproval })
     status: CaseStep;
 }
 
 // Create the user model from the User class
-const CaseStudyModel = getModelForClass(CaseStudy);
-export {CaseStudyModel};
+const FreeCaseStudyModel = getModelForClass(FreeCaseStudy);
+export {FreeCaseStudyModel};
 
 // Create the user model from the User class
 const PaidCaseStudyModel = getModelForClass(PaidCaseStudy);

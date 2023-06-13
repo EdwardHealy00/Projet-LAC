@@ -134,7 +134,6 @@ export default function Login() {
               name="email"
             />
             <TextField
-              autoFocus
               margin="dense"
               id="password"
               label="Mot de passe"
