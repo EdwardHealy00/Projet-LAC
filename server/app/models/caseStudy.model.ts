@@ -37,7 +37,7 @@ export class CaseStudy {
     subjects: string[];
 
     @prop({})
-    classIds?: string;
+    classId?: string;
 
 }
 

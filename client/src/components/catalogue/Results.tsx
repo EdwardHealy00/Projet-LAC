@@ -11,7 +11,7 @@ interface Props {
   date: React.ReactNode;
   page: React.ReactNode;
   discipline: React.ReactNode;
-  tags: string[];
+  subjects: string[];
   className: React.ReactNode;
   classNumber: React.ReactNode;
   rating: React.ReactNode;
@@ -26,7 +26,7 @@ const Results: React.FC<Props> = ({
   date,
   page,
   discipline,
-  tags,
+  subjects,
   className,
   classNumber,
   rating,
@@ -46,7 +46,7 @@ const Results: React.FC<Props> = ({
             <Button className="consulter">Consulter</Button>
           </div>
         </div>
-        <div id="tags"> Sujet(s) : {tags.join(", ")}</div>
+        <div id="tags"> Sujet(s) : {subjects.join(", ")}</div>
       </div>
       <div id="second">
         <div id="ratings">

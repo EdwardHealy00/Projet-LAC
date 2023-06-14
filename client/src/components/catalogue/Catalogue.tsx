@@ -490,7 +490,7 @@ export default function Catalogue() {
                     date={(caseStudy as Case).date.substring(0, 10)}
                     page={0}
                     discipline={"Génie " + (caseStudy as Case).discipline}
-                    tags={(caseStudy as Case).subjects}
+                    subjects={(caseStudy as Case).subjects}
                     classNumber={(caseStudy as Case).classId}
                     className={"Unknown"}
                     rating={0}
@@ -499,17 +499,17 @@ export default function Catalogue() {
                 )) ||
                 (!(caseStudy as Case).isPaidCase && (
                   <Results
-                    title={(caseStudy as CaseStudy).title}
-                    auteurs={(caseStudy as CaseStudy).authors}
-                    content={(caseStudy as CaseStudy).content}
-                    date={(caseStudy as CaseStudy).date}
-                    page={(caseStudy as CaseStudy).page}
-                    discipline={(caseStudy as CaseStudy).discipline}
-                    tags={(caseStudy as CaseStudy).tags}
-                    classNumber={(caseStudy as CaseStudy).classIds}
-                    className={(caseStudy as CaseStudy).classNames}
-                    rating={(caseStudy as CaseStudy).ratings}
-                    vote={(caseStudy as CaseStudy).votes}
+                    title={(caseStudy as Case).title}
+                    auteurs={(caseStudy as Case).authors}
+                    content={"No content at the moment"}
+                    date={(caseStudy as Case).date}
+                    page={0}
+                    discipline={(caseStudy as Case).discipline}
+                    subjects={(caseStudy as Case).subjects}
+                    classNumber={(caseStudy as Case).classId}
+                    className={"Unknown"}
+                    rating={/*(caseStudy as Case).ratings*/0}
+                    vote={/*(caseStudy as Case).votes*/0}
                   ></Results>
                 ))
             )}
