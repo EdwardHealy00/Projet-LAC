@@ -97,9 +97,7 @@ export class CaseStudyController {
                     this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
                 }
 
-                const newCaseStudy = caseStudy.isPaidCase ? await this.caseStudyService.createPaidCaseStudy(caseStudy) :
-                    await this.caseStudyService.createFreeCaseStudy(caseStudy);
-                console.log(newCaseStudy);
+                const newCaseStudy = await this.caseStudyService.createCaseStudy(caseStudy);
                 res.status(201).json(newCaseStudy);
             } catch (err: any) {
                 console.log(err);
@@ -113,9 +111,9 @@ export class CaseStudyController {
 
                 let caseStudy;
                 if (isApproved) {
-                    caseStudy = await this.caseStudyService.findPaidCaseStudyById(caseStudyId);
+                    caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
                     if (!caseStudy) {
-                        res.status(404).json('L\'étude de cas n\'a pas été trouvé');
+                        res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                         return;
                     }
                     caseStudy.status += 1;

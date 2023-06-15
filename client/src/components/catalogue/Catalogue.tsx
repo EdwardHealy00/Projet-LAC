@@ -189,11 +189,11 @@ export default function Catalogue() {
     if (subjectFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
         return subjectFilters.some((subject) => {
-          if ((caseStudy as CaseStudy).tags) {
+          if ((caseStudy as CaseStudy).subjects) {
             return false;
           }
           return (
-            (caseStudy as CaseStudy).tags.find(
+            (caseStudy as CaseStudy).subjects.find(
               (tag) => tag.toLowerCase() === subject.toLowerCase()
             ) !== undefined
           );

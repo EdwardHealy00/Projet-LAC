@@ -39,10 +39,6 @@ export class CaseStudy {
     @prop({})
     classId?: string;
 
-}
-
-export class FreeCaseStudy extends CaseStudy {
-
     @prop({})
     page: number;
 
@@ -54,18 +50,11 @@ export class FreeCaseStudy extends CaseStudy {
 
     @prop({ default: 0})
     votes: number;
-}
-
-export class PaidCaseStudy extends CaseStudy {
 
     @prop({ default: CaseStep.WaitingPreApproval })
     status: CaseStep;
+
 }
 
-// Create the user model from the User class
-const FreeCaseStudyModel = getModelForClass(FreeCaseStudy);
-export {FreeCaseStudyModel};
-
-// Create the user model from the User class
-const PaidCaseStudyModel = getModelForClass(PaidCaseStudy);
-export {PaidCaseStudyModel};
+const CaseStudyModel = getModelForClass(CaseStudy);
+export { CaseStudyModel };
