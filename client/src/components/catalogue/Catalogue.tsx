@@ -484,6 +484,7 @@ export default function Catalogue() {
               (caseStudy) =>
                 ((caseStudy as Case).isPaidCase && (
                   <Results
+                    isPaid={true}
                     title={(caseStudy as Case).title}
                     auteurs={(caseStudy as Case).authors}
                     content={"No content at the moment"}
@@ -499,6 +500,7 @@ export default function Catalogue() {
                 )) ||
                 (!(caseStudy as Case).isPaidCase && (
                   <Results
+                    isPaid={false}
                     title={(caseStudy as Case).title}
                     auteurs={(caseStudy as Case).authors}
                     content={"No content at the moment"}

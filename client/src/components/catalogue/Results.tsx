@@ -1,10 +1,11 @@
 import React from "react";
 import "./Results.scss";
 import StarIcon from "@mui/icons-material/Star";
+import { AttachMoney } from "@mui/icons-material";
 import { Button } from "@mui/material";
 
 interface Props {
-  //   onClick: () => void;
+  isPaid: React.ReactNode;
   title: React.ReactNode;
   auteurs: React.ReactNode;
   content: React.ReactNode;
@@ -19,7 +20,7 @@ interface Props {
 }
 
 const Results: React.FC<Props> = ({
-  // onClick,
+  isPaid,
   title,
   auteurs,
   content,
@@ -35,7 +36,10 @@ const Results: React.FC<Props> = ({
   return (
     <div id="viewArticles">
       <div id="first">
-        <div id="title">{title}</div>
+        <div id="title">
+          <div>{title}</div>
+          {(isPaid && <AttachMoney id="dollar-icon" />)}
+        </div>
         <div id="authors">Auteurs : {auteurs}</div>
         <div id="preview">{content}</div>
         <div id="date"> Date : {date}</div>
