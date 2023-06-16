@@ -22,6 +22,7 @@ import { CaseStep } from "./enum/CaseStatus";
 export interface Case {
   id_: number;
   title: string;
+  desc: string;
   authors: string;
   date: string;
   page: number;

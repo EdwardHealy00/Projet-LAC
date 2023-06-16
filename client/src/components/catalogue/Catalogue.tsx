@@ -6,6 +6,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Checkbox,
   Chip,
   FormControlLabel,
@@ -355,7 +356,9 @@ export default function Catalogue() {
           role={[Role.Professor]}
           children={
             <div id="addCaseRectangle">
-              <AddCaseStudy />
+              <Button variant="contained" href="/create">
+                Ajouter une étude de cas
+              </Button>
             </div>
           }
         ></UnlockAccess>

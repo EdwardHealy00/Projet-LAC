@@ -16,6 +16,7 @@ import ResetPassword from "./connection/ResetPassword";
 import axios from "axios";
 import { ResponseSnackbar, SnackbarObject } from "../utils/ResponseSnackbar";
 import AboutPage from "./landingPage/AboutPage";
+import AddCaseStudy from "./catalogue/AddCaseStudy";
 
 function App() {
   env.config({ path: `.env.${process.env.NODE_ENV}`})
@@ -63,6 +64,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPaidCase />} />
           <Route path="/approval" element={<Approval />} />
           <Route path="/new-case-approval" element={<NewCase />} />
+          <Route path="/create" element={<AddCaseStudy />} />
 
           <Route path="/summary" element={<Summary />} />
           <Route path="/mission" element={<Mission />} />

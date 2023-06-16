@@ -21,6 +21,9 @@ export class CaseStudy {
     @prop({ unique: true, required: true })
     title: string;
 
+    @prop({ required: true })
+    desc: string;
+
     @prop({ default: new Date().toISOString() })
     date: string;
 

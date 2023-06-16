@@ -12,6 +12,7 @@ import { Document } from "../../../model/Document";
 function createData(
   id_: number,
   title: string,
+  desc: string,
   authors: string,
   date: string,
   page: number,
@@ -39,6 +40,7 @@ function createData(
   return {
     id_,
     title,
+    desc,
     authors,
     date,
     page,
@@ -73,6 +75,7 @@ export default function Approval() {
             createData(
               caseStudy._id,
               caseStudy.title,
+              caseStudy.desc,
               caseStudy.authors,
               caseStudy.date,
               caseStudy.page,
