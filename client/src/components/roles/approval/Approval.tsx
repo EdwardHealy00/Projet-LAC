@@ -14,12 +14,15 @@ function createData(
   title: string,
   authors: string,
   date: string,
+  page: number,
   status: CaseStep,
   isPaidCase: boolean,
   classId: string,
   discipline: string,
   subjects: string[],
-  file: any
+  file: any,
+  ratings: number,
+  votes: number
 ): Case {
   const [ filename, extension ] = file.originalname.split(".") as string[];
   const documents: Document[] = [
@@ -38,12 +41,15 @@ function createData(
     title,
     authors,
     date,
+    page,
     status,
     isPaidCase,
     classId,
     discipline,
     subjects,
     documents,
+    ratings,
+    votes
   };
 }
 
@@ -69,12 +75,15 @@ export default function Approval() {
               caseStudy.title,
               caseStudy.authors,
               caseStudy.date,
+              caseStudy.page,
               caseStudy.status,
               caseStudy.isPaidCase,
               caseStudy.classId,
               caseStudy.discipline,
               caseStudy.subjects,
-              caseStudy.file
+              caseStudy.file,
+              caseStudy.ratings,
+              caseStudy.votes
             )
           );
         }

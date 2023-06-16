@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { CaseStudy, Case } from "../../model/CaseStudy";
+import { Case } from "../../model/CaseStudy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddCaseStudy from "./AddCaseStudy";
 import { Role } from "../../model/enum/Role";
@@ -63,22 +63,14 @@ export default function Catalogue() {
   const numberPages = ["1 à 4 pages", "5 à 10 pages", "11+ pages"];
 
   const [filters, setFilters] = React.useState<Filter[]>([]);
-  const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>(
-    []
-  );
+  const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>([]);
   const [subjectFilters, setSubjectFilters] = React.useState<string[]>([]);
   const [dateFilters, setDateFilters] = React.useState<string[]>([]);
-  const [numberPagesFilters, setNumberPagesFilters] = React.useState<string[]>(
-    []
-  );
+  const [numberPagesFilters, setNumberPagesFilters] = React.useState<string[]>([]);
 
-  const [caseStudies, setCaseStudies] = React.useState<(CaseStudy | Case)[]>(
-    []
-  );
+  const [caseStudies, setCaseStudies] = React.useState<Case[]>([]);
 
-  const [showCaseStudies, setShowCaseStudies] = React.useState<
-    (CaseStudy | Case)[]
-  >([]);
+  const [showCaseStudies, setShowCaseStudies] = React.useState<Case[]>([]);
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
@@ -95,7 +87,7 @@ export default function Catalogue() {
     }
   };
 
-  const onFilter = (caseStudy: CaseStudy | Case, searchFilter: string) => {
+  const onFilter = (caseStudy: Case, searchFilter: string) => {
     for (const property in caseStudy) {
       if (caseStudy.hasOwnProperty(property)) {
         if (
@@ -127,7 +119,7 @@ export default function Catalogue() {
     filtersType: string[]
   ) => {
     const checked = e.target.checked;
-    const value = e.target.labels![0].innerText;
+    const value = e.target.name;
     const newFilters = [...filters];
     const filtersToUpdate = [...filtersType];
     const filter: Filter = { name: value, checkboxRef: e.target };
@@ -176,12 +168,11 @@ export default function Catalogue() {
     let caseStudiesToFilter = [...caseStudies];
     if (disciplineFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if ((caseStudy as CaseStudy).discipline) {
+        if (!(caseStudy as Case).discipline) {
           return false;
         }
-        console.log((caseStudy as CaseStudy).discipline);
         return disciplineFilters.includes(
-          (caseStudy as CaseStudy).discipline.toLowerCase()
+          (caseStudy as Case).discipline.toLowerCase()
         );
       });
     }
@@ -189,11 +180,11 @@ export default function Catalogue() {
     if (subjectFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
         return subjectFilters.some((subject) => {
-          if ((caseStudy as CaseStudy).subjects) {
+          if (!(caseStudy as Case).subjects) {
             return false;
           }
           return (
-            (caseStudy as CaseStudy).subjects.find(
+            (caseStudy as Case).subjects.find(
               (tag) => tag.toLowerCase() === subject.toLowerCase()
             ) !== undefined
           );
@@ -203,19 +194,19 @@ export default function Catalogue() {
 
     if (dateFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if ((caseStudy as CaseStudy).date) {
+        if ((caseStudy as Case).date) {
           return false;
         }
-        return verifyDates((caseStudy as CaseStudy).date, dateFilters);
+        return verifyDates((caseStudy as Case).date, dateFilters);
       });
     }
 
     if (numberPagesFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if ((caseStudy as CaseStudy).page) {
+        if ((caseStudy as Case).page) {
           return false;
         }
-        return verifyPages((caseStudy as CaseStudy).page, numberPagesFilters);
+        return verifyPages((caseStudy as Case).page, numberPagesFilters);
       });
     }
 
@@ -387,7 +378,7 @@ export default function Catalogue() {
                         control={
                           <Checkbox
                             onChange={onCheckboxChangeDiscipline}
-                            key={discipline}
+                            name={discipline}
                           />
                         }
                         label={"Génie " + discipline}
@@ -412,7 +403,7 @@ export default function Catalogue() {
                       control={
                         <Checkbox
                           onChange={onCheckboxChangeSubject}
-                          key={subject}
+                          name={subject}
                         />
                       }
                       label={subject}
@@ -434,7 +425,7 @@ export default function Catalogue() {
                   {dates.map((date) => (
                     <FormControlLabel
                       control={
-                        <Checkbox onChange={onCheckboxChangeDate} key={date} />
+                        <Checkbox onChange={onCheckboxChangeDate} name={date} />
                       }
                       label={date}
                     />
@@ -457,7 +448,7 @@ export default function Catalogue() {
                       control={
                         <Checkbox
                           onChange={onCheckboxChangeNumberPages}
-                          key={nbPage}
+                          name={nbPage}
                         />
                       }
                       label={nbPage}
@@ -506,7 +497,7 @@ export default function Catalogue() {
                     content={"No content at the moment"}
                     date={(caseStudy as Case).date}
                     page={0}
-                    discipline={(caseStudy as Case).discipline}
+                    discipline={"Génie " + (caseStudy as Case).discipline}
                     subjects={(caseStudy as Case).subjects}
                     classNumber={(caseStudy as Case).classId}
                     className={"Unknown"}
