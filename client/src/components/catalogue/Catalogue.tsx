@@ -63,6 +63,7 @@ export default function Catalogue() {
   const numberPages = ["1 à 4 pages", "5 à 10 pages", "11+ pages"];
 
   const [filters, setFilters] = React.useState<Filter[]>([]);
+  const [typeFilters, setTypeFilters] = React.useState<string[]>([]);
   const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>([]);
   const [subjectFilters, setSubjectFilters] = React.useState<string[]>([]);
   const [dateFilters, setDateFilters] = React.useState<string[]>([]);
@@ -107,6 +108,7 @@ export default function Catalogue() {
       filter.checkboxRef.click();
     }
     setFilters([]);
+    setTypeFilters([]);
     setDisciplineFilters([]);
     setSubjectFilters([]);
     setDateFilters([]);
@@ -136,6 +138,13 @@ export default function Catalogue() {
     return filtersToUpdate;
   };
 
+  const onCheckboxChangeType = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newTypeFilters = onCheckboxChange(e, typeFilters);
+    setTypeFilters(newTypeFilters);
+  }
+
   const onCheckboxChangeDiscipline = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -162,10 +171,18 @@ export default function Catalogue() {
 
   React.useEffect(() => {
     onFilterChange();
-  }, [disciplineFilters, subjectFilters, dateFilters, numberPagesFilters]);
+  }, [typeFilters, disciplineFilters, subjectFilters, dateFilters, numberPagesFilters]);
 
   const onFilterChange = () => {
     let caseStudiesToFilter = [...caseStudies];
+
+    if (typeFilters.length > 0) {
+      caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
+        return ((typeFilters.includes("libre") && !(caseStudy as Case).isPaidCase) 
+                  || (typeFilters.includes("payant") && (caseStudy as Case).isPaidCase));
+      });
+    }
+
     if (disciplineFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
         if (!(caseStudy as Case).discipline) {
@@ -362,6 +379,39 @@ export default function Catalogue() {
         </div>
         <div id="rows">
           <div id="rectangleFilter">
+          <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>TYPE DE CAS</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          onChange={onCheckboxChangeType}
+                          name="Libre"
+                        />
+                      }
+                      label="Libre d'accès"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          onChange={onCheckboxChangeType}
+                          name="Payant"
+                        />
+                      }
+                      label="Payant"
+                    />
+                  </FormGroup>
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
