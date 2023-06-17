@@ -31,20 +31,19 @@ export interface Case {
   classId: string;
   discipline: string;
   subjects: string[];
-  documents: Document[];
+  files: Document[];
   ratings: number;
   votes: number;
 }
 
-interface NewCaseStudy {
+export interface NewCaseStudy {
   title: string;
+  desc: string;
   authors: string;
   classId: string;
+  files: any;
+  discipline: string;
   isPaidCase: boolean;
-}
-
-export interface PaidNewCaseStudy extends NewCaseStudy {
-  file: any;
 }
 
 export interface CaseStudyProps {

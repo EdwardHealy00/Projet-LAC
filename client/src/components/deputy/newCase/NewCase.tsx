@@ -35,11 +35,12 @@ function NewCase() {
   const newCase = state ? (state.caseStudy as Case) : state;
   const navigate = useNavigate();
 
-  const handleFileDownload = (documentName: string) => {
-    axios
+  const handleDownloadAll = (files: any[]) => {
+    for (let i = 0; i < files.length; i++) {
+      axios
       .get(
         `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/download/` +
-          documentName,
+          files[i].file.filename,
         {
           withCredentials: true,
           responseType: "arraybuffer",
@@ -49,10 +50,11 @@ function NewCase() {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "file.pdf"); //or any other extension
+        link.setAttribute("download", files[i].file.originalname); //or any other extension
         document.body.appendChild(link);
         link.click();
       });
+    }
   };
 
   const sendCaseStudyResponse = () => {
@@ -87,7 +89,7 @@ function NewCase() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => handleFileDownload(newCase.documents[0].file.filename)}
+          onClick={() => handleDownloadAll(newCase.files)}
         >
           <FileDownloadIcon /> TOUT TÉLÉCHARGER
         </Button>
@@ -101,7 +103,7 @@ function NewCase() {
           </AccordionSummary>
           <AccordionDetails>
             <Typography>
-              <NewCaseTable documents={newCase.documents} />
+              <NewCaseTable documents={newCase.files} />
             </Typography>
           </AccordionDetails>
         </Accordion>

@@ -21,22 +21,24 @@ function createData(
   classId: string,
   discipline: string,
   subjects: string[],
-  file: any,
+  file: any[],
   ratings: number,
   votes: number
 ): Case {
-  const [ filename, extension ] = file.originalname.split(".") as string[];
-  const documents: Document[] = [
-    {
-      id_: 1,
+  const files: Document[] = [];
+  for (let i = 0; i < file.length; i++) {
+    const [ filename, extension ] = file[i].originalname.split(".") as string[];
+    files.push({
+      id_: i,
       documentType: "Étude de cas",
       title: filename,
       type: "Obligatoire",
       format: extension,
       addedOn: date,
-      file: file
-    },
-  ];
+      file: file[i]
+    });
+  }
+
   return {
     id_,
     title,
@@ -49,7 +51,7 @@ function createData(
     classId,
     discipline,
     subjects,
-    documents,
+    files,
     ratings,
     votes
   };
@@ -84,12 +86,13 @@ export default function Approval() {
               caseStudy.classId,
               caseStudy.discipline,
               caseStudy.subjects,
-              caseStudy.file,
+              caseStudy.files,
               caseStudy.ratings,
               caseStudy.votes
             )
           );
         }
+        console.log(cases);
         setCaseStudies(cases);
         setCaseStudiesStep1(filterByStep(cases, CaseStep.WaitingPreApproval));
         setCaseStudiesStep2(filterByStep(cases, CaseStep.WaitingComity));

@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { FormLabel, InputLabel, Select, Checkbox, ListItemText, Accordion, AccordionSummary, Typography, AccordionDetails, FormGroup, FormControlLabel } from "@mui/material";
-import { PaidNewCaseStudy } from "../../model/CaseStudy";
+import { NewCaseStudy } from "../../model/CaseStudy";
 import axios from "axios";
 import MenuItem from "@mui/material/MenuItem";
 import { Disciplines, Subjects } from "./Catalogue";
@@ -133,7 +133,11 @@ export default function AddCaseStudy() {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setCaseStudyFileName(e.target.files[0].name);
+      let fileNames = e.target.files[0].name;
+      for (let i = 1; i < e.target.files.length; i++) {
+        fileNames += ", " + e.target.files[i].name;
+      }
+      setCaseStudyFileName(fileNames);
     }
   };
 
@@ -162,18 +166,20 @@ export default function AddCaseStudy() {
       desc: e.target.elements.desc.value,
       authors: e.target.elements.author.value,
       classId: e.target.elements.course.value,
-      file: e.target.elements.caseStudyFile.files[0],
+      files: Array.from(e.target.elements.caseStudyFile.files),
       discipline : e.target.elements.discipline.value,
       isPaidCase: e.target.elements.paid.checked,
-    } as PaidNewCaseStudy;
+    } as NewCaseStudy;
 
     const formData = new FormData();
-    let key: keyof PaidNewCaseStudy;
+    let key: keyof NewCaseStudy;
     for (key in caseStudy) {
       formData.append(key, caseStudy[key]);
     }
-    selectedSubjects.forEach(subject => formData.append('subjects[]', subject));
 
+    selectedSubjects.forEach(subject => formData.append('subjects[]', subject));
+    Array.from(e.target.elements.caseStudyFile.files).forEach(file => formData.append('files[]', (file as Blob)));
+    
     sendAddCaseStudy(formData);
   };
 
@@ -184,7 +190,7 @@ export default function AddCaseStudy() {
         caseStudy,
         {
           withCredentials: true,
-        }
+        },
       )
       .then((res) => {
         if (res.status === 201) {
@@ -233,6 +239,7 @@ export default function AddCaseStudy() {
                   type="file"
                   onChange={handleFileUpload}
                   name="caseStudyFile"
+                  multiple
                 />
               </Button>
               <FormLabel error={stateErrors.caseStudyFile.isError}>

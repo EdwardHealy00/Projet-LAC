@@ -28,7 +28,7 @@ export class CaseStudy {
     date: string;
 
     @prop({ required: true })
-    file: any;
+    files: any;
 
     @prop({ required: true })
     authors: string;
