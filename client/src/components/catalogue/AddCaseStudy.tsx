@@ -4,18 +4,22 @@ import TextField from "@mui/material/TextField";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { FormLabel, InputLabel, Select, Checkbox, ListItemText } from "@mui/material";
+import { FormLabel, InputLabel, Select, Checkbox, ListItemText, Accordion, AccordionSummary, Typography, AccordionDetails, FormGroup, FormControlLabel } from "@mui/material";
 import { PaidNewCaseStudy } from "../../model/CaseStudy";
 import axios from "axios";
 import MenuItem from "@mui/material/MenuItem";
 import { Disciplines, Subjects } from "./Catalogue";
 import NavBar from "../common/NavBar";
 import { useNavigate } from "react-router-dom";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { checkList } from "../deputy/newCase/NewCase";
 
 export default function AddCaseStudy() {
   const navigate = useNavigate();
 
-  const [open, setOpen] = React.useState(false);
+  const [checkedState, setCheckedState] = React.useState<boolean[]>(new Array(checkList.length).fill(false));
+  const [isVerified, setVerified] = React.useState(false);
+
   const [caseStudyFileName, setCaseStudyFileName] = React.useState(
     "Aucune étude de cas n'a été téléversée"
   );
@@ -132,6 +136,19 @@ export default function AddCaseStudy() {
       setCaseStudyFileName(e.target.files[0].name);
     }
   };
+
+  const handleVerifyCheck = (index: number) => {
+    const updatedCheckedState = checkedState.map((item: boolean, i) => {
+      return index === i ? !item : item
+    });
+    setCheckedState(updatedCheckedState);
+
+    let result = true;
+    updatedCheckedState.forEach((item) => {
+      result = result && item;
+    })
+    setVerified(result);
+  }
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -317,9 +334,33 @@ export default function AddCaseStudy() {
               ))}
             </Select>
           </form>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2a-content"
+              id="panel2a-header"
+            >
+              <Typography>Vérifier le cas</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                <FormGroup>
+                  {checkList.map((criteria, index) => (
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label={criteria}
+                      key={index}
+                      checked={checkedState[index]}
+                      onChange={() => handleVerifyCheck(index)}
+                    />
+                  ))}
+                </FormGroup>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
         </DialogContent>
         <div style={{marginLeft: '24px'}}>
-          <Button variant="contained" type="submit" form="caseStudyForm">
+          <Button disabled={!isVerified} variant="contained" type="submit" form="caseStudyForm">
             Ajouter
           </Button>
         </div>

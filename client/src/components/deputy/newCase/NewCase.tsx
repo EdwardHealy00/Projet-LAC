@@ -17,7 +17,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import NewCaseTable from "./NewCaseTable";
 import axios from "axios";
 
-const checkList: string[] = [
+export const checkList: string[] = [
   "L’étude de cas est en format Word.",
   "L’étude de cas respecte le gabarit fourni.",
   "Les notes pédagogiques sont incluses dans l’étude de cas.",
