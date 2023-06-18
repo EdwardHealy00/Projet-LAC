@@ -9,12 +9,33 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { Document } from "../../../model/Document";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import axios from "axios";
 
 interface CaseProp {
     documents: Document[];
 }
 
 export default function NewCaseTable(rows: CaseProp) {
+
+  const handleFileDownload = (file: any) => {
+    axios
+      .get(
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/download/` +
+          file.filename,
+        {
+          withCredentials: true,
+          responseType: "arraybuffer",
+        }
+      )
+      .then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", file.originalname); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      });
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -43,7 +64,7 @@ export default function NewCaseTable(rows: CaseProp) {
               <TableCell align="right">{row.format}</TableCell>
               <TableCell align="right">{row.addedOn}</TableCell>
               <TableCell align="right">
-                <Button variant="outlined">
+                <Button variant="outlined" onClick={() => handleFileDownload(row.file)}>
                   <FileDownloadIcon /> Télécharger
                 </Button>
               </TableCell>

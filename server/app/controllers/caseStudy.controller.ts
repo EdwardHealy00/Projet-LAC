@@ -91,10 +91,16 @@ export class CaseStudyController {
             try {
                 const caseStudy = req.body;
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
-                const fileProof = req.files && req.files.length > 0 ? req.files[0] : undefined;
-                if (fileProof) {
-                    caseStudy["file"] = fileProof;
-                    this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
+                if (req.files) {
+                    let files = [];
+                    for (let i = 0; i < req.files.length; i++) {
+                        const fileProof = req.files[i];
+                        if (fileProof) {
+                            files.push(fileProof);
+                            this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
+                        }
+                    }
+                    caseStudy["files"] = files;
                 }
 
                 const newCaseStudy = await this.caseStudyService.createCaseStudy(caseStudy);

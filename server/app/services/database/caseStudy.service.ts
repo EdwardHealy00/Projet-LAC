@@ -49,7 +49,7 @@ export class CaseStudyService {
 
 
     async findRestrictedCaseStudys(): Promise<(Partial<CaseStudy>)[]> {
-        const caseStudies: CaseStudy[] = await CaseStudyModel.find().lean();
+        const caseStudies: CaseStudy[] = await CaseStudyModel.find({status: CaseStep.Posted}).lean();
         const filteredCaseStudies: Partial<CaseStudy>[] = [];
         caseStudies.forEach((study, index) => {
             filteredCaseStudies.push(omit(study, excludedFields));

@@ -21,11 +21,14 @@ export class CaseStudy {
     @prop({ unique: true, required: true })
     title: string;
 
+    @prop({ required: true })
+    desc: string;
+
     @prop({ default: new Date().toISOString() })
     date: string;
 
     @prop({ required: true })
-    file: any;
+    files: any;
 
     @prop({ required: true })
     authors: string;

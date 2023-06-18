@@ -1,19 +1,25 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { FormLabel, InputLabel, Select, Checkbox, ListItemText } from "@mui/material";
-import { PaidNewCaseStudy } from "../../model/CaseStudy";
+import { FormLabel, InputLabel, Select, Checkbox, ListItemText, Accordion, AccordionSummary, Typography, AccordionDetails, FormGroup, FormControlLabel } from "@mui/material";
+import { NewCaseStudy } from "../../model/CaseStudy";
 import axios from "axios";
 import MenuItem from "@mui/material/MenuItem";
 import { Disciplines, Subjects } from "./Catalogue";
+import NavBar from "../common/NavBar";
+import { useNavigate } from "react-router-dom";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { checkList } from "../deputy/newCase/NewCase";
 
 export default function AddCaseStudy() {
-  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+  const [checkedState, setCheckedState] = React.useState<boolean[]>(new Array(checkList.length).fill(false));
+  const [isVerified, setVerified] = React.useState(false);
+
   const [caseStudyFileName, setCaseStudyFileName] = React.useState(
     "Aucune étude de cas n'a été téléversée"
   );
@@ -33,6 +39,7 @@ export default function AddCaseStudy() {
   const [state, setState] = React.useState({
     caseStudyFile: "",
     title: "",
+    desc: "",
     author: "",
     course: "",
     discipline: "",
@@ -42,6 +49,7 @@ export default function AddCaseStudy() {
   const initialStateErrors = {
     caseStudyFile: { isError: false, message: "" },
     title: { isError: false, message: "" },
+    desc: { isError: false, message: ""},
     author: { isError: false, message: "" },
     course: { isError: false, message: "" },
     discipline: { isError: false, message: ""},
@@ -66,6 +74,14 @@ export default function AddCaseStudy() {
       stateErrorsCopy.title = {
         isError: true,
         message: "Veuillez entrer le titre de votre étude de cas",
+      };
+      isValid = false;
+    }
+
+    if (e.desc.value.trim() === "") {
+      stateErrorsCopy.desc = {
+        isError: true,
+        message: "Veuillez entrer le synopsis de votre étude de cas",
       };
       isValid = false;
     }
@@ -115,19 +131,28 @@ export default function AddCaseStudy() {
     return isValid;
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setCaseStudyFileName(e.target.files[0].name);
+      let fileNames = e.target.files[0].name;
+      for (let i = 1; i < e.target.files.length; i++) {
+        fileNames += ", " + e.target.files[i].name;
+      }
+      setCaseStudyFileName(fileNames);
     }
   };
+
+  const handleVerifyCheck = (index: number) => {
+    const updatedCheckedState = checkedState.map((item: boolean, i) => {
+      return index === i ? !item : item
+    });
+    setCheckedState(updatedCheckedState);
+
+    let result = true;
+    updatedCheckedState.forEach((item) => {
+      result = result && item;
+    })
+    setVerified(result);
+  }
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -138,20 +163,23 @@ export default function AddCaseStudy() {
 
     const caseStudy = {
       title: e.target.elements.title.value,
+      desc: e.target.elements.desc.value,
       authors: e.target.elements.author.value,
       classId: e.target.elements.course.value,
-      file: e.target.elements.caseStudyFile.files[0],
+      files: Array.from(e.target.elements.caseStudyFile.files),
       discipline : e.target.elements.discipline.value,
       isPaidCase: e.target.elements.paid.checked,
-    } as PaidNewCaseStudy;
+    } as NewCaseStudy;
 
     const formData = new FormData();
-    let key: keyof PaidNewCaseStudy;
+    let key: keyof NewCaseStudy;
     for (key in caseStudy) {
       formData.append(key, caseStudy[key]);
     }
-    selectedSubjects.forEach(subject => formData.append('subjects[]', subject));
 
+    selectedSubjects.forEach(subject => formData.append('subjects[]', subject));
+    Array.from(e.target.elements.caseStudyFile.files).forEach(file => formData.append('files[]', (file as Blob)));
+    
     sendAddCaseStudy(formData);
   };
 
@@ -162,21 +190,19 @@ export default function AddCaseStudy() {
         caseStudy,
         {
           withCredentials: true,
-        }
+        },
       )
       .then((res) => {
         if (res.status === 201) {
-          handleClose();
+          navigate("/catalogue");
         }
       });
   };
 
   return (
     <div>
-      <Button variant="contained" onClick={handleClickOpen}>
-        Ajouter une étude de cas
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <NavBar></NavBar>
+      <div style={{margin: '0px 200px'}}>
         <DialogTitle>Ajouter une étude de cas</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -213,6 +239,7 @@ export default function AddCaseStudy() {
                   type="file"
                   onChange={handleFileUpload}
                   name="caseStudyFile"
+                  multiple
                 />
               </Button>
               <FormLabel error={stateErrors.caseStudyFile.isError}>
@@ -227,6 +254,17 @@ export default function AddCaseStudy() {
               type="text"
               fullWidth
               error={stateErrors.title.isError}
+            />
+            <TextField 
+              multiline
+              rows={3}
+              margin="dense"
+              label="Synopsis"
+              name="desc"
+              type="text"
+              fullWidth
+              inputProps={{ maxLength: 1000 }}
+              error={stateErrors.desc.isError}
             />
             <TextField
               margin="dense"
@@ -303,16 +341,37 @@ export default function AddCaseStudy() {
               ))}
             </Select>
           </form>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2a-content"
+              id="panel2a-header"
+            >
+              <Typography>Vérifier le cas</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                <FormGroup>
+                  {checkList.map((criteria, index) => (
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label={criteria}
+                      key={index}
+                      checked={checkedState[index]}
+                      onChange={() => handleVerifyCheck(index)}
+                    />
+                  ))}
+                </FormGroup>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
         </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={handleClose}>
-            Annuler
-          </Button>
-          <Button variant="contained" type="submit" form="caseStudyForm">
+        <div style={{marginLeft: '24px'}}>
+          <Button disabled={!isVerified} variant="contained" type="submit" form="caseStudyForm">
             Ajouter
           </Button>
-        </DialogActions>
-      </Dialog>
+        </div>
+      </div>
     </div>
   );
 }

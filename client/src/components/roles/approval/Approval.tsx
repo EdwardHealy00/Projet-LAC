@@ -12,6 +12,7 @@ import { Document } from "../../../model/Document";
 function createData(
   id_: number,
   title: string,
+  desc: string,
   authors: string,
   date: string,
   page: number,
@@ -20,25 +21,29 @@ function createData(
   classId: string,
   discipline: string,
   subjects: string[],
-  file: any,
+  files: any[],
   ratings: number,
   votes: number
 ): Case {
-  const [ filename, extension ] = file.originalname.split(".") as string[];
-  const documents: Document[] = [
-    {
-      id_: 1,
+  const filesData: Document[] = [];
+  for (let i = 0; i < files.length; i++) {
+    const filename = files[i].originalname.substring(0, files[i].originalname.lastIndexOf("."));
+    const extension = files[i].originalname.substring(files[i].originalname.lastIndexOf(".") + 1);
+    filesData.push({
+      id_: i,
       documentType: "Étude de cas",
       title: filename,
       type: "Obligatoire",
       format: extension,
       addedOn: date,
-      file: file
-    },
-  ];
+      file: files[i]
+    });
+  }
+
   return {
     id_,
     title,
+    desc,
     authors,
     date,
     page,
@@ -47,7 +52,7 @@ function createData(
     classId,
     discipline,
     subjects,
-    documents,
+    files,
     ratings,
     votes
   };
@@ -73,6 +78,7 @@ export default function Approval() {
             createData(
               caseStudy._id,
               caseStudy.title,
+              caseStudy.desc,
               caseStudy.authors,
               caseStudy.date,
               caseStudy.page,
@@ -81,7 +87,7 @@ export default function Approval() {
               caseStudy.classId,
               caseStudy.discipline,
               caseStudy.subjects,
-              caseStudy.file,
+              caseStudy.files,
               caseStudy.ratings,
               caseStudy.votes
             )

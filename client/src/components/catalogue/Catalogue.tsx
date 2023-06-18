@@ -6,6 +6,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Checkbox,
   Chip,
   FormControlLabel,
@@ -17,7 +18,6 @@ import {
 import axios from "axios";
 import { Case } from "../../model/CaseStudy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddCaseStudy from "./AddCaseStudy";
 import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
 import NavBar from "../common/NavBar";
@@ -358,7 +358,9 @@ export default function Catalogue() {
           role={[Role.Professor]}
           children={
             <div id="addCaseRectangle">
-              <AddCaseStudy />
+              <Button variant="contained" href="/create">
+                Ajouter une étude de cas
+              </Button>
             </div>
           }
         ></UnlockAccess>
