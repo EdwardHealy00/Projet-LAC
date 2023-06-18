@@ -51,6 +51,9 @@ export const Subjects = [
   "Recherche opérationnelle",
 ];
 
+const PAID_STR: string = "payant";
+const FREE_STR: string = "libre";
+
 export default function Catalogue() {
   const dates = [
     "0-3 mois",
@@ -178,8 +181,8 @@ export default function Catalogue() {
 
     if (typeFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        return ((typeFilters.includes("libre") && !(caseStudy as Case).isPaidCase) 
-                  || (typeFilters.includes("payant") && (caseStudy as Case).isPaidCase));
+        return ((typeFilters.includes(FREE_STR) && !(caseStudy as Case).isPaidCase) 
+                  || (typeFilters.includes(PAID_STR) && (caseStudy as Case).isPaidCase));
       });
     }
 
