@@ -1,35 +1,38 @@
 import { Document } from "./Document";
 import { CaseStep } from "./enum/CaseStatus";
 
-//hardcoded case study
-export interface CaseStudy {
-  id: string;
-  title: string;
-  authors: string;
-  content: string;
-  date: string;
-  page: number;
-  discipline: string;
-  subjects: string[];
-  tags: string[];
-  classNames: string;
-  classIds: string;
-  ratings: number;
-  votes: number;
-}
+// //hardcoded case study
+// export interface CaseStudy {
+//   id: string;
+//   title: string;
+//   authors: string;
+//   content: string;
+//   date: string;
+//   page: number;
+//   discipline: string;
+//   subjects: string[];
+//   tags: string[];
+//   classNames: string;
+//   classIds: string;
+//   ratings: number;
+//   votes: number;
+// }
 
-//Will replace the CaseStudy interface eventually 
+// Will replace the CaseStudy interface eventually 
 export interface Case {
   id_: number;
   title: string;
   authors: string;
   date: string;
+  page: number;
   status: CaseStep;
   isPaidCase: boolean;
   classId: string;
   discipline: string;
   subjects: string[];
-  documents?: Document[];
+  documents: Document[];
+  ratings: number;
+  votes: number;
 }
 
 interface NewCaseStudy {

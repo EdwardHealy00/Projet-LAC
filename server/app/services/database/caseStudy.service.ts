@@ -1,5 +1,5 @@
 import { FilterQuery, QueryOptions } from 'mongoose';
-import { CaseStudy, PaidCaseStudy, CaseStudyModel, PaidCaseStudyModel } from '@app/models/caseStudy.model';
+import { CaseStudy, CaseStudyModel } from '@app/models/caseStudy.model';
 import { Service } from 'typedi';
 import { DatabaseService } from '@app/services/database/database.service';
 import * as fs from 'fs';
@@ -34,12 +34,12 @@ export class CaseStudyService {
     }
 
     async getAllPaidCaseStudies() {
-        return PaidCaseStudyModel.find();
+        return CaseStudyModel.find({ isPaidCase: true });
     }
 
     async getRestrictedPaidCaseStudies() {
-        const paidCaseStudies: PaidCaseStudy[] = await PaidCaseStudyModel.find().lean();
-        const filteredCaseStudies: Partial<PaidCaseStudy>[] = [];
+        const paidCaseStudies: CaseStudy[] = await CaseStudyModel.find({ isPaidCase: true }).lean();
+        const filteredCaseStudies: Partial<CaseStudy>[] = [];
         paidCaseStudies.forEach((study, index) => {
             filteredCaseStudies.push(omit(study, excludedFields));
             console.log(omit(study,excludedFields));
@@ -48,52 +48,38 @@ export class CaseStudyService {
     }
 
 
-    async findRestrictedCaseStudys(): Promise<(Partial<CaseStudy> | Partial<PaidCaseStudy>)[]> {
+    async findRestrictedCaseStudys(): Promise<(Partial<CaseStudy>)[]> {
         const caseStudies: CaseStudy[] = await CaseStudyModel.find().lean();
-        const paidCaseStudies: PaidCaseStudy[] = await PaidCaseStudyModel.find({
-            status: CaseStep.Posted
-        }).lean();
         const filteredCaseStudies: Partial<CaseStudy>[] = [];
-        const filteredPaidCaseStudies: Partial<PaidCaseStudy>[] = [];
-        paidCaseStudies.forEach((study, index) => {
-            filteredPaidCaseStudies.push(omit(study, excludedFields));
-        });
         caseStudies.forEach((study, index) => {
             filteredCaseStudies.push(omit(study, excludedFields));
         });
 
-        return [...filteredCaseStudies, ...filteredPaidCaseStudies];
+        return filteredCaseStudies;
     }
 
-    // Find PaidCaseStudy by Id
-    async findPaidCaseStudyById(id: string) {
-        return PaidCaseStudyModel.findById(id);
-    }
-
-    async updatePaidCaseStudy(paidCaseStudy: DocumentType<PaidCaseStudy>) {
+    async updatePaidCaseStudy(paidCaseStudy: DocumentType<CaseStudy>) {
         await paidCaseStudy.save();
         return paidCaseStudy;
     }
 
     // CreateCaseStudy service
-    async createPaidCaseStudy(input: Partial<PaidCaseStudy>) {
-        const caseStudy = await PaidCaseStudyModel.create(input);
+    async createCaseStudy(input: Partial<CaseStudy>) {
+        const caseStudy = await CaseStudyModel.create(input);
         return caseStudy;
     }
 
     // Find CaseStudy by Id
     async findCaseStudyById(id: string) {
-        const study = CaseStudyModel.findById(id).lean();
-        return omit(study, excludedFields);
+        return CaseStudyModel.findById(id);
     }
 
     // Find All CaseStudys
-    async findAllCaseStudys(): Promise<(PaidCaseStudy | CaseStudy)[]> {
-        const caseStudies: CaseStudy[] = await CaseStudyModel.find();
-        const paidCaseStudies: PaidCaseStudy[] = await PaidCaseStudyModel.find({
+    async findAllCaseStudys(): Promise<(CaseStudy)[]> {
+        const caseStudies: CaseStudy[] = await CaseStudyModel.find({
             status: CaseStep.Posted
         });
-        return [...caseStudies, ...paidCaseStudies];
+        return caseStudies;
     }
 
     // Find one CaseStudy by any fields

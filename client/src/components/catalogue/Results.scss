@@ -2,7 +2,13 @@
   flex: 1 1 60%;
 }
 
+#dollar-icon {
+  padding-bottom: 5px;
+  color: green;
+}
+
 #title{
+    display: flex;
     width: 80%;
     height: 23px;
     border-bottom: 1px solid #d7d7d7;

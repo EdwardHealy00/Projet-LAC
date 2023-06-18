@@ -15,10 +15,9 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { CaseStudy, Case } from "../../model/CaseStudy";
+import { Case } from "../../model/CaseStudy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddPaidCaseStudy from "./AddPaidCaseStudy";
-import AddFreeCaseStudy from "./AddFreeCaseStudy";
+import AddCaseStudy from "./AddCaseStudy";
 import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
 import NavBar from "../common/NavBar";
@@ -52,6 +51,9 @@ export const Subjects = [
   "Recherche opérationnelle",
 ];
 
+const PAID_STR: string = "payant";
+const FREE_STR: string = "libre";
+
 export default function Catalogue() {
   const dates = [
     "0-3 mois",
@@ -64,22 +66,15 @@ export default function Catalogue() {
   const numberPages = ["1 à 4 pages", "5 à 10 pages", "11+ pages"];
 
   const [filters, setFilters] = React.useState<Filter[]>([]);
-  const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>(
-    []
-  );
+  const [typeFilters, setTypeFilters] = React.useState<string[]>([]);
+  const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>([]);
   const [subjectFilters, setSubjectFilters] = React.useState<string[]>([]);
   const [dateFilters, setDateFilters] = React.useState<string[]>([]);
-  const [numberPagesFilters, setNumberPagesFilters] = React.useState<string[]>(
-    []
-  );
+  const [numberPagesFilters, setNumberPagesFilters] = React.useState<string[]>([]);
 
-  const [caseStudies, setCaseStudies] = React.useState<(CaseStudy | Case)[]>(
-    []
-  );
+  const [caseStudies, setCaseStudies] = React.useState<Case[]>([]);
 
-  const [showCaseStudies, setShowCaseStudies] = React.useState<
-    (CaseStudy | Case)[]
-  >([]);
+  const [showCaseStudies, setShowCaseStudies] = React.useState<Case[]>([]);
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
@@ -96,7 +91,7 @@ export default function Catalogue() {
     }
   };
 
-  const onFilter = (caseStudy: CaseStudy | Case, searchFilter: string) => {
+  const onFilter = (caseStudy: Case, searchFilter: string) => {
     for (const property in caseStudy) {
       if (caseStudy.hasOwnProperty(property)) {
         if (
@@ -116,6 +111,7 @@ export default function Catalogue() {
       filter.checkboxRef.click();
     }
     setFilters([]);
+    setTypeFilters([]);
     setDisciplineFilters([]);
     setSubjectFilters([]);
     setDateFilters([]);
@@ -128,7 +124,7 @@ export default function Catalogue() {
     filtersType: string[]
   ) => {
     const checked = e.target.checked;
-    const value = e.target.labels![0].innerText;
+    const value = e.target.name;
     const newFilters = [...filters];
     const filtersToUpdate = [...filtersType];
     const filter: Filter = { name: value, checkboxRef: e.target };
@@ -144,6 +140,13 @@ export default function Catalogue() {
     }
     return filtersToUpdate;
   };
+
+  const onCheckboxChangeType = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newTypeFilters = onCheckboxChange(e, typeFilters);
+    setTypeFilters(newTypeFilters);
+  }
 
   const onCheckboxChangeDiscipline = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -171,18 +174,25 @@ export default function Catalogue() {
 
   React.useEffect(() => {
     onFilterChange();
-  }, [disciplineFilters, subjectFilters, dateFilters, numberPagesFilters]);
+  }, [typeFilters, disciplineFilters, subjectFilters, dateFilters, numberPagesFilters]);
 
   const onFilterChange = () => {
     let caseStudiesToFilter = [...caseStudies];
+
+    if (typeFilters.length > 0) {
+      caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
+        return ((typeFilters.includes(FREE_STR) && !(caseStudy as Case).isPaidCase) 
+                  || (typeFilters.includes(PAID_STR) && (caseStudy as Case).isPaidCase));
+      });
+    }
+
     if (disciplineFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if ((caseStudy as CaseStudy).discipline) {
+        if (!(caseStudy as Case).discipline) {
           return false;
         }
-        console.log((caseStudy as CaseStudy).discipline);
         return disciplineFilters.includes(
-          (caseStudy as CaseStudy).discipline.toLowerCase()
+          (caseStudy as Case).discipline.toLowerCase()
         );
       });
     }
@@ -190,11 +200,11 @@ export default function Catalogue() {
     if (subjectFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
         return subjectFilters.some((subject) => {
-          if ((caseStudy as CaseStudy).tags) {
+          if (!(caseStudy as Case).subjects) {
             return false;
           }
           return (
-            (caseStudy as CaseStudy).tags.find(
+            (caseStudy as Case).subjects.find(
               (tag) => tag.toLowerCase() === subject.toLowerCase()
             ) !== undefined
           );
@@ -204,19 +214,19 @@ export default function Catalogue() {
 
     if (dateFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if ((caseStudy as CaseStudy).date) {
+        if ((caseStudy as Case).date) {
           return false;
         }
-        return verifyDates((caseStudy as CaseStudy).date, dateFilters);
+        return verifyDates((caseStudy as Case).date, dateFilters);
       });
     }
 
     if (numberPagesFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if ((caseStudy as CaseStudy).page) {
+        if ((caseStudy as Case).page) {
           return false;
         }
-        return verifyPages((caseStudy as CaseStudy).page, numberPagesFilters);
+        return verifyPages((caseStudy as Case).page, numberPagesFilters);
       });
     }
 
@@ -348,8 +358,7 @@ export default function Catalogue() {
           role={[Role.Professor]}
           children={
             <div id="addCaseRectangle">
-              <AddPaidCaseStudy />
-              <AddFreeCaseStudy />
+              <AddCaseStudy />
             </div>
           }
         ></UnlockAccess>
@@ -373,6 +382,39 @@ export default function Catalogue() {
         </div>
         <div id="rows">
           <div id="rectangleFilter">
+          <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>TYPE DE CAS</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          onChange={onCheckboxChangeType}
+                          name="Libre"
+                        />
+                      }
+                      label="Libre d'accès"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          onChange={onCheckboxChangeType}
+                          name="Payant"
+                        />
+                      }
+                      label="Payant"
+                    />
+                  </FormGroup>
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -389,7 +431,7 @@ export default function Catalogue() {
                         control={
                           <Checkbox
                             onChange={onCheckboxChangeDiscipline}
-                            key={discipline}
+                            name={discipline}
                           />
                         }
                         label={"Génie " + discipline}
@@ -414,7 +456,7 @@ export default function Catalogue() {
                       control={
                         <Checkbox
                           onChange={onCheckboxChangeSubject}
-                          key={subject}
+                          name={subject}
                         />
                       }
                       label={subject}
@@ -436,7 +478,7 @@ export default function Catalogue() {
                   {dates.map((date) => (
                     <FormControlLabel
                       control={
-                        <Checkbox onChange={onCheckboxChangeDate} key={date} />
+                        <Checkbox onChange={onCheckboxChangeDate} name={date} />
                       }
                       label={date}
                     />
@@ -459,7 +501,7 @@ export default function Catalogue() {
                       control={
                         <Checkbox
                           onChange={onCheckboxChangeNumberPages}
-                          key={nbPage}
+                          name={nbPage}
                         />
                       }
                       label={nbPage}
@@ -486,13 +528,14 @@ export default function Catalogue() {
               (caseStudy) =>
                 ((caseStudy as Case).isPaidCase && (
                   <Results
+                    isPaid={true}
                     title={(caseStudy as Case).title}
                     auteurs={(caseStudy as Case).authors}
                     content={"No content at the moment"}
                     date={(caseStudy as Case).date.substring(0, 10)}
                     page={0}
                     discipline={"Génie " + (caseStudy as Case).discipline}
-                    tags={(caseStudy as Case).subjects}
+                    subjects={(caseStudy as Case).subjects}
                     classNumber={(caseStudy as Case).classId}
                     className={"Unknown"}
                     rating={0}
@@ -501,17 +544,18 @@ export default function Catalogue() {
                 )) ||
                 (!(caseStudy as Case).isPaidCase && (
                   <Results
-                    title={(caseStudy as CaseStudy).title}
-                    auteurs={(caseStudy as CaseStudy).authors}
-                    content={(caseStudy as CaseStudy).content}
-                    date={(caseStudy as CaseStudy).date}
-                    page={(caseStudy as CaseStudy).page}
-                    discipline={(caseStudy as CaseStudy).discipline}
-                    tags={(caseStudy as CaseStudy).tags}
-                    classNumber={(caseStudy as CaseStudy).classIds}
-                    className={(caseStudy as CaseStudy).classNames}
-                    rating={(caseStudy as CaseStudy).ratings}
-                    vote={(caseStudy as CaseStudy).votes}
+                    isPaid={false}
+                    title={(caseStudy as Case).title}
+                    auteurs={(caseStudy as Case).authors}
+                    content={"No content at the moment"}
+                    date={(caseStudy as Case).date}
+                    page={0}
+                    discipline={"Génie " + (caseStudy as Case).discipline}
+                    subjects={(caseStudy as Case).subjects}
+                    classNumber={(caseStudy as Case).classId}
+                    className={"Unknown"}
+                    rating={/*(caseStudy as Case).ratings*/0}
+                    vote={/*(caseStudy as Case).votes*/0}
                   ></Results>
                 ))
             )}

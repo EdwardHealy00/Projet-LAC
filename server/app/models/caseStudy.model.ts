@@ -15,74 +15,46 @@ import { CaseStep } from './CaseStatus';
 // Export the User class to be used as TypeScript type
 export class CaseStudy {
 
+    @prop({ default: true}) 
+    isPaidCase: boolean;
+
     @prop({ unique: true, required: true })
     title: string;
 
-    @prop({ required: true })
-    authors: string;
-
-    @prop({ required: true })
-    content: string;
-
-    @prop({ })
+    @prop({ default: new Date().toISOString() })
     date: string;
 
-    @prop({})
-    page: number;
+    @prop({ required: true })
+    file: any;
+
+    @prop({ required: true })
+    authors: string;
 
     @prop({})
     discipline: string;
 
     @prop({})
-    tags: string[];
+    subjects: string[];
+
+    @prop({})
+    classId?: string;
+
+    @prop({})
+    page: number;
 
     @prop({})
     classNames?: string;
-
-    @prop({})
-    classIds?: string;
 
     @prop({ default: 0 })
     ratings: number;
 
     @prop({ default: 0})
     votes: number;
-}
-
-export class PaidCaseStudy {
-
-    @prop({ default: true}) 
-    isPaidCase: boolean;
-
-    @prop({ default: new Date().toISOString() })
-    date: string;
-
-    @prop({ unique: true, required: true })
-    title: string;
-
-    @prop({ required: true })
-    authors: string;
-
-    @prop({ required: true })
-    classId: string;
-
-    @prop({ required: true })
-    discipline: string;
-
-    @prop({ required: true })
-    subjects: string[];
-
-    @prop({ required: true })
-    file: any;
 
     @prop({ default: CaseStep.WaitingPreApproval })
     status: CaseStep;
+
 }
 
-// Create the user model from the User class
 const CaseStudyModel = getModelForClass(CaseStudy);
-export {CaseStudyModel};
-
-// Create the user model from the User class
-const PaidCaseStudyModel = getModelForClass(PaidCaseStudy);
-export {PaidCaseStudyModel};
+export { CaseStudyModel };
