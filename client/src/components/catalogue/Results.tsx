@@ -17,6 +17,7 @@ interface Props {
   classNumber: React.ReactNode;
   rating: React.ReactNode;
   vote: React.ReactNode;
+  url: React.ReactNode;
 }
 
 const Results: React.FC<Props> = ({
@@ -32,6 +33,7 @@ const Results: React.FC<Props> = ({
   classNumber,
   rating,
   vote,
+  url
 }) => {
   return (
     <div id="viewArticles">
@@ -47,7 +49,8 @@ const Results: React.FC<Props> = ({
         <div id="placement">
           <div id="discipline"> Discipline : {discipline}</div>
           <div id="positionButton">
-            <Button className="consulter">Consulter</Button>
+            {isPaid && <Button className="consulter" onClick={() => window.open(url as string, "_blank")}>Consulter</Button>}
+            {!isPaid && <Button className="consulter">Consulter</Button>}
           </div>
         </div>
         <div id="tags"> Sujet(s) : {subjects.join(", ")}</div>

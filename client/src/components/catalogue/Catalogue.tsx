@@ -542,6 +542,7 @@ export default function Catalogue() {
                     className={"Unknown"}
                     rating={0}
                     vote={0}
+                    url={(caseStudy as Case).url}
                   ></Results>
                 )) ||
                 (!(caseStudy as Case).isPaidCase && (
@@ -558,6 +559,7 @@ export default function Catalogue() {
                     className={"Unknown"}
                     rating={/*(caseStudy as Case).ratings*/0}
                     vote={/*(caseStudy as Case).votes*/0}
+                    url={(caseStudy as Case).url}
                   ></Results>
                 ))
             )}
