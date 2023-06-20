@@ -130,7 +130,7 @@ export class CaseStudyController {
                         caseStudy.url = url;
                     }
                     
-                    await this.caseStudyService.updatePaidCaseStudy(caseStudy);
+                    await this.caseStudyService.updateCaseStudy(caseStudy);
                 }
                 res.status(200).json({
                     status: 'success',

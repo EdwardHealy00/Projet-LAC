@@ -56,7 +56,7 @@ function NewCase() {
   const navigate = useNavigate();
 
   const [checkedState, setCheckedState] = React.useState<boolean[]>(new Array(checkList.length).fill(false));
-  const isApproved = false;
+  const [isApproved, setApproved] = React.useState(false);
 
   const [decision, setDecision] = React.useState("");
 
@@ -68,10 +68,12 @@ function NewCase() {
     });
     setCheckedState(updatedCheckedState);
 
-    let isApproved = true;
+    let approved = true;
     updatedCheckedState.forEach((item) => {
-      isApproved = isApproved && item;
+      approved = approved && item;
     });
+
+    setApproved(approved);
   }
 
   const onDecisionChanged = (e: any) => {
