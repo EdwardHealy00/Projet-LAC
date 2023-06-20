@@ -57,6 +57,8 @@ export class CaseStudy {
     @prop({ default: CaseStep.WaitingPreApproval })
     status: CaseStep;
 
+    @prop({ default: ""})
+    url: string;
 }
 
 const CaseStudyModel = getModelForClass(CaseStudy);

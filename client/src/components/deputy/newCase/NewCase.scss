@@ -20,3 +20,20 @@
         margin-right: 10px;
     }
 }
+
+.criteria-box {
+    display: flex;
+    flex-direction: row;
+}
+
+.radio-form-control {
+    margin-left: 5% !important;
+}
+
+.decision-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 30%;
+    align-items: flex-end;
+}
