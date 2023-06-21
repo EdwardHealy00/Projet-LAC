@@ -2,7 +2,6 @@ import React from "react";
 import { DeputyCaseStudyProps } from "../../../../model/CaseStudy";
 import "../Approval.scss";
 import CaseTable from "./CaseTable";
-import { CaseStep } from "../../../../model/enum/CaseStatus";
 
 export function ApprovalDeputy(caseStudiesProp: DeputyCaseStudyProps) {
          return (

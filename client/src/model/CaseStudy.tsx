@@ -56,3 +56,7 @@ export interface DeputyCaseStudyProps {
   step2: Case[];
   step3: Case[];
 }
+
+export interface SingleCaseProp {
+  caseData: Case;
+}
