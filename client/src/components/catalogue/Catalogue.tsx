@@ -528,40 +528,7 @@ export default function Catalogue() {
           <div id="articles">
             {showCaseStudies.map(
               (caseStudy) =>
-                ((caseStudy as Case).isPaidCase && (
-                  <Results
-                    isPaid={true}
-                    title={(caseStudy as Case).title}
-                    auteurs={(caseStudy as Case).authors}
-                    content={"No content at the moment"}
-                    date={(caseStudy as Case).date.substring(0, 10)}
-                    page={0}
-                    discipline={"Génie " + (caseStudy as Case).discipline}
-                    subjects={(caseStudy as Case).subjects}
-                    classNumber={(caseStudy as Case).classId}
-                    className={"Unknown"}
-                    rating={0}
-                    vote={0}
-                    url={(caseStudy as Case).url}
-                  ></Results>
-                )) ||
-                (!(caseStudy as Case).isPaidCase && (
-                  <Results
-                    isPaid={false}
-                    title={(caseStudy as Case).title}
-                    auteurs={(caseStudy as Case).authors}
-                    content={"No content at the moment"}
-                    date={(caseStudy as Case).date}
-                    page={0}
-                    discipline={"Génie " + (caseStudy as Case).discipline}
-                    subjects={(caseStudy as Case).subjects}
-                    classNumber={(caseStudy as Case).classId}
-                    className={"Unknown"}
-                    rating={/*(caseStudy as Case).ratings*/0}
-                    vote={/*(caseStudy as Case).votes*/0}
-                    url={(caseStudy as Case).url}
-                  ></Results>
-                ))
+                <Results caseData={(caseStudy as Case)}></Results>
             )}
           </div>
         </div>

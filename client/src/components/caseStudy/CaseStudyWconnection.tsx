@@ -4,11 +4,13 @@ import Button from "@mui/material/Button";
 import "../img/normal_search.svg";
 import { PieChart } from "react-minimal-pie-chart";
 import Table from './Table';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Case } from "../../model/CaseStudy";
 
-interface Props {}
+const CaseStudyWTconnection = () => {
+  const state = useLocation().state as any;
+  const newCase = state ? (state.caseData as Case) : state;
 
-const CaseStudyWTconnection: React.FC<Props> = ({}) => {
  const navigate = useNavigate();
  const handleOnClick = useCallback(() => navigate('/catalogue'), [navigate]);
 
@@ -22,40 +24,25 @@ const CaseStudyWTconnection: React.FC<Props> = ({}) => {
         <div className="section">
           <div className="section-line"></div>
           <div id="first">
-            <div id="title">
-              Littéralement en changement
-              <div id="subtitle">
-                L’impact de la COVID-19 sur l’écosystème littéraire québécois
-              </div>
-            </div>
+            <div id="title">{newCase.title}</div>
             <br />
             <div id="information">
-              <div>
-                Au début de l’année 2020, la pandémie de la COVID-19 a frappé de
-                plein fouet le milieu littéraire. Fragilisé, l’écosystème
-                littéraire a subi une énième vague de transformation. Les
-                bibliothèques ont fermé. Les salons du livre, les lancements et
-                les événements culturels ont été reportés ou carrément annulés.
-                Les retards de paiement des éditeurs s’accumulent. Le droit de
-                représentation empêche bon nombre d’auteurs et d’autrices de
-                présenter leurs livres, même virtuellement. L’industrie du livre
-                est-elle en crise?
-              </div>
+              <div>{newCase.desc}</div>
               <div>
                 <div>
-                  <b>Auteurs :</b> Virginie Francoeur, Annie Passalacqua
+                  <b>Auteurs :</b> {newCase.authors}
                 </div>
                 <div>
-                  <b>Discipline :</b> Génie industriel
+                  <b>Discipline :</b> Génie {newCase.discipline}
                 </div>
                 <div>
-                  <b>Sujet(s) :</b> Gestion du changement
+                  <b>Sujet(s) :</b> {newCase.subjects.join(", ")}
                 </div>
                 <div>
-                  <b>Nombre de pages :</b> 9
+                  <b>Nombre de pages :</b> {newCase.page}
                 </div>
                 <div>
-                  <b>Date :</b> 2021-02-28
+                  <b>Date :</b> {newCase.date.substring(0, 10)}
                 </div>
               </div>
             </div>
@@ -64,11 +51,11 @@ const CaseStudyWTconnection: React.FC<Props> = ({}) => {
           <Button
             id="use-case"
             variant="contained"
-            onClick={() => console.log("You clicked")}
+            onClick={() => console.log("You clicked (use case)")}
           >
             Utiliser ce cas
           </Button>
-          <Button variant="outlined" onClick={() => console.log("You clicked")}>
+          <Button variant="outlined" onClick={() => console.log("You clicked (consulter)")}>
             Consulter
           </Button>
         </div>
