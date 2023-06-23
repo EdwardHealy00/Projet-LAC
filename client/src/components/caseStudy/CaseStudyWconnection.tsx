@@ -6,13 +6,57 @@ import { PieChart } from "react-minimal-pie-chart";
 import Table from './Table';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Case } from "../../model/CaseStudy";
+import axios from "axios";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 const CaseStudyWTconnection = () => {
   const state = useLocation().state as any;
-  const newCase = state ? (state.caseData as Case) : state;
+  const displayedCase = state ? (state.caseData as Case) : state;
 
- const navigate = useNavigate();
- const handleOnClick = useCallback(() => navigate('/catalogue'), [navigate]);
+  const [open, setOpen] = React.useState(false);
+
+  const navigate = useNavigate();
+  const handleOnClick = useCallback(() => navigate('/catalogue'), [navigate]);
+
+  const openDialog = () => {
+    setOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpen(false);
+  };
+
+  const handleFileDownload = (file: any) => {
+    axios
+      .get(
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/download/` +
+          file.filename,
+        {
+          withCredentials: true,
+          responseType: "arraybuffer",
+        }
+      )
+      .then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", file.originalname); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      });
+  };
+
+  const onConsultClick = () => {
+    if (displayedCase.files.length < 1) return;
+
+    if (displayedCase.files.length == 1) {
+      handleFileDownload(displayedCase.files[0]);
+      return;
+    }
+
+    openDialog();
+  };
 
   return (
     <div>
@@ -24,25 +68,25 @@ const CaseStudyWTconnection = () => {
         <div className="section">
           <div className="section-line"></div>
           <div id="first">
-            <div id="title">{newCase.title}</div>
+            <div id="title">{displayedCase.title}</div>
             <br />
             <div id="information">
-              <div>{newCase.desc}</div>
+              <div>{displayedCase.desc}</div>
               <div>
                 <div>
-                  <b>Auteurs :</b> {newCase.authors}
+                  <b>Auteurs :</b> {displayedCase.authors}
                 </div>
                 <div>
-                  <b>Discipline :</b> Génie {newCase.discipline}
+                  <b>Discipline :</b> Génie {displayedCase.discipline}
                 </div>
                 <div>
-                  <b>Sujet(s) :</b> {newCase.subjects.join(", ")}
+                  <b>Sujet(s) :</b> {displayedCase.subjects.join(", ")}
                 </div>
                 <div>
-                  <b>Nombre de pages :</b> {newCase.page}
+                  <b>Nombre de pages :</b> {displayedCase.page}
                 </div>
                 <div>
-                  <b>Date :</b> {newCase.date.substring(0, 10)}
+                  <b>Date :</b> {displayedCase.date.substring(0, 10)}
                 </div>
               </div>
             </div>
@@ -55,7 +99,7 @@ const CaseStudyWTconnection = () => {
           >
             Utiliser ce cas
           </Button>
-          <Button variant="outlined" onClick={() => console.log("You clicked (consulter)")}>
+          <Button variant="outlined" onClick={onConsultClick}>
             Consulter
           </Button>
         </div>
@@ -86,6 +130,24 @@ const CaseStudyWTconnection = () => {
           <Table></Table>
         </div>
       </div>
+      <Dialog open={open} onClose={handleDialogClose} fullWidth={true}>
+        <DialogTitle>Consulter les fichiers</DialogTitle>
+
+        <DialogContent>
+          {displayedCase.files.map((file: { originalname: string; }) => (
+            <div className="file-row">
+              <div>{file.originalname}</div>
+              <Button onClick={() => handleFileDownload(file)}>
+                <FileDownloadIcon />Télécharger
+              </Button>
+            </div>
+          ))}
+        </DialogContent>
+
+        <DialogActions>
+          <Button variant="contained" onClick={handleDialogClose}>Fermer</Button>
+        </DialogActions>
+      </Dialog>      
     </div>
   );
 };
