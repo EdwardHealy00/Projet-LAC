@@ -71,10 +71,11 @@ export default function Catalogue() {
   const [subjectFilters, setSubjectFilters] = React.useState<string[]>([]);
   const [dateFilters, setDateFilters] = React.useState<string[]>([]);
   const [numberPagesFilters, setNumberPagesFilters] = React.useState<string[]>([]);
+  const [authorsFilters, setAuthorsFilters] = React.useState<string[]>([]);
 
   const [caseStudies, setCaseStudies] = React.useState<Case[]>([]);
-
   const [showCaseStudies, setShowCaseStudies] = React.useState<Case[]>([]);
+  const [caseStudyAuthors, setCaseStudyAuthors] = React.useState<string[]>([]);
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value;
@@ -116,6 +117,7 @@ export default function Catalogue() {
     setSubjectFilters([]);
     setDateFilters([]);
     setNumberPagesFilters([]);
+    setAuthorsFilters([]);
     setShowCaseStudies(caseStudies);
   };
 
@@ -172,9 +174,16 @@ export default function Catalogue() {
     setNumberPagesFilters(newNumberPagesFilters);
   };
 
+  const onCheckboxChangeAuthorName = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newAuthorsFilters = onCheckboxChange(e, authorsFilters);
+    setAuthorsFilters(newAuthorsFilters);
+  };
+
   React.useEffect(() => {
     onFilterChange();
-  }, [typeFilters, disciplineFilters, subjectFilters, dateFilters, numberPagesFilters]);
+  }, [typeFilters, disciplineFilters, subjectFilters, dateFilters, numberPagesFilters, authorsFilters]);
 
   const onFilterChange = () => {
     let caseStudiesToFilter = [...caseStudies];
@@ -230,6 +239,15 @@ export default function Catalogue() {
       });
     }
 
+    if (authorsFilters.length > 0) {
+      caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
+        if (!(caseStudy as Case).authors) {
+          return false;
+        }
+        return verifyAuthors((caseStudy as Case).authors, authorsFilters);
+      });
+    }
+
     setShowCaseStudies(caseStudiesToFilter);
   };
 
@@ -241,6 +259,15 @@ export default function Catalogue() {
       } else if (numberPage.includes("10") && page >= 5 && page <= 10) {
         return true;
       } else if (numberPage.includes("11") && page >= 11) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const verifyAuthors = (author: string, authorsFilters: string[]) => {
+    for (const selectedAuthor of authorsFilters) {
+      if (selectedAuthor.toLowerCase() === author.toLowerCase()) {
         return true;
       }
     }
@@ -320,8 +347,17 @@ export default function Catalogue() {
       });
   };
 
+  const getCaseStudyAuthors = async () => {
+    axios
+      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/authors`)
+      .then((res) => {
+        setCaseStudyAuthors(res.data);
+      });
+  };
+
   React.useEffect(() => {
     getCaseStudies();
+    getCaseStudyAuthors();
   }, []);
 
   const onDeleteChip = (filter: Filter) => {
@@ -521,7 +557,19 @@ export default function Catalogue() {
                 <Typography>AUTEUR</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography>TODO</Typography>
+                <Typography>
+                  {caseStudyAuthors.map((author) => (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          onChange={onCheckboxChangeAuthorName}
+                          name={author}
+                        />
+                      }
+                      label={author}
+                    />
+                  ))}
+                </Typography>
               </AccordionDetails>
             </Accordion>
           </div>

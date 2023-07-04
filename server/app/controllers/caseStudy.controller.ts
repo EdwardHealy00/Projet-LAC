@@ -67,6 +67,15 @@ export class CaseStudyController {
 
         });
 
+        this.router.get('/authors', async (req: Request, res: Response) => {
+            try {
+                const caseStudyAuthors = await this.caseStudyService.findAllCaseStudyAuthors();
+                res.json(caseStudyAuthors);
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
         this.router.get('/:id', async (req: Request, res: Response) => {
             try {
                 const caseStudy = await this.caseStudyService.findCaseStudyById(req.params.id);

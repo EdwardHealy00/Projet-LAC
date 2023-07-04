@@ -87,4 +87,9 @@ export class CaseStudyService {
     ) {
         return CaseStudyModel.findOne(query, {}, options);
     }
+
+    // Find All Authors
+    async findAllCaseStudyAuthors(): Promise<(string)[]> {
+        return await CaseStudyModel.find({status: CaseStep.Posted}).distinct('authors');
+    }
 }
