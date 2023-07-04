@@ -214,7 +214,7 @@ export default function Catalogue() {
 
     if (dateFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if ((caseStudy as Case).date) {
+        if (!(caseStudy as Case).date) {
           return false;
         }
         return verifyDates((caseStudy as Case).date, dateFilters);
@@ -223,7 +223,7 @@ export default function Catalogue() {
 
     if (numberPagesFilters.length > 0) {
       caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if ((caseStudy as Case).page) {
+        if (!(caseStudy as Case).page) {
           return false;
         }
         return verifyPages((caseStudy as Case).page, numberPagesFilters);
