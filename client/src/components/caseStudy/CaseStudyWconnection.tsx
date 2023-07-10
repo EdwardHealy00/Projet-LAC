@@ -10,7 +10,7 @@ import axios from "axios";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
-const CaseStudyWTconnection = () => {
+const CaseStudyWconnection = () => {
   const state = useLocation().state as any;
   const displayedCase = state ? (state.caseData as Case) : state;
 
@@ -152,4 +152,4 @@ const CaseStudyWTconnection = () => {
   );
 };
 
-export default CaseStudyWTconnection;
+export default CaseStudyWconnection;
