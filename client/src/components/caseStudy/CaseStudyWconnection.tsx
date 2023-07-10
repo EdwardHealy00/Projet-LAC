@@ -4,13 +4,59 @@ import Button from "@mui/material/Button";
 import "../img/normal_search.svg";
 import { PieChart } from "react-minimal-pie-chart";
 import Table from './Table';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Case } from "../../model/CaseStudy";
+import axios from "axios";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
-interface Props {}
+const CaseStudyWconnection = () => {
+  const state = useLocation().state as any;
+  const displayedCase = state ? (state.caseData as Case) : state;
 
-const CaseStudyWTconnection: React.FC<Props> = ({}) => {
- const navigate = useNavigate();
- const handleOnClick = useCallback(() => navigate('/catalogue'), [navigate]);
+  const [open, setOpen] = React.useState(false);
+
+  const navigate = useNavigate();
+  const handleOnClick = useCallback(() => navigate('/catalogue'), [navigate]);
+
+  const openDialog = () => {
+    setOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpen(false);
+  };
+
+  const handleFileDownload = (file: any) => {
+    axios
+      .get(
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/download/` +
+          file.filename,
+        {
+          withCredentials: true,
+          responseType: "arraybuffer",
+        }
+      )
+      .then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", file.originalname); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      });
+  };
+
+  const onConsultClick = () => {
+    if (displayedCase.files.length < 1) return;
+
+    if (displayedCase.files.length == 1) {
+      handleFileDownload(displayedCase.files[0]);
+      return;
+    }
+
+    openDialog();
+  };
 
   return (
     <div>
@@ -22,40 +68,25 @@ const CaseStudyWTconnection: React.FC<Props> = ({}) => {
         <div className="section">
           <div className="section-line"></div>
           <div id="first">
-            <div id="title">
-              Littéralement en changement
-              <div id="subtitle">
-                L’impact de la COVID-19 sur l’écosystème littéraire québécois
-              </div>
-            </div>
+            <div id="title">{displayedCase.title}</div>
             <br />
             <div id="information">
-              <div>
-                Au début de l’année 2020, la pandémie de la COVID-19 a frappé de
-                plein fouet le milieu littéraire. Fragilisé, l’écosystème
-                littéraire a subi une énième vague de transformation. Les
-                bibliothèques ont fermé. Les salons du livre, les lancements et
-                les événements culturels ont été reportés ou carrément annulés.
-                Les retards de paiement des éditeurs s’accumulent. Le droit de
-                représentation empêche bon nombre d’auteurs et d’autrices de
-                présenter leurs livres, même virtuellement. L’industrie du livre
-                est-elle en crise?
-              </div>
+              <div>{displayedCase.desc}</div>
               <div>
                 <div>
-                  <b>Auteurs :</b> Virginie Francoeur, Annie Passalacqua
+                  <b>Auteurs :</b> {displayedCase.authors}
                 </div>
                 <div>
-                  <b>Discipline :</b> Génie industriel
+                  <b>Discipline :</b> Génie {displayedCase.discipline}
                 </div>
                 <div>
-                  <b>Sujet(s) :</b> Gestion du changement
+                  <b>Sujet(s) :</b> {displayedCase.subjects.join(", ")}
                 </div>
                 <div>
-                  <b>Nombre de pages :</b> 9
+                  <b>Nombre de pages :</b> {displayedCase.page}
                 </div>
                 <div>
-                  <b>Date :</b> 2021-02-28
+                  <b>Date :</b> {displayedCase.date.substring(0, 10)}
                 </div>
               </div>
             </div>
@@ -64,11 +95,11 @@ const CaseStudyWTconnection: React.FC<Props> = ({}) => {
           <Button
             id="use-case"
             variant="contained"
-            onClick={() => console.log("You clicked")}
+            onClick={() => console.log("You clicked (use case)")}
           >
             Utiliser ce cas
           </Button>
-          <Button variant="outlined" onClick={() => console.log("You clicked")}>
+          <Button variant="outlined" onClick={onConsultClick}>
             Consulter
           </Button>
         </div>
@@ -99,8 +130,26 @@ const CaseStudyWTconnection: React.FC<Props> = ({}) => {
           <Table></Table>
         </div>
       </div>
+      <Dialog open={open} onClose={handleDialogClose} fullWidth={true}>
+        <DialogTitle>Consulter les fichiers</DialogTitle>
+
+        <DialogContent>
+          {displayedCase.files.map((file: { originalname: string; }) => (
+            <div className="file-row">
+              <div>{file.originalname}</div>
+              <Button onClick={() => handleFileDownload(file)}>
+                <FileDownloadIcon />Télécharger
+              </Button>
+            </div>
+          ))}
+        </DialogContent>
+
+        <DialogActions>
+          <Button variant="contained" onClick={handleDialogClose}>Fermer</Button>
+        </DialogActions>
+      </Dialog>      
     </div>
   );
 };
 
-export default CaseStudyWTconnection;
+export default CaseStudyWconnection;

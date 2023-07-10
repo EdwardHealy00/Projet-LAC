@@ -1,39 +1,20 @@
-import {
-  Accordion,
-  AccordionSummary,
-  Typography,
-  AccordionDetails,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-} from "@mui/material";
+import { Accordion, AccordionSummary, Typography, AccordionDetails, Button } from "@mui/material";
 import React from "react";
 import "./NewCase.scss";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { Case } from "../../../model/CaseStudy";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import NewCaseTable from "./NewCaseTable";
 import axios from "axios";
-
-export const checkList: string[] = [
-  "L’étude de cas est en format Word.",
-  "L’étude de cas respecte le gabarit fourni.",
-  "Les notes pédagogiques sont incluses dans l’étude de cas.",
-  "La version étudiante est incluse dans l’étude de cas.",
-  "Toutes les sections dans le gabarit sont dûment remplies.",
-  "La matière semble pertinente au génie, aux sciences ou à la technologie.",
-  "La qualité rédactionnelle est satisfaisante.",
-  "Le formulaire d’autorisation de publication est en format PDF.",
-  "Le formulaire d’autorisation est dûment rempli (signatures, dates, etc.)",
-  "Tous les fichiers pertinents à l’étude de cas sont présents (données, annexes, outils, etc.)",
-];
+import { CaseStep } from "../../../model/enum/CaseStatus";
+import DeputyFeedback from "../../roles/approval/deputy/Feedback";
+import ComityFeedback from "../../roles/approval/comity/Feedback";
+import PressFeedback from "../../roles/approval/polyPress/Feedback";
 
 function NewCase() {
   const state = useLocation().state as any;
   const newCase = state ? (state.caseStudy as Case) : state;
-  const navigate = useNavigate();
 
   const handleDownloadAll = (files: any[]) => {
     for (let i = 0; i < files.length; i++) {
@@ -55,24 +36,6 @@ function NewCase() {
         link.click();
       });
     }
-  };
-
-  const sendCaseStudyResponse = () => {
-    const isCaseStudyApproved = true;
-    axios
-      .post(
-        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/approvalResult`,
-        {
-          case: newCase.id_,
-          approved: isCaseStudyApproved,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        navigate("/approval");
-      });
   };
 
   return (
@@ -108,39 +71,21 @@ function NewCase() {
           </AccordionDetails>
         </Accordion>
         <br />
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel2a-content"
-            id="panel2a-header"
-          >
-            <Typography>Préapprouver le cas</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              <FormGroup>
-                {checkList.map((criteria, index) => (
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label={criteria}
-                    key={index}
-                  />
-                ))}
-              </FormGroup>
-              <div>
-                <b>
-                  L’auteur sera avisé par courriel du statut de suivi de son
-                  dossier. <br />
-                  Si certains critères n’ont pas été respectés, l’auteur sera
-                  avisé des modifications à effectuer.
-                </b>
-              </div>
-              <Button variant="contained" onClick={sendCaseStudyResponse}>
-                Compléter
-              </Button>
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
+
+        {/* PREAPPROVAL */}
+        {((newCase as Case).status == CaseStep.WaitingPreApproval &&
+          <DeputyFeedback caseData={newCase as Case}></DeputyFeedback>  
+        )}
+
+        {/* COMITY APPROVAL */}
+        {((newCase as Case).status == CaseStep.WaitingComity &&
+          <ComityFeedback caseData={newCase as Case}></ComityFeedback>
+        )}
+
+          {/* CATALOGUE ADD SECTION*/}
+          {((newCase as Case).status == CaseStep.WaitingCatalogue && 
+            <PressFeedback caseData={newCase as Case}></PressFeedback>
+          )}
       </div>
     )
   );

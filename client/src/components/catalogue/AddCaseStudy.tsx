@@ -12,7 +12,7 @@ import { Disciplines, Subjects } from "./Catalogue";
 import NavBar from "../common/NavBar";
 import { useNavigate } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { checkList } from "../deputy/newCase/NewCase";
+import { checkList } from "../roles/approval/deputy/Feedback";
 
 export default function AddCaseStudy() {
   const navigate = useNavigate();

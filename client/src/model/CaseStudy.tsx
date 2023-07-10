@@ -34,6 +34,7 @@ export interface Case {
   files: Document[];
   ratings: number;
   votes: number;
+  url: string;
 }
 
 export interface NewCaseStudy {
@@ -54,5 +55,8 @@ export interface DeputyCaseStudyProps {
   step1: Case[];
   step2: Case[];
   step3: Case[];
-  step4: Case[];
+}
+
+export interface SingleCaseProp {
+  caseData: Case;
 }

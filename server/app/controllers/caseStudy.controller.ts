@@ -4,6 +4,7 @@ import { CaseStudyService } from '@app/services/database/caseStudy.service';
 import {Role} from "@app/models/Role";
 import {verifyJwt} from "@app/utils/jwt";
 import {UserService} from "@app/services/database/user.service";
+import { CaseStep } from '@app/models/CaseStatus';
 
 export const excludedFields = ['_id', 'file', 'fieldName', 'encoding', 'mimetype', 'destination', 'filename', 'path', ];
 
@@ -114,6 +115,7 @@ export class CaseStudyController {
             try {
                 const caseStudyId = req.body.case;
                 const isApproved = req.body.approved;
+                const url = req.body.url;
 
                 let caseStudy;
                 if (isApproved) {
@@ -123,7 +125,12 @@ export class CaseStudyController {
                         return;
                     }
                     caseStudy.status += 1;
-                    await this.caseStudyService.updatePaidCaseStudy(caseStudy);
+
+                    if (caseStudy.isPaidCase && caseStudy.status == CaseStep.Posted) {
+                        caseStudy.url = url;
+                    }
+                    
+                    await this.caseStudyService.updateCaseStudy(caseStudy);
                 }
                 res.status(200).json({
                     status: 'success',

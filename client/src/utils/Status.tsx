@@ -6,8 +6,6 @@ export function getStatus(step: CaseStep) {
       return "Nouveau";
     case CaseStep.WaitingComity:
       return "En révision";
-    case CaseStep.WaitingPolyPress:
-      return "En cours d’édition";
     case CaseStep.WaitingCatalogue:
       return "À ajouter";
     default:

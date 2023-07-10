@@ -58,9 +58,9 @@ export class CaseStudyService {
         return filteredCaseStudies;
     }
 
-    async updatePaidCaseStudy(paidCaseStudy: DocumentType<CaseStudy>) {
-        await paidCaseStudy.save();
-        return paidCaseStudy;
+    async updateCaseStudy(caseStudy: DocumentType<CaseStudy>) {
+        await caseStudy.save();
+        return caseStudy;
     }
 
     // CreateCaseStudy service
@@ -76,9 +76,7 @@ export class CaseStudyService {
 
     // Find All CaseStudys
     async findAllCaseStudys(): Promise<(CaseStudy)[]> {
-        const caseStudies: CaseStudy[] = await CaseStudyModel.find({
-            status: CaseStep.Posted
-        });
+        const caseStudies: CaseStudy[] = await CaseStudyModel.find();
         return caseStudies;
     }
 

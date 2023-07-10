@@ -68,3 +68,12 @@
   width: 50%;
   height: 200px;
 }
+
+.file-row {
+  margin: 10px 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: #d7d7d7 1px solid;
+}
