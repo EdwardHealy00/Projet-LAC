@@ -1,6 +1,9 @@
 import { Service } from 'typedi';
 import * as nodemailer from 'nodemailer';
 import { EMAIL_USERNAME, EMAIL_PASSWORD } from '@app/constant/constant';
+import { CaseStudy } from '@app/models/caseStudy.model';
+import { User } from '@app/models/user.model';
+
 @Service()
 export class EmailService {
 
@@ -76,5 +79,41 @@ export class EmailService {
             text: isApproved ? "Your account has been approved" : "Your account has been rejected"
         }
         this.sendEmail(mailOptions);
+    }
+
+    sendPreApprovalNeededToDeputies(deputies: Array<User>, caseStudy: CaseStudy) {
+        for(var deputy of deputies) {
+            const mailOptions = {
+                from: EMAIL_USERNAME,
+                to: deputy.email,
+                subject: "A new case study needs your attention",
+                text: `A new case study named ${caseStudy.title}, authored by ${caseStudy.authors} is waiting for pre-approval. \n\n You can access it here: http://localhost:3000/approval`
+            }
+            this.sendEmail(mailOptions);
+        }
+    }
+
+    sendReviewNeededToComity(commity: Array<User>, caseStudy: CaseStudy) {
+        for(var committeeMember of commity) {
+            const mailOptions = {
+                from: EMAIL_USERNAME,
+                to: committeeMember.email,
+                subject: "A pre-approved case study needs your attention",
+                text: `A pre-approved case study named ${caseStudy.title}, authored by ${caseStudy.authors} is waiting for review. \n\n You can access it here: http://localhost:3000/approval`
+            }
+            this.sendEmail(mailOptions);
+        }
+    }
+
+    sendWaitingForFinalConfirmationToDeputies(deputies: Array<User>, caseStudy: CaseStudy) {
+        for(var deputy of deputies) {
+            const mailOptions = {
+                from: EMAIL_USERNAME,
+                to: deputy.email,
+                subject: "A reviewed case study needs your attention",
+                text: `A reviewed case study named ${caseStudy.title}, authored by ${caseStudy.authors} is waiting for final confirmation. \n\n You can access it here: http://localhost:3000/approval`
+            }
+            this.sendEmail(mailOptions);
+        }
     }
 }

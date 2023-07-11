@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response, Router} from 'express';
 import { Service } from 'typedi';
 import { CaseStudyService } from '@app/services/database/caseStudy.service';
+import { EmailService } from '@app/services/email.service';
 import {Role} from "@app/models/Role";
 import {verifyJwt} from "@app/utils/jwt";
 import {UserService} from "@app/services/database/user.service";
@@ -12,7 +13,7 @@ export const excludedFields = ['_id', 'file', 'fieldName', 'encoding', 'mimetype
 export class CaseStudyController {
     router: Router;
 
-    constructor(private readonly userService: UserService, private readonly caseStudyService: CaseStudyService) {
+    constructor(private readonly userService: UserService, private readonly caseStudyService: CaseStudyService, private readonly emailService: EmailService) {
         this.configureRouter();
     }
 
@@ -105,6 +106,10 @@ export class CaseStudyController {
                 }
 
                 const newCaseStudy = await this.caseStudyService.createCaseStudy(caseStudy);
+
+                const deputies = await this.userService.findUsers({ role: Role.Deputy });
+                this.emailService.sendPreApprovalNeededToDeputies(deputies, newCaseStudy);
+
                 res.status(201).json(newCaseStudy);
             } catch (err: any) {
                 console.log(err);
@@ -130,7 +135,19 @@ export class CaseStudyController {
                         caseStudy.url = url;
                     }
                     
+                    if(caseStudy.status == CaseStep.WaitingComity) {
+                        const comity = await this.userService.findUsers({ role: Role.Comity });
+                        this.emailService.sendReviewNeededToComity(comity, caseStudy);
+                    }
+
+                    if(caseStudy.status == CaseStep.WaitingCatalogue) {
+                        console.log("")
+                        const deputies = await this.userService.findUsers({ role: Role.Deputy });
+                        this.emailService.sendWaitingForFinalConfirmationToDeputies(deputies, caseStudy);
+                    }
+                    
                     await this.caseStudyService.updateCaseStudy(caseStudy);
+                    
                 }
                 res.status(200).json({
                     status: 'success',
