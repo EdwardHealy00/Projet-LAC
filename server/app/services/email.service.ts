@@ -3,6 +3,7 @@ import * as nodemailer from 'nodemailer';
 import { EMAIL_USERNAME, EMAIL_PASSWORD } from '@app/constant/constant';
 import { CaseStudy } from '@app/models/caseStudy.model';
 import { User } from '@app/models/user.model';
+import { CaseFeedback } from '@app/models/CaseFeedback';
 
 @Service()
 export class EmailService {
@@ -81,6 +82,60 @@ export class EmailService {
         this.sendEmail(mailOptions);
     }
 
+    sendPreApprovalResultToUser(email: string, caseStudy: CaseStudy, isPreApproved: boolean, failedCriterias: string[]) {
+        let criteriaText = '';
+        for (var criteria of failedCriterias) {
+          criteriaText += criteria + '\n';
+        }
+
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: email,
+            subject: `You case study named ${caseStudy.title}` + (isPreApproved ? `has been pre-approved` : `has been declined by a deputy`), 
+            text: `Your case study named ${caseStudy.title}, authored by ${caseStudy.authors}` + 
+                    (isPreApproved ? ` is now ready to get reviewed by the scientific committee.`
+                                   : ` requires changes for its pre-approval. The following criterias were not respected: \n\n` +`${criteriaText}`) +
+                    `\n\n Click here to see its status: http://localhost:3000/approval`
+
+        }
+        this.sendEmail(mailOptions);
+    }
+
+    sendReviewResultToUser(email: string, caseStudy: CaseStudy, isApproved: boolean, decision: string, feedback: CaseFeedback[]) {
+        let decisionText = '';
+        switch(decision){
+            case 'minor': decisionText = 'requires minor changes.'; break;
+            case 'major': decisionText = 'requires major changes.'; break;
+            case 'rejected': decisionText = 'has been rejected.';
+        }
+
+        let feedbackText = '';
+        for (var element of feedback) {
+            feedbackText += element.criteria + ': ' + (element.rating? element.rating + '/5': '') + '\n' +  (element.comments? element.comments + '\n': '') + '\n';
+        }
+    
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: email,
+            subject: `You case study named ${caseStudy.title} has been reviewed`, 
+            text: `Your case study named ${caseStudy.title}, authored by ${caseStudy.authors}` + 
+                    (isApproved ? ` has been approved by the scientific committee.`
+                                : `${decisionText} See the full review below: \n\n${feedbackText}`) + 
+                    `\n\n Click here to see its status: http://localhost:3000/approval` 
+        }
+        this.sendEmail(mailOptions);
+    }
+
+    sendNotifyCaseStudyPublishedToUser(email: string, caseStudy: CaseStudy) {
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: email,
+            subject: `Your case study named ${caseStudy.title} has been published`,
+            text: `Your case study named ${caseStudy.title}, authored by ${caseStudy.authors} has been approved by PolyPress. \n\n You can access to its published version here: http://localhost:3000/catalogue`
+        }
+        this.sendEmail(mailOptions);
+    }
+
     sendPreApprovalNeededToDeputies(deputies: Array<User>, caseStudy: CaseStudy) {
         for(var deputy of deputies) {
             const mailOptions = {
@@ -105,11 +160,11 @@ export class EmailService {
         }
     }
 
-    sendWaitingForFinalConfirmationToDeputies(deputies: Array<User>, caseStudy: CaseStudy) {
-        for(var deputy of deputies) {
+    sendWaitingForFinalConfirmationToPolyPress(polyPress: Array<User>, caseStudy: CaseStudy) {
+        for(var polyPressMember of polyPress) {
             const mailOptions = {
                 from: EMAIL_USERNAME,
-                to: deputy.email,
+                to: polyPressMember.email,
                 subject: "A reviewed case study needs your attention",
                 text: `A reviewed case study named ${caseStudy.title}, authored by ${caseStudy.authors} is waiting for final confirmation. \n\n You can access it here: http://localhost:3000/approval`
             }

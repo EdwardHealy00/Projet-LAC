@@ -16,6 +16,7 @@ function createData(
   title: string,
   desc: string,
   authors: string,
+  submitter: string,
   date: string,
   page: number,
   status: CaseStep,
@@ -47,6 +48,7 @@ function createData(
     title,
     desc,
     authors,
+    submitter,
     date,
     page,
     status,
@@ -83,13 +85,14 @@ export default function Approval() {
       .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/`, {withCredentials: true})
       .then((res) => {
         const paidCases: Case[] = [];
-        const freeCases: Case[] = []
+        const freeCases: Case[] = [];
         for (const caseStudy of res.data) {
           const newData = createData(
             caseStudy._id,
             caseStudy.title,
             caseStudy.desc,
             caseStudy.authors,
+            caseStudy.submitter,
             caseStudy.date,
             caseStudy.page,
             caseStudy.status,

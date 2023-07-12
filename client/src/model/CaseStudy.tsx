@@ -24,6 +24,7 @@ export interface Case {
   title: string;
   desc: string;
   authors: string;
+  submitter: string;
   date: string;
   page: number;
   status: CaseStep;
@@ -41,6 +42,7 @@ export interface NewCaseStudy {
   title: string;
   desc: string;
   authors: string;
+  submitter: string;
   classId: string;
   files: any;
   discipline: string;

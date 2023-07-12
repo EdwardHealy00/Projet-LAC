@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 import { CaseStudyService } from '@app/services/database/caseStudy.service';
 import { EmailService } from '@app/services/email.service';
 import {Role} from "@app/models/Role";
+import {Criteria} from "@app/models/Criteria";
 import {verifyJwt} from "@app/utils/jwt";
 import {UserService} from "@app/services/database/user.service";
 import { CaseStep } from '@app/models/CaseStatus';
@@ -120,34 +121,50 @@ export class CaseStudyController {
             try {
                 const caseStudyId = req.body.case;
                 const isApproved = req.body.approved;
+                const failedCriterias = req.body.failedCriterias;
+                const decision = req.body.decision;
+                const feedback = req.body.feedback;
                 const url = req.body.url;
 
-                let caseStudy;
-                if (isApproved) {
-                    caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
-                    if (!caseStudy) {
-                        res.status(404).json('L\'étude de cas n\'a pas été trouvée');
-                        return;
-                    }
-                    caseStudy.status += 1;
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
 
-                    if (caseStudy.isPaidCase && caseStudy.status == CaseStep.Posted) {
-                        caseStudy.url = url;
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                if(caseStudy.status == CaseStep.WaitingPreApproval) {
+                    let writtenCriterias: string[] = [];
+                    for(var criteriaIndex of failedCriterias) {
+                        writtenCriterias.push(Criteria[criteriaIndex]);
                     }
+                    this.emailService.sendPreApprovalResultToUser(caseStudy.submitter, caseStudy, isApproved, writtenCriterias)
                     
-                    if(caseStudy.status == CaseStep.WaitingComity) {
+                    if(isApproved) {
                         const comity = await this.userService.findUsers({ role: Role.Comity });
                         this.emailService.sendReviewNeededToComity(comity, caseStudy);
                     }
+                }
 
-                    if(caseStudy.status == CaseStep.WaitingCatalogue) {
-                        console.log("")
-                        const deputies = await this.userService.findUsers({ role: Role.Deputy });
-                        this.emailService.sendWaitingForFinalConfirmationToDeputies(deputies, caseStudy);
+                if(caseStudy.status == CaseStep.WaitingComity) {
+                    this.emailService.sendReviewResultToUser(caseStudy.submitter, caseStudy, isApproved, decision, feedback)
+
+                    if(isApproved) {
+                        const polyPress = await this.userService.findUsers({ role: Role.PolyPress });
+                        this.emailService.sendWaitingForFinalConfirmationToPolyPress(polyPress, caseStudy);
                     }
-                    
+                }
+
+                if(caseStudy.status == CaseStep.WaitingCatalogue && isApproved) {
+                    if (caseStudy.isPaidCase) {
+                        caseStudy.url = url;
+                    }
+                    this.emailService.sendNotifyCaseStudyPublishedToUser(caseStudy.submitter, caseStudy);
+                }
+
+                if (isApproved) {
+                    caseStudy.status += 1; 
                     await this.caseStudyService.updateCaseStudy(caseStudy);
-                    
                 }
                 res.status(200).json({
                     status: 'success',

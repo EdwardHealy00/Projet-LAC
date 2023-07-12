@@ -61,6 +61,7 @@ export default function Login() {
           handleClose();
           localStorage.setItem("name", res.data.name);
           localStorage.setItem("role", res.data.role);
+          localStorage.setItem("email", res.data.email);
           window.location.reload();
         }
       });
@@ -75,6 +76,7 @@ export default function Login() {
         if (res.status === 200) {
           localStorage.removeItem("name");
           localStorage.removeItem("role");
+          localStorage.removeItem("email");
           window.location.reload();
         }
       });

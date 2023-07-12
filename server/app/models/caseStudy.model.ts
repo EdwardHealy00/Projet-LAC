@@ -33,6 +33,9 @@ export class CaseStudy {
     @prop({ required: true })
     authors: string;
 
+    @prop({ required: true })
+    submitter: string;
+
     @prop({})
     discipline: string;
 
