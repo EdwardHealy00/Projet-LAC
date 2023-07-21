@@ -5,5 +5,6 @@ export interface Document {
   type: string;
   format: string;
   addedOn: string;
+  isPending: boolean;
   file: any;
 }

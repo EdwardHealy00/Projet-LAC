@@ -1,0 +1,28 @@
+#pendingCase {
+    width: 100%;
+}
+
+#generalCaseInfo {
+    display: flex;
+    flex-direction: column;
+
+    div {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 10px 10px;
+    }
+}
+
+#folderTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 10px;
+}
+
+#decision-actions {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: flex-end;
+}

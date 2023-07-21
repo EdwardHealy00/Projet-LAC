@@ -76,6 +76,17 @@ export class CaseStudyController {
             }
         });
 
+        this.router.get('/user/:email', this.middlewareRestrictTo(Role.Professor, Role.Admin), async (req: Request, res: Response) => {
+            try {
+                const caseStudies = await this.caseStudyService.findAllMyCaseStudies(req.params.email);
+
+                res.json(caseStudies);
+            } catch (err: any) {
+                console.log(err);
+            }
+
+        });
+
         this.router.get('/download/:filename', async (req: Request, res: Response) => {
             try {
                 const caseStudyStream = await this.caseStudyService.getCaseStudyFile(req.params.filename);
@@ -90,6 +101,78 @@ export class CaseStudyController {
             }
         });
 
+        this.router.delete('/delete/:filename', async (req: Request, res: Response) => {
+            try {
+                var isSuccessful = await this.caseStudyService.deleteCaseStudyFile(req.params.filename);
+                if (!isSuccessful) {
+                    res.status(404).json('Le fichier ' + req.params.filename+  ' n\'a pas pu être supprimé');
+                    return;
+                }
+                
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
+        this.router.patch('/:id/removeFiles', async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.params.id;
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
+
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                caseStudy.files = req.body.files;
+
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
+        this.router.patch('/:id/addFiles', async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.params.id;
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
+
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                if (req.files) {
+                    let newFiles = [];
+                    for (let i = 0; i < req.files.length; i++) {
+                        const fileProof = req.files[i];
+                        if (fileProof) {
+                            fileProof.date = new Date().toISOString();
+                            fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
+                            newFiles.push(fileProof);
+                            this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
+                        }
+                    }
+                    caseStudy.files = [...caseStudy.files.concat(newFiles)];
+                }
+
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+                
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+        
+
         this.router.post('/', this.middlewareRestrictTo(Role.Professor, Role.Deputy, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudy = req.body;
@@ -99,6 +182,8 @@ export class CaseStudyController {
                     for (let i = 0; i < req.files.length; i++) {
                         const fileProof = req.files[i];
                         if (fileProof) {
+                            fileProof.date = new Date().toISOString();
+                            fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
                             files.push(fileProof);
                             this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
                         }

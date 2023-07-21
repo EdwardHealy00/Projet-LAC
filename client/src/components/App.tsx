@@ -17,6 +17,8 @@ import axios from "axios";
 import { ResponseSnackbar, SnackbarObject } from "../utils/ResponseSnackbar";
 import AboutPage from "./landingPage/AboutPage";
 import AddCaseStudy from "./catalogue/AddCaseStudy";
+import PendingCaseEdit from "./roles/edit/teacher/PendingCaseEdit/PendingCaseEdit";
+import PendingCaseStudies from "./pendingCaseStudies/PendingCaseStudies";
 
 function App() {
   env.config({ path: `.env.${process.env.NODE_ENV}`})
@@ -62,6 +64,8 @@ function App() {
             element={<CollaborativeSpace />}
           />
           <Route path="/dashboard" element={<DashboardPaidCase />} />
+          <Route path="/my-pending-study-cases" element={<PendingCaseStudies />}/>
+          <Route path="/my-pending-study-cases/case-edit" element={<PendingCaseEdit />} />
           <Route path="/approval" element={<Approval />} />
           <Route path="/new-case-approval" element={<NewCase />} />
           <Route path="/create" element={<AddCaseStudy />} />

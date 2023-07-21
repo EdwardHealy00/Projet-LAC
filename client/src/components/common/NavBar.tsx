@@ -48,7 +48,11 @@ const NavBar: React.FC<Props> = ({}) => {
         <Button className="navbutton" href="/catalogue">Catalogue</Button>
         <UnlockAccess
             role={[Role.Deputy, Role.Comity, Role.PolyPress]}
-            children={<Button href="/dashboard">Tableau de board</Button>}
+            children={<Button href="/dashboard">Tableau de bord</Button>}
+        ></UnlockAccess>
+        <UnlockAccess
+            role={[Role.Professor]}
+            children={<Button className="navbutton" href="/my-pending-study-cases">Mes études de cas</Button>}
         ></UnlockAccess>
         <span>
           <Button
