@@ -10,7 +10,7 @@ import {
 import React, { useRef } from "react";
 import "./PendingCaseEdit.scss";
 import { Case } from "../../../../../model/CaseStudy";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PendingCaseEditTable, {
   PendingCaseEditTableRef,
 } from "./PendingCaseEditTable";
@@ -20,8 +20,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import { Document } from "../../../../../model/Document";
 import { createCaseFromData } from "../../../../../utils/ConvertUtils";
+import { ConfirmationDialog } from "../../../../common/ConfirmationDialog";
 
 function PendingCaseEdit() {
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -29,18 +31,34 @@ function PendingCaseEdit() {
   const PendingCaseEditTableRef = useRef<PendingCaseEditTableRef | null>(null);
   const [hasBeenModified, SetHasBeenModified] = React.useState<Boolean>(false);
   let [caseStudy, SetCaseStudy] = React.useState<Case>();
-  const [open, setDialogOpen] = React.useState(false);
+  const [duplicateErrorDialogOpen, setDuplicateErrorDialogOpen] = React.useState(false);
+  const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = React.useState(false);
 
   const setModified = (isModified: boolean) => {
     SetHasBeenModified(isModified);
   };
 
   const openDuplicateErrorDialog = () => {
-    setDialogOpen(true);
+    setDuplicateErrorDialogOpen(true);
   };
 
   const handleDuplicateErrorDialogClose = () => {
-    setDialogOpen(false);
+    setDuplicateErrorDialogOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    setConfirmDeleteDialogOpen(false);
+    if(caseStudy) {
+      deleteCaseStudy(caseStudy.id_.toString());
+    }
+  };
+
+  const openConfirmDeleteDialog = () => {
+    setConfirmDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDeleteDialogCanceled = () => {
+    setConfirmDeleteDialogOpen(false);
   };
 
   React.useEffect(() => {
@@ -93,7 +111,7 @@ function PendingCaseEdit() {
     for (const filename of filenamesToDelete) {
       try {
         await axios.delete(
-          `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/delete/${filename}`,
+          `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/deleteFile/${filename}`,
           {
             data: { caseStudyId: caseStudy.id_ },
             withCredentials: true,
@@ -139,7 +157,26 @@ function PendingCaseEdit() {
     SetHasBeenModified(false);
     PendingCaseEditTableRef.current.ClearModifications();
     getCaseStudy(caseStudy.id_.toString());
-  };
+  }
+
+  const deleteCaseStudy = async (id: string) => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/delete/${id}`,
+        {
+          withCredentials: true,
+        }
+      ).then((res) => {
+        if (res.status === 200) {
+          navigate("/my-pending-study-cases");
+        }
+      });
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div>
       {caseStudy && (
@@ -162,7 +199,7 @@ function PendingCaseEdit() {
               case={caseStudy}
               setModified={setModified}
               openDuplicateErrorDialog={openDuplicateErrorDialog}
-              closeDuplicateErrorDialog={openDuplicateErrorDialog}
+              closeDuplicateErrorDialog={handleDuplicateErrorDialogClose}
             />
           </Card>
           <br />
@@ -199,18 +236,8 @@ function PendingCaseEdit() {
             >
               <SaveIcon /> Confirmer les changements
             </Button>
-            <Button variant="contained" color="error" component="label">
+            <Button variant="contained" color="error" component="label" onClick={openConfirmDeleteDialog}>
               <DeleteIcon /> Supprimer l'étude de cas
-              <input
-                hidden
-                accept=".doc,.docx,.pdf"
-                type="file"
-                onChange={(e) =>
-                  PendingCaseEditTableRef.current
-                    ? PendingCaseEditTableRef.current.AddFiles(e.target.files)
-                    : null
-                }
-              />
             </Button>
           </div>
         </div>
@@ -219,7 +246,7 @@ function PendingCaseEdit() {
       {!caseStudy && <div></div>}
 
       <Dialog
-        open={open}
+        open={duplicateErrorDialogOpen}
         onClose={handleDuplicateErrorDialogClose}
         fullWidth={true}
       >
@@ -235,6 +262,12 @@ function PendingCaseEdit() {
           </Button>
         </DialogActions>
       </Dialog>
+      {caseStudy && <ConfirmationDialog
+        open={confirmDeleteDialogOpen}
+        text="Attention, cette action est irréversible. Êtes-vous certain de vouloir supprimer votre étude de cas?"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleConfirmDeleteDialogCanceled}
+      /> }
     </div>
   );
 }

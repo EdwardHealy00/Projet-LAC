@@ -78,6 +78,20 @@ export class CaseStudyService {
         return caseStudy;
     }
 
+    async deleteCaseStudy(id: string) {
+        const caseStudyQuery = CaseStudyModel.findById(id);
+        if(!caseStudyQuery) return false;
+        
+        const caseStudy = await caseStudyQuery.exec();
+        if(!caseStudy) return false;
+
+        await CaseStudyModel.deleteOne({ _id: id });
+        for(const file of caseStudy.files) {
+            this.deleteCaseStudyFile(file.serverFileName)
+        }
+        return true;
+    }
+
     // Find CaseStudy by Id
     async findCaseStudyById(id: string) {
         return CaseStudyModel.findById(id);
@@ -92,7 +106,7 @@ export class CaseStudyService {
     async findAllMyCaseStudies(userEmail: string): Promise<(CaseStudy)[]> {
         const caseStudies: CaseStudy[] = await CaseStudyModel.find({submitter: userEmail}).lean();
         const filteredCaseStudies: Partial<CaseStudy>[] = [];
-        caseStudies.forEach((study) => {
+        caseStudies.forEach((study: any) => {
             filteredCaseStudies.push(omit(study, excludedFields));
         });
 

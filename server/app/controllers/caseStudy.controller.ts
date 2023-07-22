@@ -101,11 +101,27 @@ export class CaseStudyController {
             }
         });
 
-        this.router.delete('/delete/:filename', async (req: Request, res: Response) => {
+        this.router.delete('/deleteFile/:filename', async (req: Request, res: Response) => {
             try {
                 var isSuccessful = await this.caseStudyService.deleteCaseStudyFile(req.params.filename);
                 if (!isSuccessful) {
                     res.status(404).json('Le fichier ' + req.params.filename+  ' n\'a pas pu être supprimé');
+                    return;
+                }
+                
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
+        this.router.delete('/delete/:id', async (req: Request, res: Response) => {
+            try {
+                var isSuccessful = await this.caseStudyService.deleteCaseStudy(req.params.id);
+                if (!isSuccessful) {
+                    res.status(404).json('L\'étude de cas n\'a pas pu être supprimé');
                     return;
                 }
                 
