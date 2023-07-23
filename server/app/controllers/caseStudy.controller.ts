@@ -133,7 +133,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.patch('/:id/removeFiles', async (req: Request, res: Response) => {
+        this.router.patch('/removeFiles/:id', async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.params.id;
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
@@ -154,7 +154,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.patch('/:id/addFiles', async (req: Request, res: Response) => {
+        this.router.patch('/addFiles/:id', async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.params.id;
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
@@ -178,6 +178,27 @@ export class CaseStudyController {
                     caseStudy.files = [...caseStudy.files.concat(newFiles)];
                 }
 
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+                
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
+        this.router.patch('/convertToFree/:id', async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.params.id;
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
+
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                caseStudy.isPaidCase = false;
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 
                 res.status(200).json({
