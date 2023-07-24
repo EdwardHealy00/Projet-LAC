@@ -64,6 +64,7 @@
         "mongoose": "^6.4.6",
         "multer": "^1.4.5-lts.1",
         "nodemailer": "^6.7.8",
+        "page-count": "^0.0.3",
         "prettier": "^2.3.2",
         "reflect-metadata": "^0.1.13",
         "serve-favicon": "~2.5.0",
