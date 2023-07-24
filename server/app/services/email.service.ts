@@ -95,7 +95,7 @@ export class EmailService {
             text: `Your case study named ${caseStudy.title}, authored by ${caseStudy.authors}` + 
                     (isPreApproved ? ` is now ready to get reviewed by the scientific committee.`
                                    : ` requires changes for its pre-approval. The following criterias were not respected: \n\n` +`${criteriaText}`) +
-                    `\n\n Click here to see its status: http://localhost:3000/approval`
+                    `\n\n Click here to see its status: http://localhost:3000/my-pending-case-studies`
 
         }
         this.sendEmail(mailOptions);
@@ -121,7 +121,7 @@ export class EmailService {
             text: `Your case study named ${caseStudy.title}, authored by ${caseStudy.authors}` + 
                     (isApproved ? ` has been approved by the scientific committee.`
                                 : `${decisionText} See the full review below: \n\n${feedbackText}`) + 
-                    `\n\n Click here to see its status: http://localhost:3000/approval` 
+                    `\n\n Click here to see its status: http://localhost:3000/my-pending-case-studies` 
         }
         this.sendEmail(mailOptions);
     }

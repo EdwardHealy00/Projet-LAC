@@ -52,7 +52,7 @@ const NavBar: React.FC<Props> = ({}) => {
         ></UnlockAccess>
         <UnlockAccess
             role={[Role.Professor]}
-            children={<Button className="navbutton" href="/my-pending-study-cases">Mes études de cas</Button>}
+            children={<Button className="navbutton" href="/my-pending-case-studies">Mes études de cas</Button>}
         ></UnlockAccess>
         <span>
           <Button

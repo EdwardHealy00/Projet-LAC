@@ -189,7 +189,7 @@ function PendingCaseEdit() {
         )
         .then((res) => {
           if (res.status === 200) {
-            navigate("/my-pending-study-cases");
+            navigate("/my-pending-case-studies");
           }
         });
     } catch (error) {
@@ -208,7 +208,7 @@ function PendingCaseEdit() {
         )
         .then((res) => {
           if (res.status === 200) {
-            navigate("/my-pending-study-cases");
+            navigate("/my-pending-case-studies");
           }
         });
     } catch (error) {
@@ -220,7 +220,7 @@ function PendingCaseEdit() {
     <div>
       {caseStudy && (
         <div id="pendingCase">
-          <Button className="return" href="/my-pending-study-cases">
+          <Button className="return" href="/my-pending-case-studies">
             &gt; Retour à mes études de cas
           </Button>
           <div id="generalCaseInfo">

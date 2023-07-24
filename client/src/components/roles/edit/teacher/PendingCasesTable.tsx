@@ -18,7 +18,7 @@ interface CaseProp {
 }
 
 function navigateHandleCase(navigate: NavigateFunction, caseStudy?: Case) {
-  navigate(`/my-pending-study-cases/case-edit?id=${caseStudy? caseStudy.id_: 0}`, { state: caseStudy });
+  navigate(`/my-pending-case-studies/case-edit?id=${caseStudy? caseStudy.id_: 0}`, { state: caseStudy });
 }
 
 export default function CaseTable(prop: CaseProp) {
