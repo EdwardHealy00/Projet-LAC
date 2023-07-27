@@ -175,21 +175,23 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
                 <TableCell align="right">{row.format}</TableCell>
                 <TableCell align="right">{row.addedOn}</TableCell>
                 <TableCell align="right">
-                  {!row.isPending ? (
+                  {!row.isPending && (
                     <Button
                       variant="outlined"
                       onClick={() => handleFileDownload(row.file)}
                     >
                       <FileDownloadIcon /> Télécharger
                     </Button>
-                  ) : null}
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => handleFileDelete(row)}
-                  >
-                    <DeleteIcon /> Supprimer
-                  </Button>
+                  )}
+                  {props.case.isRejected && (
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handleFileDelete(row)}
+                    >
+                      <DeleteIcon /> Supprimer
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

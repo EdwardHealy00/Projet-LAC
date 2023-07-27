@@ -28,6 +28,7 @@ export interface Case {
   date: string;
   page: number;
   status: CaseStep;
+  isRejected: boolean;
   isPaidCase: boolean;
   classId: string;
   discipline: string;

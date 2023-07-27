@@ -12,7 +12,7 @@ import { getStatus } from "../../../../utils/Status";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 
 interface CaseProp {
-    cases: Case[];
+  cases: Case[];
 }
 
 function navigateHandleCase(navigate: NavigateFunction, caseStudy?: Case) {
@@ -20,11 +20,13 @@ function navigateHandleCase(navigate: NavigateFunction, caseStudy?: Case) {
 }
 
 export default function CaseTable(rows: CaseProp) {
-const navigate = useNavigate();
-const handleCase = (id: number) => {
-  const caseStudy = rows.cases.find((caseToHandle) => caseToHandle.id_ === id);
-  navigateHandleCase(navigate, caseStudy);
-};
+  const navigate = useNavigate();
+  const handleCase = (id: number) => {
+    const caseStudy = rows.cases.find(
+      (caseToHandle) => caseToHandle.id_ === id
+    );
+    navigateHandleCase(navigate, caseStudy);
+  };
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -50,16 +52,28 @@ const handleCase = (id: number) => {
               <TableCell align="right">{row.title}</TableCell>
               <TableCell align="right">{row.authors}</TableCell>
               <TableCell align="right">{row.date}</TableCell>
-              <TableCell align="right">{getStatus(row.status)}</TableCell>
-              <TableCell align="right">
-                <Button
-                  variant="contained"
-                  sx={{ backgroundColor: "#c00000" }}
-                  onClick={() => handleCase(row.id_)}
-                >
-                  Traiter
-                </Button>
-              </TableCell>
+              {row.isRejected && (
+                <>
+                  <TableCell align="right" style={{ color: "red" }}>
+                    Rejetée
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                </>
+              )}
+              {!row.isRejected && (
+                <>
+                  <TableCell align="right">{getStatus(row.status)}</TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="contained"
+                      sx={{ backgroundColor: "#c00000" }}
+                      onClick={() => handleCase(row.id_)}
+                    >
+                      Traiter
+                    </Button>
+                  </TableCell>
+                </>
+              )}
             </TableRow>
           ))}
         </TableBody>

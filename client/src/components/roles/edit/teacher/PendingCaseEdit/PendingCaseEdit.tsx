@@ -18,7 +18,7 @@ import axios from "axios";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
-import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import MoneyOffIcon from "@mui/icons-material/MoneyOff";
 import { Document } from "../../../../../model/Document";
 import { createCaseFromData } from "../../../../../utils/ConvertUtils";
 import { ConfirmationDialog } from "../../../../common/ConfirmationDialog";
@@ -101,6 +101,7 @@ function PendingCaseEdit() {
           res.data.page,
           res.data.status,
           res.data.isPaidCase,
+          res.data.isRejected,
           res.data.classId,
           res.data.discipline,
           res.data.subjects,
@@ -132,7 +133,7 @@ function PendingCaseEdit() {
         await axios.delete(
           `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/deleteFile/${filename}`,
           {
-            data: { caseStudyId: caseStudy.id_ },
+            data: { caseStudy: caseStudy },
             withCredentials: true,
           }
         );
@@ -242,58 +243,64 @@ function PendingCaseEdit() {
             />
           </Card>
           <br />
-          <form
-            onSubmit={handleConfirmChanges}
-            id="uploadNewFiles"
-            encType="multipart/form-data"
-          >
-            <Button variant="contained" color="primary" component="label">
-              <FileUploadIcon /> Téléverser un fichier
-              <input
-                hidden
-                accept=".doc,.docx,.pdf"
-                type="file"
-                onChange={(e) => {
-                  PendingCaseEditTableRef.current
-                    ? PendingCaseEditTableRef.current.AddFiles(e.target.files)
-                    : null;
-                  e.target.value = "";
-                }}
-                name="caseStudyFiles"
-                multiple
-              />
-            </Button>
-          </form>
-
-          <div id="decision-actions">
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={!hasBeenModified}
-              type="submit"
-              form="uploadNewFiles"
-            >
-              <SaveIcon /> Confirmer les changements
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              component="label"
-              onClick={openDeleteDialog}
-            >
-              <DeleteIcon /> Supprimer l'étude de cas
-            </Button>
-            {caseStudy && caseStudy.isPaidCase && (
-              <Button
-                variant="outlined"
-                color="error"
-                component="label"
-                onClick={openConvertToFreeDialog}
+          {caseStudy.isRejected && (
+            <>
+              <form
+                onSubmit={handleConfirmChanges}
+                id="uploadNewFiles"
+                encType="multipart/form-data"
               >
-                <MoneyOffIcon /> Convertir en étude de cas gratuite
-              </Button>
-            )}
-          </div>
+                <Button variant="contained" color="primary" component="label">
+                  <FileUploadIcon /> Téléverser un fichier
+                  <input
+                    hidden
+                    accept=".docx"
+                    type="file"
+                    onChange={(e) => {
+                      PendingCaseEditTableRef.current
+                        ? PendingCaseEditTableRef.current.AddFiles(
+                            e.target.files
+                          )
+                        : null;
+                      e.target.value = "";
+                    }}
+                    name="caseStudyFiles"
+                    multiple
+                  />
+                </Button>
+              </form>
+
+              <div id="decision-actions">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={!hasBeenModified}
+                  type="submit"
+                  form="uploadNewFiles"
+                >
+                  <SaveIcon /> Confirmer les changements
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  component="label"
+                  onClick={openDeleteDialog}
+                >
+                  <DeleteIcon /> Supprimer l'étude de cas
+                </Button>
+                {caseStudy && caseStudy.isPaidCase && (
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    component="label"
+                    onClick={openConvertToFreeDialog}
+                  >
+                    <MoneyOffIcon /> Convertir en étude de cas gratuite
+                  </Button>
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
 

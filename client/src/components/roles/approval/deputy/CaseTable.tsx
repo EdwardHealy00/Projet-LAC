@@ -54,15 +54,27 @@ export default function CaseTable(rows: CaseProp) {
               <TableCell align="right">{row.title}</TableCell>
               <TableCell align="right">{row.authors}</TableCell>
               <TableCell align="right">{row.date}</TableCell>
-              <TableCell align="right">{getStatus(row.status)}</TableCell>
-              <TableCell align="right">
-                <Button
-                  variant={getButtonVariant(row.status)}
-                  onClick={() => handleCase(row.id_)}
-                >
-                  {getButtonMessage(row.status)}
-                </Button>
-              </TableCell>
+              {row.isRejected && (
+                <>
+                  <TableCell align="right" style={{ color: "red" }}>
+                    Rejetée
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                </>
+              )}
+              {!row.isRejected && (
+                <>
+                  <TableCell align="right">{getStatus(row.status)}</TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant={getButtonVariant(row.status)}
+                      onClick={() => handleCase(row.id_)}
+                    >
+                      {getButtonMessage(row.status)}
+                    </Button>
+                  </TableCell>
+                </>
+              )}
             </TableRow>
           ))}
         </TableBody>

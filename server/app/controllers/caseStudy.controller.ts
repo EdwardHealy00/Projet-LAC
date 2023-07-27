@@ -108,6 +108,10 @@ export class CaseStudyController {
                     res.status(404).json('Le fichier ' + req.params.filename+  ' n\'a pas pu être supprimé');
                     return;
                 }
+                if(!req.body.caseStudy.isRejected) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
+                    return;
+                }
                 
                 res.status(200).json({
                     status: 'success',
@@ -142,8 +146,13 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
+                if (!caseStudy.isRejected) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
+                    return;
+                }
 
                 caseStudy.files = req.body.files;
+                caseStudy.isRejected = false;
 
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 res.status(200).json({
@@ -178,6 +187,7 @@ export class CaseStudyController {
                     caseStudy.files = [...caseStudy.files.concat(newFiles)];
                 }
 
+                caseStudy.isRejected = false;
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 
                 res.status(200).json({
@@ -197,8 +207,13 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
+                if (!caseStudy.isRejected) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
+                    return;
+                }
 
                 caseStudy.isPaidCase = false;
+                caseStudy.isRejected = false;
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 
                 res.status(200).json({
@@ -286,8 +301,10 @@ export class CaseStudyController {
 
                 if (isApproved) {
                     caseStudy.status += 1; 
-                    await this.caseStudyService.updateCaseStudy(caseStudy);
+                } else {
+                    caseStudy.isRejected = true;
                 }
+                await this.caseStudyService.updateCaseStudy(caseStudy);
                 res.status(200).json({
                     status: 'success',
                 });

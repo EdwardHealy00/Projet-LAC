@@ -18,6 +18,9 @@ export class CaseStudy {
     @prop({ default: true}) 
     isPaidCase: boolean;
 
+    @prop({ default: false}) 
+    isRejected: boolean;
+
     @prop({ unique: true, required: true })
     title: string;
 
