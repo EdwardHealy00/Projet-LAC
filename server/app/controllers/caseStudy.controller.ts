@@ -121,22 +121,6 @@ export class CaseStudyController {
             }
         });
 
-        this.router.delete('/delete/:id', this.middlewareRestrictTo(Role.Professor, Role.Admin), async (req: Request, res: Response) => {
-            try {
-                var isSuccessful = await this.caseStudyService.deleteCaseStudy(req.params.id);
-                if (!isSuccessful) {
-                    res.status(404).json('L\'étude de cas n\'a pas pu être supprimé');
-                    return;
-                }
-                
-                res.status(200).json({
-                    status: 'success',
-                });
-            } catch (err: any) {
-                console.log(err);
-            }
-        });
-
         this.router.patch('/removeFileRefs/:id', this.middlewareRestrictTo(Role.Professor, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.params.id;
