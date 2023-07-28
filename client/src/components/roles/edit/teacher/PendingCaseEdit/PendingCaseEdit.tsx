@@ -36,6 +36,8 @@ function PendingCaseEdit() {
   let [caseStudy, SetCaseStudy] = React.useState<Case>();
   const [duplicateErrorDialogOpen, setDuplicateErrorDialogOpen] =
     React.useState(false);
+  const [confirmChangesDialogOpen, setConfirmChangesDialogOpen] =
+    React.useState(false);
 
   const setModified = (isModified: boolean) => {
     SetHasBeenModified(isModified);
@@ -47,6 +49,14 @@ function PendingCaseEdit() {
 
   const handleDuplicateErrorDialogClose = () => {
     setDuplicateErrorDialogOpen(false);
+  };
+
+  const openConfirmChangesDialog = () => {
+    setConfirmChangesDialogOpen(true);
+  };
+
+  const handleConfirmChangesDialogClose = () => {
+    setConfirmChangesDialogOpen(false);
   };
 
   React.useEffect(() => {
@@ -91,6 +101,7 @@ function PendingCaseEdit() {
 
   const handleConfirmChanges = async (e: any) => {
     e.preventDefault();
+    handleConfirmChangesDialogClose();
     if (!caseStudy || !PendingCaseEditTableRef.current) return;
 
     const filenamesToDelete =
@@ -243,8 +254,7 @@ function PendingCaseEdit() {
                   variant="contained"
                   color="primary"
                   disabled={!hasBeenModified}
-                  type="submit"
-                  form="uploadNewFiles"
+                  onClick={openConfirmChangesDialog}
                 >
                   <SaveIcon /> Confirmer les changements
                 </Button>
@@ -273,6 +283,18 @@ function PendingCaseEdit() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Dialog open={confirmChangesDialogOpen} onClose={handleConfirmChangesDialogClose}>
+      <DialogTitle><b>Attention</b></DialogTitle>
+      <DialogContent>Cette action est irréversible. Êtes-vous certain de vouloir confirmer les changements? Il sera impossible de modifier l'étude de cas par la suite.</DialogContent>
+      <DialogActions>
+        <Button onClick={handleConfirmChangesDialogClose} color="error">
+          Annuler
+        </Button>
+        <Button type="submit" form="uploadNewFiles" color="primary">
+          Confirmer
+        </Button>
+      </DialogActions>
+    </Dialog>
     </div>
   );
 }
