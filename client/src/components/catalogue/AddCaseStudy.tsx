@@ -21,7 +21,7 @@ export default function AddCaseStudy() {
   const [isVerified, setVerified] = React.useState(false);
 
   const [caseStudyFileName, setCaseStudyFileName] = React.useState(
-    "Aucun document n'a été téléversée"
+    "Aucun document n'a été téléversé"
   );
 
   const [selectedDiscipline, setSelectedDiscipline] = React.useState("");
