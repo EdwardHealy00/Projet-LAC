@@ -220,6 +220,10 @@ export class CaseStudyController {
                 }
 
                 caseStudy.isRejected = false;
+                if (caseStudy.status == CaseStep.WaitingComity) {
+                    caseStudy.status = CaseStep.WaitingPreApproval;
+                }
+
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 
                 res.status(200).json({
