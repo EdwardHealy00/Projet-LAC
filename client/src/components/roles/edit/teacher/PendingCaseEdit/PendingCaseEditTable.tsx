@@ -90,6 +90,7 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
     };
 
     const handleFilesAdd = (files: FileList) => {
+      // Filter out files that already exists
       let newFiles: File[] = [];
       for (var i = 0; i < files.length; i++) {
         if (!files || !files.item(i)) return;
@@ -107,12 +108,13 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
       }
       SetFilesToUpload(filesToUpload.concat(newFiles));
 
+      // Create documents out of new files to update UI
       let filesData: Document[] = [];
       for (let i = 0; i < newFiles.length; i++) {
         filesData.push(
           createDocumentFromFile(
             null,
-            files[i].name,
+            newFiles[i].name,
             changedCaseFiles.length + i
           )
         );
@@ -174,7 +176,7 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
           <TableBody>
             {changedCaseFiles.map((row) => (
               <TableRow
-                key={row.id_}
+                key={changedCaseFiles.findIndex((e) => row.title == e.title)}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
