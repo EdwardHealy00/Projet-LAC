@@ -20,6 +20,7 @@ interface CaseProp {
   setModified: (isModified: boolean) => void;
   openDuplicateErrorDialog: Function;
   closeDuplicateErrorDialog: Function;
+  wantsToConvertToFree: boolean;
 }
 
 export interface PendingCaseEditTableRef {
@@ -28,6 +29,8 @@ export interface PendingCaseEditTableRef {
   GetFilesToUpload(): File[];
   ClearModifications(): void;
   RefreshCaseFiles(documents: Document[]): void;
+  AreFilesModified(): boolean;
+  IsFileListEmpty(): boolean;
 }
 
 const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
@@ -49,6 +52,13 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
       RefreshCaseFiles(documents: Document[]) {
         SetChangedCaseFiles([...documents]);
       },
+      AreFilesModified(): boolean {
+        return !((filesToUpload.length == 0 && filenamesToDelete.length == 0) ||
+        changedCaseFiles.length == 0)
+      },
+      IsFileListEmpty(): boolean {
+        return changedCaseFiles.length == 0;
+      }
     }));
 
     const [changedCaseFiles, SetChangedCaseFiles] = React.useState<Document[]>([
@@ -141,8 +151,8 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
 
       // Disable the confirm changes button if all the changes have been deleted
       if (
-        (filesToUpload.length == 0 && filenamesToDelete.length == 0) ||
-        changedCaseFiles.length == 0
+        (filesToUpload.length == 0 && filenamesToDelete.length == 0 && !props.wantsToConvertToFree) ||
+        (changedCaseFiles.length == 0) 
       ) {
         props.setModified(false);
       }

@@ -101,7 +101,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.delete('/deleteFile/:filename', async (req: Request, res: Response) => {
+        this.router.delete('/deleteFile/:filename', this.middlewareRestrictTo(Role.Professor, Role.Admin), async (req: Request, res: Response) => {
             try {
                 var isSuccessful = await this.caseStudyService.deleteCaseStudyFile(req.params.filename);
                 if (!isSuccessful) {
@@ -121,7 +121,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.delete('/delete/:id', async (req: Request, res: Response) => {
+        this.router.delete('/delete/:id', this.middlewareRestrictTo(Role.Professor, Role.Admin), async (req: Request, res: Response) => {
             try {
                 var isSuccessful = await this.caseStudyService.deleteCaseStudy(req.params.id);
                 if (!isSuccessful) {
@@ -137,7 +137,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.patch('/removeFiles/:id', async (req: Request, res: Response) => {
+        this.router.patch('/removeFileRefs/:id', this.middlewareRestrictTo(Role.Professor, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.params.id;
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
@@ -152,7 +152,6 @@ export class CaseStudyController {
                 }
 
                 caseStudy.files = req.body.files;
-                caseStudy.isRejected = false;
 
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 res.status(200).json({
@@ -163,13 +162,17 @@ export class CaseStudyController {
             }
         });
 
-        this.router.patch('/addFiles/:id', async (req: Request, res: Response) => {
+        this.router.patch('/addFileRefs/:id', this.middlewareRestrictTo(Role.Professor, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.params.id;
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
 
                 if (!caseStudy) {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+                if (!caseStudy.isRejected) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
 
@@ -187,7 +190,6 @@ export class CaseStudyController {
                     caseStudy.files = [...caseStudy.files.concat(newFiles)];
                 }
 
-                caseStudy.isRejected = false;
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 
                 res.status(200).json({
@@ -198,7 +200,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.patch('/convertToFree/:id', async (req: Request, res: Response) => {
+        this.router.patch('/convertToFree/:id', this.middlewareRestrictTo(Role.Professor, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.params.id;
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
@@ -213,6 +215,26 @@ export class CaseStudyController {
                 }
 
                 caseStudy.isPaidCase = false;
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+                
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
+        this.router.patch('/resubmit/:id', this.middlewareRestrictTo(Role.Professor, Role.Admin), async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.params.id;
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
+
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
                 caseStudy.isRejected = false;
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 
@@ -254,7 +276,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.post('/approvalResult', async (req: Request, res: Response) => {
+        this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Deputy, Role.Comity, Role.PolyPress, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.body.case;
                 const isApproved = req.body.approved;
@@ -300,7 +322,7 @@ export class CaseStudyController {
                 }
 
                 if (isApproved) {
-                    caseStudy.status += 1; 
+                    caseStudy.status++; 
                 } else {
                     caseStudy.isRejected = true;
                 }
@@ -350,9 +372,7 @@ export class CaseStudyController {
             } else if (req.cookies.accessToken) {
                 console.log('C');
                 access_token = req.cookies.accessToken;
-            }
-
-            if (access_token) {
+            }            if (access_token) {
                 // Validate Access Token
                 const decoded = verifyJwt<{ sub: string, role: string }>(access_token);
 

@@ -36,8 +36,8 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: userEmail,
-            subject: "Welcome",
-            text: "Welcome to LAC " + userName,
+            subject: "Bienvenue",
+            text: "Bienvenue sur la plateforme LAC " + userName,
         }
         this.sendEmail(mailOptions);
     }
@@ -46,8 +46,8 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: "yanis.toubal@hotmail.com",
-            subject: "New teacher signed up",
-            text: "A new teacher signed up, please check your account to validate it",
+            subject: "Un nouvel enseignant s'est enregistré",
+            text: "Un nouvel enseignant s'est enregistré, veuillez consultez votre compte pour évaluer celui-ci",
         };
         this.sendEmail(mailOptions);
     }
@@ -56,8 +56,8 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: userEmail,
-            subject: "Reset your password",
-            text: `To reset your password, please click on the following link: http://localhost:3000/reset-password/${resetToken}`,
+            subject: "Réinitialiser votre mot de passe",
+            text: `Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant: http://localhost:3000/reset-password/${resetToken}`,
         }
         this.sendEmail(mailOptions);
     }
@@ -66,8 +66,8 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: userEmail,
-            subject: "Password reset",
-            text: "Your password has been successfully reset",
+            subject: "Mot de passe réinitialisé",
+            text: "Votre mot de passe a été réinitialisé avec succès",
         }
         this.sendEmail(mailOptions);
     }
@@ -76,8 +76,8 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: userEmail,
-            subject: "Your proof of identity has been reviewed",
-            text: isApproved ? "Your account has been approved" : "Your account has been rejected"
+            subject: "Votre preuve d'identité a été évaluée",
+            text: isApproved ? "Votre compte a été approuvée" : "Votre compte a été rejetée"
         }
         this.sendEmail(mailOptions);
     }
@@ -91,11 +91,11 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: email,
-            subject: `You case study named ${caseStudy.title}` + (isPreApproved ? `has been pre-approved` : `has been declined by a deputy`), 
-            text: `Your case study named ${caseStudy.title}, authored by ${caseStudy.authors}` + 
-                    (isPreApproved ? ` is now ready to get reviewed by the scientific committee.`
-                                   : ` requires changes for its pre-approval. The following criterias were not respected: \n\n` +`${criteriaText}`) +
-                    `\n\n Click here to see its status: http://localhost:3000/my-pending-case-studies`
+            subject: `L'étude de cas nommée ${caseStudy.title}` + (isPreApproved ? `a été pré-approuvée` : `a été rejetée par l'adjoint administratif`), 
+            text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors}` + 
+                    (isPreApproved ? ` est maintenant prête à être évalué par le comité scientifique.`
+                                   : ` requiert des changements. Les critères suivants n'étaient pas respectés: \n\n` +`${criteriaText}`) +
+                    `\n\n Cliquez sur le lien suivant pour modifier celle-ci: http://localhost:3000/my-pending-case-studies`
 
         }
         this.sendEmail(mailOptions);
@@ -104,9 +104,9 @@ export class EmailService {
     sendReviewResultToUser(email: string, caseStudy: CaseStudy, isApproved: boolean, decision: string, feedback: CaseFeedback[]) {
         let decisionText = '';
         switch(decision){
-            case 'minor': decisionText = 'requires minor changes.'; break;
-            case 'major': decisionText = 'requires major changes.'; break;
-            case 'rejected': decisionText = 'has been rejected.';
+            case 'minor': decisionText = 'requiert des changements mineurs.'; break;
+            case 'major': decisionText = 'requiert des changements majeurs.'; break;
+            case 'rejected': decisionText = 'a été rejetée.';
         }
 
         let feedbackText = '';
@@ -117,11 +117,11 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: email,
-            subject: `You case study named ${caseStudy.title} has been reviewed`, 
-            text: `Your case study named ${caseStudy.title}, authored by ${caseStudy.authors}` + 
-                    (isApproved ? ` has been approved by the scientific committee.`
-                                : `${decisionText} See the full review below: \n\n${feedbackText}`) + 
-                    `\n\n Click here to see its status: http://localhost:3000/my-pending-case-studies` 
+            subject: `Votre étude de cas nommée ${caseStudy.title} a été revue`, 
+            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
+                    (isApproved ? ` a été approuvée par le comité scientifique.`
+                                : `${decisionText} Consultez l'évaluation complète ci-dessous: \n\n${feedbackText}`) + 
+                    `\n\n Cliquez-ci pour y consulter son statut: http://localhost:3000/my-pending-case-studies` 
         }
         this.sendEmail(mailOptions);
     }
@@ -130,8 +130,8 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: email,
-            subject: `Your case study named ${caseStudy.title} has been published`,
-            text: `Your case study named ${caseStudy.title}, authored by ${caseStudy.authors} has been approved by PolyPress. \n\n You can access to its published version here: http://localhost:3000/catalogue`
+            subject: `Votre étude de cas nommée ${caseStudy.title} a été publiée`,
+            text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors} a été approuvée par la Presse Internationale de Polytechnique. \n\n Vous pouvez accédez à sa version publiée au lien suivant: http://localhost:3000/catalogue`
         }
         this.sendEmail(mailOptions);
     }
@@ -141,8 +141,8 @@ export class EmailService {
             const mailOptions = {
                 from: EMAIL_USERNAME,
                 to: deputy.email,
-                subject: "A new case study needs your attention",
-                text: `A new case study named ${caseStudy.title}, authored by ${caseStudy.authors} is waiting for pre-approval. \n\n You can access it here: http://localhost:3000/approval`
+                subject: "Une nouvelle étude de cas requiert votre attention",
+                text: `Une nouvelle étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de pré-approbation. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval`
             }
             this.sendEmail(mailOptions);
         }
@@ -153,8 +153,8 @@ export class EmailService {
             const mailOptions = {
                 from: EMAIL_USERNAME,
                 to: committeeMember.email,
-                subject: "A pre-approved case study needs your attention",
-                text: `A pre-approved case study named ${caseStudy.title}, authored by ${caseStudy.authors} is waiting for review. \n\n You can access it here: http://localhost:3000/approval`
+                subject: "Une étude de cas pré-approuvée requiert votre attention",
+                text: `Une étude de cas pré-approuvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de revue. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval`
             }
             this.sendEmail(mailOptions);
         }
@@ -165,8 +165,8 @@ export class EmailService {
             const mailOptions = {
                 from: EMAIL_USERNAME,
                 to: polyPressMember.email,
-                subject: "A reviewed case study needs your attention",
-                text: `A reviewed case study named ${caseStudy.title}, authored by ${caseStudy.authors} is waiting for final confirmation. \n\n You can access it here: http://localhost:3000/approval`
+                subject: "Une étude de cas revue requiert votre attention",
+                text: `Une étude de cas revue nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de confirmation finale. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval`
             }
             this.sendEmail(mailOptions);
         }

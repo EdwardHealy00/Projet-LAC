@@ -6,6 +6,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 import React, { useRef } from "react";
 import "./PendingCaseEdit.scss";
@@ -31,12 +33,12 @@ function PendingCaseEdit() {
 
   const PendingCaseEditTableRef = useRef<PendingCaseEditTableRef | null>(null);
   const [hasBeenModified, SetHasBeenModified] = React.useState<Boolean>(false);
+  const [wantsToConvertToFree, SetWantsToConvertToFree] =
+    React.useState<boolean>(false);
   let [caseStudy, SetCaseStudy] = React.useState<Case>();
   const [duplicateErrorDialogOpen, setDuplicateErrorDialogOpen] =
     React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [convertToFreeDialogOpen, setConvertToFreeDialogOpen] =
-    React.useState(false);
 
   const setModified = (isModified: boolean) => {
     SetHasBeenModified(isModified);
@@ -63,21 +65,6 @@ function PendingCaseEdit() {
 
   const handleDeleteDialogCanceled = () => {
     setDeleteDialogOpen(false);
-  };
-
-  const handleConfirmConvertToFree = () => {
-    setConvertToFreeDialogOpen(false);
-    if (caseStudy) {
-      convertCaseStudyToFree(caseStudy.id_.toString());
-    }
-  };
-
-  const openConvertToFreeDialog = () => {
-    setConvertToFreeDialogOpen(true);
-  };
-
-  const handleConvertToFreeDialogCanceled = () => {
-    setConvertToFreeDialogOpen(false);
   };
 
   React.useEffect(() => {
@@ -156,19 +143,33 @@ function PendingCaseEdit() {
       }
     );
 
-    // Patch requests to remove deleted files and add new ones to case study
+    // Patch requests to remove deleted files and add new ones to case study for resubmitting
     try {
       await axios.patch(
-        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/removeFiles/${caseStudy.id_}`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/removeFileRefs/${caseStudy.id_}`,
         { files },
         { withCredentials: true }
       );
 
       await axios.patch(
-        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/addFiles/${caseStudy.id_}`,
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/addFileRefs/${caseStudy.id_}`,
         addedFilesFormData,
         { withCredentials: true }
       );
+
+      if(wantsToConvertToFree) {
+        await axios.patch(
+          `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/convertToFree/${id}`,
+          {},
+         { withCredentials: true }
+        )
+      }
+
+      await axios.patch(
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/resubmit/${id}`,
+        {},
+       { withCredentials: true }
+      )
     } catch (error) {
       console.log(error);
     }
@@ -184,25 +185,6 @@ function PendingCaseEdit() {
       await axios
         .delete(
           `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/delete/${id}`,
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            navigate("/my-pending-case-studies");
-          }
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const convertCaseStudyToFree = async (id: string) => {
-    try {
-      await axios
-        .patch(
-          `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/convertToFree/${id}`,
           {
             withCredentials: true,
           }
@@ -240,6 +222,7 @@ function PendingCaseEdit() {
               setModified={setModified}
               openDuplicateErrorDialog={openDuplicateErrorDialog}
               closeDuplicateErrorDialog={handleDuplicateErrorDialogClose}
+              wantsToConvertToFree={wantsToConvertToFree}
             />
           </Card>
           <br />
@@ -271,6 +254,28 @@ function PendingCaseEdit() {
               </form>
 
               <div id="decision-actions">
+                {caseStudy && caseStudy.isPaidCase && (
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        value={wantsToConvertToFree}
+                        onChange={() => {
+                          if(!PendingCaseEditTableRef.current) return;
+                          if (!wantsToConvertToFree && !PendingCaseEditTableRef.current.IsFileListEmpty()) {
+                            SetHasBeenModified(true);
+                          }
+                          else if (
+                            !PendingCaseEditTableRef.current.AreFilesModified()
+                          ) {
+                            SetHasBeenModified(false);
+                          }
+                          SetWantsToConvertToFree(!wantsToConvertToFree);
+                        }}
+                      />
+                    }
+                    label="Convertir en étude de cas gratuite"
+                  />
+                )}
                 <Button
                   variant="contained"
                   color="primary"
@@ -288,16 +293,6 @@ function PendingCaseEdit() {
                 >
                   <DeleteIcon /> Supprimer l'étude de cas
                 </Button>
-                {caseStudy && caseStudy.isPaidCase && (
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    component="label"
-                    onClick={openConvertToFreeDialog}
-                  >
-                    <MoneyOffIcon /> Convertir en étude de cas gratuite
-                  </Button>
-                )}
               </div>
             </>
           )}
@@ -329,14 +324,6 @@ function PendingCaseEdit() {
           text="Cette action est irréversible. Êtes-vous certain de vouloir supprimer votre étude de cas?"
           onConfirm={handleConfirmDelete}
           onCancel={handleDeleteDialogCanceled}
-        />
-      )}
-      {caseStudy && (
-        <ConfirmationDialog
-          open={convertToFreeDialogOpen}
-          text="Cette action est irréversible. Êtes-vous certain de vouloir convertir votre étude de cas payante en étude de cas gratuite?"
-          onConfirm={handleConfirmConvertToFree}
-          onCancel={handleConvertToFreeDialogCanceled}
         />
       )}
     </div>
