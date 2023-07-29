@@ -67,6 +67,15 @@ export class CaseStudyController {
 
         });
 
+        this.router.get('/authors', async (req: Request, res: Response) => {
+            try {
+                const caseStudyAuthors = await this.caseStudyService.findAllCaseStudyAuthors();
+                res.json(caseStudyAuthors);
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
         this.router.get('/:id', async (req: Request, res: Response) => {
             try {
                 const caseStudy = await this.caseStudyService.findCaseStudyById(req.params.id);
@@ -239,7 +248,12 @@ export class CaseStudyController {
             try {
                 const caseStudy = req.body;
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
+                let totalNbPages = 0;
                 if (req.files) {
+                    if(!validateFilesType(req.files)) {
+                        res.status(415).json('L\'étude de cas doit être en format .docx');
+                        return;
+                    }
                     let files = [];
                     for (let i = 0; i < req.files.length; i++) {
                         const fileProof = req.files[i];
@@ -247,12 +261,13 @@ export class CaseStudyController {
                             fileProof.date = new Date().toISOString();
                             fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
                             files.push(fileProof);
+                            totalNbPages += await countNumberPages(fileProof.path);
                             this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
                         }
                     }
                     caseStudy["files"] = files;
                 }
-
+                caseStudy["page"] = totalNbPages;
                 const newCaseStudy = await this.caseStudyService.createCaseStudy(caseStudy);
 
                 const deputies = await this.userService.findUsers({ role: Role.Deputy });
@@ -412,4 +427,26 @@ export class CaseStudyController {
             next(err);
         }
     }*/
+}
+
+function countNumberPages(filePath: string): Promise<number> {
+    var getDocumentProperties = require('office-document-properties');
+    return new Promise((resolve) => {
+      getDocumentProperties.fromFilePath(filePath, function(err: any, data: any) {
+        if (err) {
+          resolve(0); // For now, if document is protected or locked, dont count its pages
+        } else {
+          resolve(data.pages);
+        }
+      });
+    });
+}
+
+function validateFilesType(files: any): boolean {
+    for(const file of files) {
+        if(!file || file.mimetype != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {    
+            return false;
+        }
+    }
+    return true;
 }
