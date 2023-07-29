@@ -121,6 +121,10 @@ export class CaseStudyController {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
+                if(res.locals.user.email !== req.body.caseStudy.submitter) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
+                    return;
+                }
                 
                 res.status(200).json({
                     status: 'success',
@@ -141,6 +145,10 @@ export class CaseStudyController {
                 }
                 if (!caseStudy.isRejected) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
+                    return;
+                }
+                if(res.locals.user.email !== caseStudy.submitter) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
                     return;
                 }
 
@@ -166,6 +174,10 @@ export class CaseStudyController {
                 }
                 if (!caseStudy.isRejected) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
+                    return;
+                }
+                if(res.locals.user.email !== caseStudy.submitter) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
                     return;
                 }
 
@@ -206,6 +218,10 @@ export class CaseStudyController {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
+                if(res.locals.user.email !== caseStudy.submitter) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
+                    return;
+                }
 
                 caseStudy.isPaidCase = false;
                 await this.caseStudyService.updateCaseStudy(caseStudy);
@@ -225,6 +241,10 @@ export class CaseStudyController {
 
                 if (!caseStudy) {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+                if(res.locals.user.email !== caseStudy.submitter) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
                     return;
                 }
 
