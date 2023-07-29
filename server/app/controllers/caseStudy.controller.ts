@@ -194,6 +194,7 @@ export class CaseStudyController {
                         if (fileProof) {
                             fileProof.date = new Date().toISOString();
                             fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
+                            fileProof.pages = await countNumberPages(fileProof.path);
                             newFiles.push(fileProof);
                             this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
                         }
@@ -253,6 +254,12 @@ export class CaseStudyController {
                     res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
                     return;
                 }
+                
+                let totalNbPages = 0;
+                for (let i = 0; i < caseStudy.files.length; i++) {
+                    totalNbPages += caseStudy.files[i].pages;
+                }
+                caseStudy.page = totalNbPages;
 
                 caseStudy.isRejected = false;
                 if (caseStudy.status == CaseStep.WaitingComity) {
@@ -291,8 +298,9 @@ export class CaseStudyController {
                         if (fileProof) {
                             fileProof.date = new Date().toISOString();
                             fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
+                            fileProof.pages = await countNumberPages(fileProof.path);
                             files.push(fileProof);
-                            totalNbPages += await countNumberPages(fileProof.path);
+                            totalNbPages += fileProof.pages;
                             this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
                         }
                     }
