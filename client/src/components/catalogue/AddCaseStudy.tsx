@@ -21,7 +21,7 @@ export default function AddCaseStudy() {
   const [isVerified, setVerified] = React.useState(false);
 
   const [caseStudyFileName, setCaseStudyFileName] = React.useState(
-    "Aucune étude de cas n'a été téléversée"
+    "Aucun document n'a été téléversé"
   );
 
   const [selectedDiscipline, setSelectedDiscipline] = React.useState("");
@@ -232,10 +232,10 @@ export default function AddCaseStudy() {
             </div>
             <div>
               <Button variant="contained" component="label">
-                Téléverser l'étude de cas
+                Téléverser des documents Word
                 <input
                   hidden
-                  accept=".doc,.docx,.pdf"
+                  accept=".docx"
                   type="file"
                   onChange={handleFileUpload}
                   name="caseStudyFile"

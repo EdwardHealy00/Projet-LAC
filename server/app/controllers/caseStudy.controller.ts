@@ -5,8 +5,6 @@ import {Role} from "@app/models/Role";
 import {verifyJwt} from "@app/utils/jwt";
 import {UserService} from "@app/services/database/user.service";
 import { CaseStep } from '@app/models/CaseStatus';
-import { readFileSync } from "fs";
-import countPages from "page-count";
 
 export const excludedFields = ['_id', 'file', 'fieldName', 'encoding', 'mimetype', 'destination', 'filename', 'path', ];
 
@@ -105,13 +103,16 @@ export class CaseStudyController {
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
                 let totalNbPages = 0;
                 if (req.files) {
+                    if(!validateFilesType(req.files)) {
+                        res.status(415).json('L\'étude de cas doit être en format .docx');
+                        return;
+                    }
                     let files = [];
                     for (let i = 0; i < req.files.length; i++) {
                         const fileProof = req.files[i];
                         if (fileProof) {
                             files.push(fileProof);
-                            const docxBuffer = readFileSync(fileProof.path);
-                            totalNbPages += await countPages(docxBuffer, "docx");
+                            totalNbPages += await countNumberPages(fileProof.path);
                             this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
                         }
                     }
@@ -245,4 +246,26 @@ export class CaseStudyController {
             next(err);
         }
     }*/
+}
+
+function countNumberPages(filePath: string): Promise<number> {
+    var getDocumentProperties = require('office-document-properties');
+    return new Promise((resolve) => {
+      getDocumentProperties.fromFilePath(filePath, function(err: any, data: any) {
+        if (err) {
+          resolve(0); // For now, if document is protected or locked, dont count its pages
+        } else {
+          resolve(data.pages);
+        }
+      });
+    });
+}
+
+function validateFilesType(files: any): boolean {
+    for(const file of files) {
+        if(!file || file.mimetype != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {    
+            return false;
+        }
+    }
+    return true;
 }
