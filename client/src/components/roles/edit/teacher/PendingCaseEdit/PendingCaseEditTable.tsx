@@ -14,12 +14,15 @@ import axios from "axios";
 import { Case } from "../../../../../model/CaseStudy";
 import { forwardRef, useImperativeHandle } from "react";
 import { createDocumentFromFile } from "../../../../../utils/ConvertUtils";
+import { MAX_FILES_PER_CASE } from "../../../../../utils/Constants";
 
 interface CaseProp {
   case: Case;
   setModified: (isModified: boolean) => void;
   openDuplicateErrorDialog: Function;
   closeDuplicateErrorDialog: Function;
+  openMaxNumberOfFilesDialog: Function;
+  closeMaxNumberOfFilesDialog: Function;
   wantsToConvertToFree: boolean;
 }
 
@@ -94,7 +97,9 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
       let newFiles: File[] = [];
       for (var i = 0; i < files.length; i++) {
         if (!files || !files.item(i)) return;
-        if (
+        else if (changedCaseFiles.length + newFiles.length == MAX_FILES_PER_CASE) {
+          props.openMaxNumberOfFilesDialog();
+        }else if (
           changedCaseFiles.findIndex((value: Document) => {
             return (
               (files.item(i) as File).name === value.title + "." + value.format
@@ -102,7 +107,7 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
           }) != -1
         ) {
           props.openDuplicateErrorDialog();
-        } else {
+        }else {
           newFiles.push(files.item(i) as File);
         }
       }
@@ -119,7 +124,8 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
           )
         );
       }
-      props.setModified(true);
+      
+      if(newFiles.length > 0) props.setModified(true);
       SetChangedCaseFiles([...changedCaseFiles.concat(filesData)]);
     };
 

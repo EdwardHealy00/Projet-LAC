@@ -13,6 +13,7 @@ import NavBar from "../common/NavBar";
 import { useNavigate } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { checkList } from "../roles/approval/deputy/Feedback";
+import { MAX_FILES_PER_CASE } from "../../utils/Constants";
 
 export default function AddCaseStudy() {
   const navigate = useNavigate();
@@ -58,6 +59,22 @@ export default function AddCaseStudy() {
 
   const [stateErrors, setStateErrors] = React.useState(initialStateErrors);
 
+  const onUploadValidation = (files: any) => {
+    let isValid = true;
+    const stateErrorsCopy = { ...initialStateErrors };
+
+    if (files.length > MAX_FILES_PER_CASE) {
+      stateErrorsCopy.caseStudyFile = {
+        isError: true,
+        message: `Un maximum de ${MAX_FILES_PER_CASE} documents peuvent être inclus dans une étude de cas`,
+      };
+      isValid = false;
+    }
+
+    setStateErrors(!isValid ? stateErrorsCopy : initialStateErrors);
+    return isValid;
+  }
+
   const onValidation = (e: any) => {
     let isValid = true;
     const stateErrorsCopy = { ...initialStateErrors };
@@ -66,6 +83,14 @@ export default function AddCaseStudy() {
       stateErrorsCopy.caseStudyFile = {
         isError: true,
         message: "Veuillez entrer votre étude de cas",
+      };
+      isValid = false;
+    }
+
+    if (e.caseStudyFile.files.length > MAX_FILES_PER_CASE) {
+      stateErrorsCopy.caseStudyFile = {
+        isError: true,
+        message: `Un maximum de ${MAX_FILES_PER_CASE} documents peuvent être inclus dans une étude de cas`,
       };
       isValid = false;
     }
@@ -133,6 +158,7 @@ export default function AddCaseStudy() {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
+      onUploadValidation(e.target.files)
       let fileNames = e.target.files[0].name;
       for (let i = 1; i < e.target.files.length; i++) {
         fileNames += ", " + e.target.files[i].name;

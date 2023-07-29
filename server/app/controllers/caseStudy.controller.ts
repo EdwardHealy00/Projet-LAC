@@ -7,6 +7,7 @@ import {Criteria} from "@app/models/Criteria";
 import {verifyJwt} from "@app/utils/jwt";
 import {UserService} from "@app/services/database/user.service";
 import { CaseStep } from '@app/models/CaseStatus';
+import { MAX_FILES_PER_CASE } from '@app/constant/constant';
 
 export const excludedFields = ['_id', 'file', 'fieldName', 'encoding', 'mimetype', 'destination', 'filename', 'path', ];
 
@@ -182,6 +183,11 @@ export class CaseStudyController {
                 }
 
                 if (req.files) {
+                    if(req.files.length + caseStudy.files.length > MAX_FILES_PER_CASE) {
+                        res.status(405).json(`Il est interdit d\'inclure plus de ${MAX_FILES_PER_CASE} documents dans une étude de cas`);
+                        return;
+                    }
+
                     let newFiles = [];
                     for (let i = 0; i < req.files.length; i++) {
                         const fileProof = req.files[i];
@@ -274,6 +280,11 @@ export class CaseStudyController {
                         res.status(415).json('L\'étude de cas doit être en format .docx');
                         return;
                     }
+                    if(req.files.length > MAX_FILES_PER_CASE) {
+                        res.status(415).json('L\'étude de cas doit avoir un maximum de 3 documents');
+                        return;
+                    }
+
                     let files = [];
                     for (let i = 0; i < req.files.length; i++) {
                         const fileProof = req.files[i];

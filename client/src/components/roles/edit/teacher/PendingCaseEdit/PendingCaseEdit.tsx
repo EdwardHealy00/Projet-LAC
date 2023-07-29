@@ -12,7 +12,7 @@ import {
 import React, { useRef } from "react";
 import "./PendingCaseEdit.scss";
 import { Case } from "../../../../../model/CaseStudy";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import PendingCaseEditTable, {
   PendingCaseEditTableRef,
 } from "./PendingCaseEditTable";
@@ -21,10 +21,9 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import SaveIcon from "@mui/icons-material/Save";
 import { Document } from "../../../../../model/Document";
 import { createCaseFromData } from "../../../../../utils/ConvertUtils";
-import { ConfirmationDialog } from "../../../../common/ConfirmationDialog";
+import { MAX_FILES_PER_CASE } from "../../../../../utils/Constants";
 
 function PendingCaseEdit() {
-  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -35,6 +34,8 @@ function PendingCaseEdit() {
     React.useState<boolean>(false);
   let [caseStudy, SetCaseStudy] = React.useState<Case>();
   const [duplicateErrorDialogOpen, setDuplicateErrorDialogOpen] =
+    React.useState(false);
+  const [maxNumberOfFilesDialogOpen, SetMaxNumberOfFilesDialogOpen] =
     React.useState(false);
   const [confirmChangesDialogOpen, setConfirmChangesDialogOpen] =
     React.useState(false);
@@ -49,6 +50,14 @@ function PendingCaseEdit() {
 
   const handleDuplicateErrorDialogClose = () => {
     setDuplicateErrorDialogOpen(false);
+  };
+
+  const openMaxNumberOfFilesDialog = () => {
+    SetMaxNumberOfFilesDialogOpen(true);
+  };
+
+  const handleMaxNumberOfFilesDialogClose = () => {
+    SetMaxNumberOfFilesDialogOpen(false);
   };
 
   const openConfirmChangesDialog = () => {
@@ -196,6 +205,8 @@ function PendingCaseEdit() {
               setModified={setModified}
               openDuplicateErrorDialog={openDuplicateErrorDialog}
               closeDuplicateErrorDialog={handleDuplicateErrorDialogClose}
+              openMaxNumberOfFilesDialog={openMaxNumberOfFilesDialog}
+              closeMaxNumberOfFilesDialog={handleMaxNumberOfFilesDialogClose}
               wantsToConvertToFree={wantsToConvertToFree}
             />
           </Card>
@@ -279,6 +290,23 @@ function PendingCaseEdit() {
 
         <DialogActions>
           <Button variant="contained" onClick={handleDuplicateErrorDialogClose}>
+            Fermer
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={maxNumberOfFilesDialogOpen}
+        onClose={handleMaxNumberOfFilesDialogClose}
+        fullWidth={true}
+      >
+        <DialogTitle>Erreur de téléversement</DialogTitle>
+
+        <DialogContent>
+          Un maximum de {MAX_FILES_PER_CASE} documents peuvent être téléversés pour une étude de cas.
+        </DialogContent>
+
+        <DialogActions>
+          <Button variant="contained" onClick={handleMaxNumberOfFilesDialogClose}>
             Fermer
           </Button>
         </DialogActions>
