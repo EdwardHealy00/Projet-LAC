@@ -22,7 +22,7 @@ export const comityCriteria: string[] = [
 export default function ComityFeedback(caseData: SingleCaseProp) {
     const newCase = caseData.caseData;
     const navigate = useNavigate();
-
+    const [feedback] = React.useState<CaseFeedback[]>(new Array());
     const [decision, setDecision] = React.useState("");
     const onDecisionChanged = (e: any) => {
         setDecision(e.target.value);
@@ -30,8 +30,6 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
 
     const onDecisionSubmit = (e: any) => {
         e.preventDefault();
-    
-        let feedback: CaseFeedback[] = [];
     
         for (let i = 0; i < comityCriteria.length; i++)
         {
@@ -47,9 +45,6 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
           comments: e.target.elements.otherComments.value
         });
     
-        // TODO : HANDLE FEEDBACK
-        // console.log(feedback)
-    
         sendCaseStudyResponse();
     }
 
@@ -60,6 +55,8 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                 {
                     case: newCase.id_,
                     approved: decision === APPROVED_STR,
+                    decision: decision,
+                    feedback: feedback
                 },
                 {
                     withCredentials: true,

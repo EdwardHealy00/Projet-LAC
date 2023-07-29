@@ -8,21 +8,26 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { Case } from "../../../../model/CaseStudy";
+import { Role } from "../../../../model/enum/Role";
 import { getStatus } from "../../../../utils/Status";
 import { NavigateFunction, useNavigate } from "react-router-dom";
+import { UnlockAccess } from "../../../connection/UnlockAccess";
 
 interface CaseProp {
   cases: Case[];
 }
 
 function navigateHandleCase(navigate: NavigateFunction, caseStudy?: Case) {
-  navigate("/new-case-approval", { state: { caseStudy } });
+  navigate(
+    `/my-pending-case-studies/case-edit?id=${caseStudy ? caseStudy.id_ : 0}`,
+    { state: caseStudy }
+  );
 }
 
-export default function CaseTable(rows: CaseProp) {
+export default function CaseTable(prop: CaseProp) {
   const navigate = useNavigate();
   const handleCase = (id: number) => {
-    const caseStudy = rows.cases.find(
+    const caseStudy = prop.cases.find(
       (caseToHandle) => caseToHandle.id_ === id
     );
     navigateHandleCase(navigate, caseStudy);
@@ -41,7 +46,7 @@ export default function CaseTable(rows: CaseProp) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.cases.map((row) => (
+          {prop.cases.map((row) => (
             <TableRow
               key={row.id_}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -57,20 +62,38 @@ export default function CaseTable(rows: CaseProp) {
                   <TableCell align="right" style={{ color: "red" }}>
                     Rejetée
                   </TableCell>
-                  <TableCell align="right"></TableCell>
+                  <TableCell align="right">
+                      <UnlockAccess
+                        role={[Role.Admin, Role.Professor]}
+                        children={
+                          <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() => handleCase(row.id_)}
+                          >
+                            Modifier
+                          </Button>
+                        }
+                      ></UnlockAccess>
+                    </TableCell>
                 </>
               )}
               {!row.isRejected && (
                 <>
                   <TableCell align="right">{getStatus(row.status)}</TableCell>
-                  <TableCell align="right">
-                    <Button
-                      variant="contained"
-                      sx={{ backgroundColor: "#c00000" }}
-                      onClick={() => handleCase(row.id_)}
-                    >
-                      Traiter
-                    </Button>
+                    <TableCell align="right">
+                      <UnlockAccess
+                        role={[Role.Admin, Role.Professor]}
+                        children={
+                          <Button
+                            variant="outlined"
+                            sx={{ backgroundColor: "primary" }}
+                            onClick={() => handleCase(row.id_)}
+                          >
+                            Consulter
+                          </Button>
+                        }
+                      ></UnlockAccess>
                   </TableCell>
                 </>
               )}

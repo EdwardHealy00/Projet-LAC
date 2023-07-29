@@ -14,11 +14,11 @@ export class CaseStudyService {
 
     constructor(private readonly databaseService: DatabaseService) { }
 
-    saveCaseStudyFile(fileName: string) {
-        const filePath = path.join(__dirname, '../../../paidCaseStudies/', fileName);
+    saveCaseStudyFile(serverFileName: string) {
+        const filePath = path.join(__dirname, '../../../paidCaseStudies/', serverFileName);
         fs.createReadStream(filePath).pipe(this.databaseService.bucket.openUploadStream(filePath,
             {
-                metadata: { name: fileName }
+                metadata: { name: serverFileName }
             }
         )).on('finish', () => {
             fs.rmSync(filePath);
@@ -31,6 +31,15 @@ export class CaseStudyService {
             return this.databaseService.bucket.openDownloadStream(files[0]._id);
         }
         return null;
+    }
+
+    async deleteCaseStudyFile(fileName: string) {
+        const files = await this.databaseService.bucket.find({ "metadata.name": fileName }).toArray();
+        if (files.length > 0) {
+            this.databaseService.bucket.delete(files[0]._id);
+            return true;
+        }
+        return false;
     }
 
     async getAllPaidCaseStudies() {
@@ -77,6 +86,16 @@ export class CaseStudyService {
     // Find All CaseStudys
     async findAllCaseStudys(): Promise<(CaseStudy)[]> {
         const caseStudies: CaseStudy[] = await CaseStudyModel.find();
+        return caseStudies;
+    }
+
+    async findAllMyCaseStudies(userEmail: string): Promise<(CaseStudy)[]> {
+        const caseStudies: CaseStudy[] = await CaseStudyModel.find({submitter: userEmail}).lean();
+        const filteredCaseStudies: Partial<CaseStudy>[] = [];
+        caseStudies.forEach((study: any) => {
+            filteredCaseStudies.push(omit(study, excludedFields));
+        });
+
         return caseStudies;
     }
 

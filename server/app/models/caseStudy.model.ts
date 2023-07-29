@@ -18,6 +18,9 @@ export class CaseStudy {
     @prop({ default: true}) 
     isPaidCase: boolean;
 
+    @prop({ default: false}) 
+    isRejected: boolean;
+
     @prop({ unique: true, required: true })
     title: string;
 
@@ -32,6 +35,9 @@ export class CaseStudy {
 
     @prop({ required: true })
     authors: string;
+
+    @prop({ required: true })
+    submitter: string;
 
     @prop({})
     discipline: string;

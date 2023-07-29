@@ -8,6 +8,8 @@ export function getStatus(step: CaseStep) {
       return "En révision";
     case CaseStep.WaitingCatalogue:
       return "À ajouter";
+      case CaseStep.Posted:
+        return "Publié";
     default:
       return "Modifications à faire";
   }

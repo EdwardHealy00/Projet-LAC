@@ -165,6 +165,7 @@ export default function AddCaseStudy() {
       title: e.target.elements.title.value,
       desc: e.target.elements.desc.value,
       authors: e.target.elements.author.value,
+      submitter: localStorage.getItem("email"),
       classId: e.target.elements.course.value,
       files: Array.from(e.target.elements.caseStudyFile.files),
       discipline : e.target.elements.discipline.value,

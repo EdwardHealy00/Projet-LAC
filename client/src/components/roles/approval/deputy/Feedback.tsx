@@ -1,27 +1,21 @@
 import React from "react";
 import { SingleCaseProp } from "../../../../model/CaseStudy";
+import { Criteria } from "../../../../model/enum/Criteria"
 import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, FormGroup, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export const checkList: string[] = [
-    "L’étude de cas est en format Word.",
-    "L’étude de cas respecte le gabarit fourni.",
-    "Les notes pédagogiques sont incluses dans l’étude de cas.",
-    "Toutes les sections dans le gabarit sont dûment remplies.",
-    "La matière semble pertinente au génie, aux sciences ou à la technologie.",
-    "La qualité rédactionnelle est satisfaisante.",
-    "Le formulaire de consentement est dûment rempli (signatures, dates, etc.)",
-    "Tous les fichiers pertinents à l’étude de cas sont présents (données, annexes, outils, etc.)",
-];
+export const checkList = Object.values(Criteria).filter(
+  (value) => typeof value === "string"
+);
 
 export default function DeputyFeedback(caseData: SingleCaseProp) {
     const newCase = caseData.caseData;
     const navigate = useNavigate();
-
     const [checkedState, setCheckedState] = React.useState<boolean[]>(new Array(checkList.length).fill(false));
     const [isApproved, setApproved] = React.useState(false);
+    const [failedCriterias] = React.useState<number[]>(new Array());
 
     const handleVerifyCheck = (index: number) => {
         const updatedCheckedState = checkedState.map((item: boolean, i) => {
@@ -30,8 +24,12 @@ export default function DeputyFeedback(caseData: SingleCaseProp) {
         setCheckedState(updatedCheckedState);
 
         let approved = true;
-        updatedCheckedState.forEach((item) => {
+        failedCriterias.splice(0);
+        updatedCheckedState.forEach((item, index) => {
             approved = approved && item;
+            if(!item) {
+              failedCriterias.push(index);
+            }
         });
 
         setApproved(approved);
@@ -43,7 +41,8 @@ export default function DeputyFeedback(caseData: SingleCaseProp) {
             `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/approvalResult`,
             {
               case: newCase.id_,
-              approved: isApproved
+              approved: isApproved,
+              failedCriterias: failedCriterias
             },
             {
               withCredentials: true,

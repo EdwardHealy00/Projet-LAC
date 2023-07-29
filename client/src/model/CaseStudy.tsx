@@ -24,9 +24,11 @@ export interface Case {
   title: string;
   desc: string;
   authors: string;
+  submitter: string;
   date: string;
   page: number;
   status: CaseStep;
+  isRejected: boolean;
   isPaidCase: boolean;
   classId: string;
   discipline: string;
@@ -41,6 +43,7 @@ export interface NewCaseStudy {
   title: string;
   desc: string;
   authors: string;
+  submitter: string;
   classId: string;
   files: any;
   discipline: string;
@@ -55,6 +58,13 @@ export interface DeputyCaseStudyProps {
   step1: Case[];
   step2: Case[];
   step3: Case[];
+}
+
+export interface TeacherCaseStudyProps {
+  step1: Case[];
+  step2: Case[];
+  step3: Case[];
+  step4: Case[];
 }
 
 export interface SingleCaseProp {

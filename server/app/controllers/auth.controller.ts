@@ -110,6 +110,7 @@ export class AuthController {
                     status: 'success',
                     name: user!.firstName + ' ' + user!.lastName,
                     role: user!.role,
+                    email: user!.email,
                 });
             } catch (err: any) {
                 console.log(err);
