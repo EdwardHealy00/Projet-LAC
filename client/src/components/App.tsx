@@ -19,6 +19,7 @@ import AboutPage from "./landingPage/AboutPage";
 import AddCaseStudy from "./catalogue/AddCaseStudy";
 import PendingCaseEdit from "./roles/edit/teacher/PendingCaseEdit/PendingCaseEdit";
 import PendingCaseStudies from "./pendingCaseStudies/PendingCaseStudies";
+import GuidePage from "./guidePage/GuidePage";
 
 function App() {
   env.config({ path: `.env.${process.env.NODE_ENV}`})
@@ -56,6 +57,7 @@ function App() {
         <Routes>
           <Route path="/" element={<AboutPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/guide" element={<GuidePage />} />
           <Route path="/catalogue" element={<Catalogue />} />
           {/* <Route path="/etude-de-cas" element={<CaseStudyWTconnection />} /> */}
           <Route path="/etude-de-cas" element={<CaseStudyWconnection />} />
