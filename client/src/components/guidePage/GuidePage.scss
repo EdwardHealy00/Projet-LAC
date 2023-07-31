@@ -1,0 +1,21 @@
+.guide-page {
+    justify-content: center;
+    margin-left: 5vw;
+}
+  
+.accordions-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-prompt {
+    margin: 0.5em;
+    width: fit-content;
+}
+
+.login-prompt-text {
+    font-size: 1em;
+    font-weight: bold;
+    text-decoration: underline;
+}
+  

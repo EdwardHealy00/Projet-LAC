@@ -1,0 +1,36 @@
+.pdf-navigation {
+  position: relative;
+  bottom: 0;
+  justify-content: center;
+  display: flex;
+}
+
+.accordion {
+  width: 65em;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 0.8em;
+}
+
+.download-button {
+  align-self: flex-start;
+  margin-top: 0.5em !important;
+}
+
+.pdf-page {
+  position: relative;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  width: fit-content;
+  min-height: 2070px;
+  zoom: 0.6;
+}
+
+.react-pdf__Page__textContent {
+  display: none;
+}
+
