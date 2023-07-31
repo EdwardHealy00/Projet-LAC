@@ -12,7 +12,7 @@
 .row {
   display: flex;
   flex-direction: row;
-  margin-top: 0.8em;
+  margin-bottom: 0.8em;
 }
 
 .download-button {
@@ -26,6 +26,7 @@
   display: flex;
   justify-content: center;
   width: fit-content;
+  min-height: 2070px;
   zoom: 0.6;
 }
 

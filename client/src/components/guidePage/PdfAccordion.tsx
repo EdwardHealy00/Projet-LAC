@@ -25,9 +25,10 @@ interface PdfAccordionProps {
   pdfFile: string;
   index: number;
   title: string;
+  disabled: boolean;
 }
 
-const PdfAccordion: React.FC<PdfAccordionProps> = ({ pdfFile, index, title }) => {
+const PdfAccordion: React.FC<PdfAccordionProps> = ({ pdfFile, index, title, disabled }) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isDocumentLoaded, setIsDocumentLoaded] = useState<boolean>(false);
@@ -48,17 +49,17 @@ const PdfAccordion: React.FC<PdfAccordionProps> = ({ pdfFile, index, title }) =>
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
-  const downloadPdf = () => {
+  const downloadPdf = (fileName: string) => {
     const downloadLink = document.createElement("a");
     downloadLink.href = pdfFile;
-    downloadLink.download = "downloaded-file.pdf";
+    downloadLink.download = fileName + ".pdf";
     downloadLink.click();
     URL.revokeObjectURL(pdfFile);
   };
 
   return (
     <div className="row">
-      <Accordion className="accordion" onChange={loadDocument}>
+      <Accordion className="accordion" onChange={loadDocument} disabled = {disabled}>
         <AccordionSummary
           expandIcon={<ExpandMore />}
           aria-controls="panel1a-content"
@@ -105,7 +106,7 @@ const PdfAccordion: React.FC<PdfAccordionProps> = ({ pdfFile, index, title }) =>
           </Typography>
         </AccordionDetails>
       </Accordion>
-      <Button className="download-button" onClick={downloadPdf}>
+      <Button className="download-button" onClick={() => downloadPdf("Fiche" + index)} disabled={disabled}>
         <Download></Download>
       </Button>
     </div>
