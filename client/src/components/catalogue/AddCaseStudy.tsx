@@ -14,12 +14,17 @@ import { useNavigate } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { checkList } from "../roles/approval/deputy/Feedback";
 import { MAX_FILES_PER_CASE } from "../../utils/Constants";
+import PaidSwitch from "./PaidSwitch";
+
 
 export default function AddCaseStudy() {
+  
+
   const navigate = useNavigate();
 
   const [checkedState, setCheckedState] = React.useState<boolean[]>(new Array(checkList.length).fill(false));
   const [isVerified, setVerified] = React.useState(false);
+  const [isPaid, setIsPaid] = React.useState(false);
 
   const [caseStudyFileName, setCaseStudyFileName] = React.useState(
     "Aucun document n'a été téléversé"
@@ -58,6 +63,10 @@ export default function AddCaseStudy() {
   };
 
   const [stateErrors, setStateErrors] = React.useState(initialStateErrors);
+
+  const handlePaidSwitchChange = (checked: boolean) => {
+    setIsPaid(checked);
+  };
 
   const onUploadValidation = (files: any) => {
     let isValid = true;
@@ -195,7 +204,7 @@ export default function AddCaseStudy() {
       classId: e.target.elements.course.value,
       files: Array.from(e.target.elements.caseStudyFile.files),
       discipline : e.target.elements.discipline.value,
-      isPaidCase: e.target.elements.paid.checked,
+      isPaidCase: isPaid,
     } as NewCaseStudy;
 
     const formData = new FormData();
@@ -250,13 +259,7 @@ export default function AddCaseStudy() {
             id="caseStudyForm"
             encType="multipart/form-data"
           >
-            <div>
-              <Checkbox
-                autoFocus
-                name="paid"
-              />
-              <FormLabel>Étude de cas payante</FormLabel>
-            </div>
+            <PaidSwitch onChange={handlePaidSwitchChange}/>
             <div>
               <Button variant="contained" component="label">
                 Téléverser des documents Word
