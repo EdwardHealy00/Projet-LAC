@@ -21,7 +21,6 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import SaveIcon from "@mui/icons-material/Save";
 import { Document } from "../../../../../model/Document";
 import { createCaseFromData } from "../../../../../utils/ConvertUtils";
-import { ConfirmationDialog } from "../../../../common/ConfirmationDialog";
 
 function PendingCaseEdit() {
   const navigate = useNavigate();

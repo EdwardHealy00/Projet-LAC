@@ -4,12 +4,16 @@ import Register from "./Register";
 import axios from "axios";
 import { UserLogin } from "../../model/User";
 import React, { forwardRef, useImperativeHandle } from "react";
+import { useNavigate } from "react-router-dom";
 
+export interface Props {
+  onLoggedIn?: () => void;
+}
 export interface LoginPopupRef {
     setPopupOpen(): void;
-  }
+}
 
-const LoginPopup = forwardRef<LoginPopupRef>(
+const LoginPopup = forwardRef<LoginPopupRef, Props>(
     (props, ref) => {
 
     useImperativeHandle(ref, () => ({
@@ -18,50 +22,53 @@ const LoginPopup = forwardRef<LoginPopupRef>(
         }
     }));
 
+    const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
-    const [state, setState] = React.useState<UserLogin>({
-      email: "",
-      password: "",
-    });
 
     const handleClose = () => {
         setOpen(false);
-      };
+    };
+
+    const handleCancel = () => {
+      if(location.pathname != '/') {
+        navigate('/catalogue'); 
+      } else {
+        navigate('/'); 
+      }
+      
+      handleClose();
+  };
     
-      const handleInputChange = (
-        e:
-          | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      ) => {
-        const target = e.target;
-        const value = target.value;
-        const name = target.name;
-        setState({ ...state, [name]: value });
-      };
-    
-      const handleSubmit = (e: any) => {
-        e.preventDefault();
-        const user: UserLogin = {
-          email: e.target.elements.email.value,
-          password: e.target.elements.password.value,
-        };
-        sendLoginForm(user);
-      };
-    
-      const sendLoginForm = (user: UserLogin) => {
-        axios
-          .post(`${process.env.REACT_APP_BASE_API_URL}/api/auth/login`, user, {
-            withCredentials: true,
-          })
-          .then((res) => {
-            if (res.status === 200) {
-              handleClose();
-              localStorage.setItem("name", res.data.name);
-              localStorage.setItem("role", res.data.role);
-              localStorage.setItem("email", res.data.email);
-              window.location.reload();
-            }
-          });
-      };
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    const user: UserLogin = {
+      email: e.target.elements.email.value,
+      password: e.target.elements.password.value,
+    };
+    sendLoginForm(user);
+  };
+  
+  const sendLoginForm = (user: UserLogin) => {
+    axios
+      .post(`${process.env.REACT_APP_BASE_API_URL}/api/auth/login`, user, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          handleClose();
+
+          const hasExpired = localStorage.getItem("email") == res.data.email;
+          localStorage.setItem("name", res.data.name);
+          localStorage.setItem("role", res.data.role);
+          localStorage.setItem("email", res.data.email);
+          if(!hasExpired){
+            window.location.reload(); // Dont mind reloading if user was not interrupted
+          } else if(props.onLoggedIn){
+            props.onLoggedIn(); // Refresh only Login/Logout button to not lose changes
+          } 
+          }
+      });
+  };
       
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -99,7 +106,7 @@ const LoginPopup = forwardRef<LoginPopupRef>(
         </form>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Annuler</Button>
+        <Button onClick={handleCancel}>Annuler</Button>
         <Button variant="contained" type="submit" form="loginForm">
           Valider
         </Button>

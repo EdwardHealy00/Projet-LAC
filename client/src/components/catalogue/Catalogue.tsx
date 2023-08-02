@@ -369,7 +369,6 @@ export default function Catalogue() {
 
   return (
     <div>
-      <NavBar></NavBar>
       <div id="content">
         <div id="rectangle">
           <div id="catalogue-des-cas">Catalogue des cas</div>

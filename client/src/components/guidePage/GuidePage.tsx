@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import PdfAccordion from "./PdfAccordion";
 import "./GuidePage.scss";
 import NavBar from "../common/NavBar";
 import { Button, Typography } from "@mui/material";
 import Cookies from "js-cookie";
 import LoginPopup, { LoginPopupRef } from "./../connection/LoginPopup";
+import { AppContext } from "../App";
 
 function GuidePage() {
-  const loginPopupRef = React.useRef<LoginPopupRef | null>(null);
+  const appContext = useContext(AppContext);
 
   const numberOfUnrestrictedPdfFiles = 1;
   const numberOfRestrictedPdfFiles = 9;
@@ -35,14 +36,13 @@ function GuidePage() {
   }
 
   const openPopup = () => {
-    if (loginPopupRef.current) {
-      loginPopupRef.current.setPopupOpen();
+    if(appContext) {
+      appContext.openLogInPopup();
     }
   };
 
   return (
     <>
-      <NavBar></NavBar>
       <div className="guide-page">
         <h1>Ressources pédagogiques</h1>
         <h2>Comment rédiger et animer une étude de cas ?</h2>
@@ -73,7 +73,6 @@ function GuidePage() {
             />
           ))}
         </div>
-        <LoginPopup ref={loginPopupRef}/>
       </div>
     </>
   );
