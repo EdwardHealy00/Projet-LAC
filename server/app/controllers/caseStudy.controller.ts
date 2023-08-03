@@ -23,7 +23,7 @@ export class CaseStudyController {
         this.router.use(this.middlewareDeserializeUser.bind(this));
 
 
-        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response) => {
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.PolyPress), async (req: Request, res: Response) => {
             try {
                 const caseStudies = await this.caseStudyService.findAllCaseStudys();
 
@@ -45,7 +45,7 @@ export class CaseStudyController {
 
         });
 
-        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.PolyPress), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const caseStudies = await this.caseStudyService.getAllPaidCaseStudies();
 
@@ -84,7 +84,10 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvé');
                     return;
                 }
-                if(res.locals.user.email !== caseStudy.submitter) {
+                
+                const role = res.locals.user.role;
+                const isNotPrivileged = role === Role.Professor || role === Role.ProfessorNotApproved || role === Role.Student;
+                if(isNotPrivileged && caseStudy.status != CaseStep.Posted && res.locals.user.email !== caseStudy.submitter) {
                     res.status(403).json('Il est interdit de consulter une étude de cas en cours d\'évaluation déposée par un autre utilisateur');
                     return;
                 }
