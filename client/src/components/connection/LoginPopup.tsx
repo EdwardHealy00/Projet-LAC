@@ -67,6 +67,8 @@ const LoginPopup = forwardRef<LoginPopupRef, Props>(
             props.onLoggedIn(); // Refresh only Login/Logout button to not lose changes
           } 
           }
+      }).catch((err) => {
+        console.log(err);
       });
   };
       

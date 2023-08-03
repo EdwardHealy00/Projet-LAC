@@ -1,10 +1,8 @@
 import React, { useContext } from "react";
 import PdfAccordion from "./PdfAccordion";
 import "./GuidePage.scss";
-import NavBar from "../common/NavBar";
 import { Button, Typography } from "@mui/material";
 import Cookies from "js-cookie";
-import LoginPopup, { LoginPopupRef } from "./../connection/LoginPopup";
 import { AppContext } from "../App";
 
 function GuidePage() {

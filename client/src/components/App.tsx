@@ -1,6 +1,6 @@
 import React, { createContext, useRef } from "react";
 import Catalogue from "./catalogue/Catalogue";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import CaseStudyWconnection from "./caseStudy/CaseStudyWconnection";
 import NavBar, { NavBarRef } from "./common/NavBar";
 import CollaborativeSpace from "./collaborativeSpace/CollaborativeSpace";
@@ -21,6 +21,7 @@ import PendingCaseEdit from "./roles/edit/teacher/PendingCaseEdit/PendingCaseEdi
 import PendingCaseStudies from "./pendingCaseStudies/PendingCaseStudies";
 import GuidePage from "./guidePage/GuidePage";
 import LoginPopup, { LoginPopupRef } from "./connection/LoginPopup";
+import ForbiddenPage from "./roles/ForbiddenPage";
 
 interface AppContextValue {
   openLogInPopup: () => void;
@@ -34,6 +35,7 @@ function App() {
   const navBarRef = useRef<NavBarRef | null>(null);
   const loginPopupRef = useRef<LoginPopupRef | null>(null);
   let resolveLogIn: ((value: void | PromiseLike<void>) => void) | undefined;
+  const navigate = useNavigate();
 
   const openLogInPopup = () => {
     if (loginPopupRef.current) {
@@ -69,7 +71,8 @@ function App() {
       console.groupEnd();
       
       // Prompt user to log in if unauthorized (Session expired)
-      if (error.response && error.response.status === 401) {
+      if (error.response) {
+        if(error.response.status === 401 && error.response.message == "Authentication error") {
           const originalRequest = error.config;
           originalRequest._retry = true;
 
@@ -82,8 +85,22 @@ function App() {
           // wait for user to sign in before retrying request
           await logInPromise;
           return axios(originalRequest);
+        } else if(error.response.status === 403) {
+            navigate('/forbidden')
+        } 
       }
-    });
+
+      let message = "Une erreur s'est produite, veuillez réessayer";
+      if (error.response.data) {
+        message = error.response.data;
+      } 
+      snackBarRef.current!.handleClick(
+        true,
+        message
+      );
+      return Promise.reject(error);
+    }
+  );
 
   return (
     <div>
@@ -113,6 +130,7 @@ function App() {
           <Route path="/mission" element={<Mission />} />
           <Route path="/team" element={<Team />} />
           <Route path="/creation" element={<Creation />} />
+          <Route path="/forbidden" element={<ForbiddenPage />} />
           <Route
             path="/reset-password/:resetToken"
             element={<ResetPassword />}

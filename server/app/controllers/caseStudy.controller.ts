@@ -79,6 +79,16 @@ export class CaseStudyController {
         this.router.get('/:id', async (req: Request, res: Response) => {
             try {
                 const caseStudy = await this.caseStudyService.findCaseStudyById(req.params.id);
+
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvé');
+                    return;
+                }
+                if(res.locals.user.email !== caseStudy.submitter) {
+                    res.status(403).json('Il est interdit de consulter une étude de cas en cours d\'évaluation déposée par un autre utilisateur');
+                    return;
+                }
+
                 res.json(caseStudy);
             } catch (err: any) {
                 console.log(err);
