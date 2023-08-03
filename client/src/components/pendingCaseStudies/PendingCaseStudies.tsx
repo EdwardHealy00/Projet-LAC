@@ -49,6 +49,7 @@ export default function PendingCaseStudies() {
               caseStudy.discipline,
               caseStudy.subjects,
               caseStudy.files,
+              caseStudy.comityMemberReviews,
               caseStudy.ratings,
               caseStudy.votes
             );

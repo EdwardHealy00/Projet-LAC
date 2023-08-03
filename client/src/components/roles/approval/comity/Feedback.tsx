@@ -4,6 +4,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Button, FormControl, For
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useNavigate } from "react-router-dom";
 import { CaseFeedback } from "../../../deputy/newCase/CaseFeedback";
+import { ApprovalDecision } from "../../../../model/enum/ApprovalDecision";
 import axios from "axios";
 
 export const comityCriteria: string[] = [
@@ -13,17 +14,12 @@ export const comityCriteria: string[] = [
     "Style",
     "Apport d'un point de vue pédagogique"
   ];
-  
-  const APPROVED_STR: string = "approved";
-  const MAJOR_STR: string = "major";
-  const MINOR_STR: string = "minor";
-  const REJECT_STR: string = "rejected";
 
 export default function ComityFeedback(caseData: SingleCaseProp) {
     const newCase = caseData.caseData;
     const navigate = useNavigate();
     const [feedback] = React.useState<CaseFeedback[]>(new Array());
-    const [decision, setDecision] = React.useState("");
+    const [decision, setDecision] = React.useState<ApprovalDecision | string>('');
     const onDecisionChanged = (e: any) => {
         setDecision(e.target.value);
     }
@@ -51,12 +47,11 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
     const sendCaseStudyResponse = () => {
         axios
             .post(
-                `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/approvalResult`,
+                `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/comityMemberReview`,
                 {
                     case: newCase.id_,
-                    approved: decision === APPROVED_STR,
                     decision: decision,
-                    feedback: feedback
+                    feedback: feedback,
                 },
                 {
                     withCredentials: true,
@@ -142,13 +137,13 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                       onChange={onDecisionChanged}
                       style={{width: '300px'}}
                     >
-                      <MenuItem value={APPROVED_STR}>Publication dans l'état</MenuItem>
-                      <MenuItem value={MAJOR_STR}>Publication avec révision majeure</MenuItem>
-                      <MenuItem value={MINOR_STR}>Publication avec révision mineure</MenuItem>
-                      <MenuItem value={REJECT_STR}>Rejet</MenuItem>
+                      <MenuItem value={ApprovalDecision.APPROVED}>Publication dans l'état</MenuItem>
+                      <MenuItem value={ApprovalDecision.MAJOR_CHANGES}>Publication avec révision majeure</MenuItem>
+                      <MenuItem value={ApprovalDecision.MINOR_CHANGES}>Publication avec révision mineure</MenuItem>
+                      <MenuItem value={ApprovalDecision.REJECT}>Rejet</MenuItem>
                     </Select>
                   </FormControl>
-                  <Button variant="contained" disabled={decision.length == 0} type="submit" form="feedbackForm">
+                  <Button variant="contained" disabled={decision === ''} type="submit" form="feedbackForm">
                     Compléter
                   </Button>
                 </div>

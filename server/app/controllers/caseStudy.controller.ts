@@ -7,6 +7,7 @@ import {Criteria} from "@app/models/Criteria";
 import {verifyJwt} from "@app/utils/jwt";
 import {UserService} from "@app/services/database/user.service";
 import { CaseStep } from '@app/models/CaseStatus';
+import { ComityMemberReview } from '@app/models/ComityMemberReview';
 
 export const excludedFields = ['_id', 'file', 'fieldName', 'encoding', 'mimetype', 'destination', 'filename', 'path', ];
 
@@ -343,6 +344,48 @@ export class CaseStudyController {
                     caseStudy.isRejected = true;
                 }
                 await this.caseStudyService.updateCaseStudy(caseStudy);
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
+        this.router.post('/comityMemberReview', this.middlewareRestrictTo(Role.Comity, Role.Admin), async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.body.case;
+                const feedback = req.body.feedback;
+                const decision = req.body.decision;
+                const reviewerEmail = res.locals.user.email;
+
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
+
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                if(caseStudy.status != CaseStep.WaitingComity) {
+                    res.status(403).json('L\'étude de cas ne peut pas être évalué dans son statut actuel');
+                    return;
+                }
+
+                if(caseStudy.comityMemberReviews.find(
+                    (review) => review.reviewAuthor === reviewerEmail
+                  ) !== undefined) {
+                    res.status(403).json('L\'étude de cas a déjà été évalué par cet utilisateur');
+                    return;
+                }
+
+                const comityMemberReview: ComityMemberReview = {
+                    reviewAuthor: reviewerEmail,
+                    caseFeedback: feedback,
+                    decision: decision,
+                };
+                caseStudy.comityMemberReviews.push(comityMemberReview);
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+
                 res.status(200).json({
                     status: 'success',
                 });

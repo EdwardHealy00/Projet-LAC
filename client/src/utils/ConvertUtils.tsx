@@ -1,6 +1,7 @@
 import { Case } from "../model/CaseStudy";
 import { CaseStep } from "../model/enum/CaseStatus";
 import { Document } from "../model/Document";
+import { ComityMemberReview } from "../components/deputy/newCase/CaseFeedback";
 
 export function createCaseFromData(
     id_: number,
@@ -17,6 +18,7 @@ export function createCaseFromData(
     discipline: string,
     subjects: string[],
     files: any[],
+    comityMemberReviews: ComityMemberReview[],
     ratings: number,
     votes: number
   ): Case {
@@ -40,6 +42,7 @@ export function createCaseFromData(
         discipline,
         subjects,
         files: filesData,
+        comityMemberReviews,
         ratings,
         votes,
         url: ""

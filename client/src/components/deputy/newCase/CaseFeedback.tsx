@@ -3,3 +3,8 @@ export interface CaseFeedback {
     rating?: number;
     comments: string;
 }
+
+export interface ComityMemberReview {
+    reviewAuthor: string;
+    caseFeedback: CaseFeedback[];
+}

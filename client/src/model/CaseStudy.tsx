@@ -1,3 +1,4 @@
+import { ComityMemberReview } from "../components/deputy/newCase/CaseFeedback";
 import { Document } from "./Document";
 import { CaseStep } from "./enum/CaseStatus";
 
@@ -34,6 +35,7 @@ export interface Case {
   discipline: string;
   subjects: string[];
   files: Document[];
+  comityMemberReviews: ComityMemberReview[];
   ratings: number;
   votes: number;
   url: string;

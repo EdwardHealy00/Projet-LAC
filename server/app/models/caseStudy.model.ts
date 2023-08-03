@@ -4,6 +4,7 @@ import {
     prop,
 } from '@typegoose/typegoose';
 import { CaseStep } from './CaseStatus';
+import { ComityMemberReview } from './ComityMemberReview';
 
 @modelOptions({
     schemaOptions: {
@@ -32,6 +33,9 @@ export class CaseStudy {
 
     @prop({ required: true })
     files: any;
+
+    @prop({default: []})
+    comityMemberReviews: ComityMemberReview[];
 
     @prop({ required: true })
     authors: string;

@@ -84,6 +84,7 @@ function PendingCaseEdit() {
           res.data.discipline,
           res.data.subjects,
           res.data.files,
+          res.data.comityMemberReviews,
           res.data.ratings,
           res.data.votes
         );
