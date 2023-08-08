@@ -30,39 +30,43 @@ export default function PendingCaseStudies() {
     axios
       .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/user/${localStorage.getItem("email")}`, {withCredentials: true})
       .then((res) => {
-        const paidCases: Case[] = [];
-        const freeCases: Case[] = [];
-        for (const caseStudy of res.data) {
-          const newData = createCaseFromData(
-            caseStudy._id,
-            caseStudy.title,
-            caseStudy.desc,
-            caseStudy.authors,
-            caseStudy.submitter,
-            caseStudy.date,
-            caseStudy.page,
-            caseStudy.status,
-            caseStudy.isPaidCase,
-            caseStudy.isRejected,
-            caseStudy.classId,
-            caseStudy.discipline,
-            caseStudy.subjects,
-            caseStudy.files,
-            caseStudy.ratings,
-            caseStudy.votes
-          );
-          caseStudy.isPaidCase ? paidCases.push(newData) : freeCases.push(newData);
-        }
-        setPaidCaseStudiesStep1(filterByStep(paidCases, CaseStep.WaitingPreApproval));
-        setPaidCaseStudiesStep2(filterByStep(paidCases, CaseStep.WaitingComity));
-        setPaidCaseStudiesStep3(filterByStep(paidCases, CaseStep.WaitingCatalogue));
-        setPaidCaseStudiesStep4(filterByStep(paidCases, CaseStep.Posted));
+        if(res.status === 200) {
+          const paidCases: Case[] = [];
+          const freeCases: Case[] = [];
+          for (const caseStudy of res.data) {
+            const newData = createCaseFromData(
+              caseStudy._id,
+              caseStudy.title,
+              caseStudy.desc,
+              caseStudy.authors,
+              caseStudy.submitter,
+              caseStudy.date,
+              caseStudy.page,
+              caseStudy.status,
+              caseStudy.isPaidCase,
+              caseStudy.isRejected,
+              caseStudy.classId,
+              caseStudy.discipline,
+              caseStudy.subjects,
+              caseStudy.files,
+              caseStudy.ratings,
+              caseStudy.votes
+            );
+            caseStudy.isPaidCase ? paidCases.push(newData) : freeCases.push(newData);
+          }
+          setPaidCaseStudiesStep1(filterByStep(paidCases, CaseStep.WaitingPreApproval));
+          setPaidCaseStudiesStep2(filterByStep(paidCases, CaseStep.WaitingComity));
+          setPaidCaseStudiesStep3(filterByStep(paidCases, CaseStep.WaitingCatalogue));
+          setPaidCaseStudiesStep4(filterByStep(paidCases, CaseStep.Posted));
 
-        setFreeCaseStudiesStep1(filterByStep(freeCases, CaseStep.WaitingPreApproval));
-        setFreeCaseStudiesStep2(filterByStep(freeCases, CaseStep.WaitingComity));
-        setFreeCaseStudiesStep3(filterByStep(freeCases, CaseStep.WaitingCatalogue));
-        setFreeCaseStudiesStep4(filterByStep(freeCases, CaseStep.Posted));
-      });
+          setFreeCaseStudiesStep1(filterByStep(freeCases, CaseStep.WaitingPreApproval));
+          setFreeCaseStudiesStep2(filterByStep(freeCases, CaseStep.WaitingComity));
+          setFreeCaseStudiesStep3(filterByStep(freeCases, CaseStep.WaitingCatalogue));
+          setFreeCaseStudiesStep4(filterByStep(freeCases, CaseStep.Posted));
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
   };
 
   React.useEffect(() => {
