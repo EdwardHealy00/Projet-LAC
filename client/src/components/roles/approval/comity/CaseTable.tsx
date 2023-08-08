@@ -17,7 +17,9 @@ interface CaseProp {
 }
 
 function navigateHandleCase(navigate: NavigateFunction, caseStudy?: Case) {
-  navigate("/new-case-approval", { state: { caseStudy } });
+  navigate(
+    `/approval/new-case?id=${caseStudy ? caseStudy.id_ : 0}`
+  );
 }
 
 export default function CaseTable(rows: CaseProp) {
@@ -77,7 +79,7 @@ export default function CaseTable(rows: CaseProp) {
                   <TableCell align="right"></TableCell>
                 </>
               )}
-              {row.approvalDecision != ApprovalDecision.REJECT && (
+              {row.approvalDecision == ApprovalDecision.PENDING && (
                 <>
                   <TableCell align="right">{getStatus(row.status)}</TableCell>
                   <TableCell align="right">

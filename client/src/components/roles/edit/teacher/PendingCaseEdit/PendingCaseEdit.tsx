@@ -24,7 +24,6 @@ import { createCaseFromData } from "../../../../../utils/ConvertUtils";
 import { ApprovalDecision } from "../../../../../model/enum/ApprovalDecision";
 
 function PendingCaseEdit() {
-  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");

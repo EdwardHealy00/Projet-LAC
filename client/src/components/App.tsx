@@ -123,7 +123,7 @@ function App() {
           <Route path="/my-pending-case-studies" element={<PendingCaseStudies />}/>
           <Route path="/my-pending-case-studies/case-edit" element={<PendingCaseEdit />} />
           <Route path="/approval" element={<Approval />} />
-          <Route path="/new-case-approval" element={<NewCase />} />
+          <Route path="/approval/new-case" element={<NewCase />} />
           <Route path="/create" element={<AddCaseStudy />} />
 
           <Route path="/summary" element={<Summary />} />

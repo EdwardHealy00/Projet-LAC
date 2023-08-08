@@ -77,7 +77,7 @@ export default function CaseTable(rows: CaseProp) {
                   <TableCell align="right"></TableCell>
                 </>
               )}
-              {row.approvalDecision != ApprovalDecision.REJECT && (
+              {row.approvalDecision == ApprovalDecision.PENDING && (
                 <>
                   <TableCell align="right">{getStatus(row.status)}</TableCell>
                   <TableCell align="right">

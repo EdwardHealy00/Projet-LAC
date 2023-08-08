@@ -18,7 +18,9 @@ interface CaseProp {
 }
 
 function navigateHandleCase(navigate: NavigateFunction, caseStudy?: Case) {
-  navigate("/new-case-approval", { state: { caseStudy } });
+  navigate(
+    `/approval/new-case?id=${caseStudy ? caseStudy.id_ : 0}`
+  );
 }
 
 export default function CaseTable(rows: CaseProp) {
@@ -63,6 +65,14 @@ export default function CaseTable(rows: CaseProp) {
                   <TableCell align="right"></TableCell>
                 </>
               )}
+              {row.approvalDecision == ApprovalDecision.MAJOR_CHANGES && (
+                <>
+                  <TableCell align="right" style={{ color: "orange" }}>
+                    Nécessite des changements majeurs
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                </>
+              )}
               {row.approvalDecision == ApprovalDecision.MINOR_CHANGES && (
                 <>
                   <TableCell align="right" style={{ color: "orange" }}>
@@ -71,15 +81,7 @@ export default function CaseTable(rows: CaseProp) {
                   <TableCell align="right"></TableCell>
                 </>
               )}
-              {row.approvalDecision == ApprovalDecision.MAJOR_CHANGES && (
-                <>
-                  <TableCell align="right" style={{ color: "orange" }}>
-                  Nécessite des changements majeurs
-                  </TableCell>
-                  <TableCell align="right"></TableCell>
-                </>
-              )}
-              {row.approvalDecision != ApprovalDecision.REJECT && (
+              {row.approvalDecision == ApprovalDecision.PENDING && (
                 <>
                   <TableCell align="right">{getStatus(row.status)}</TableCell>
                   <TableCell align="right">

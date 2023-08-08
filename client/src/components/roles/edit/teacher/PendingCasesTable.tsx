@@ -20,8 +20,7 @@ interface CaseProp {
 
 function navigateHandleCase(navigate: NavigateFunction, caseStudy?: Case) {
   navigate(
-    `/my-pending-case-studies/case-edit?id=${caseStudy ? caseStudy.id_ : 0}`,
-    { state: caseStudy }
+    `/my-pending-case-studies/case-edit?id=${caseStudy ? caseStudy.id_ : 0}`
   );
 }
 
@@ -79,7 +78,7 @@ export default function CaseTable(prop: CaseProp) {
                   </TableCell>
                 </>
               )}
-              {row.approvalDecision != ApprovalDecision.PENDING && (
+              {row.approvalDecision != ApprovalDecision.PENDING && row.approvalDecision != ApprovalDecision.APPROVED && (
                 <>
                   <TableCell align="right">
                       <UnlockAccess
@@ -95,25 +94,25 @@ export default function CaseTable(prop: CaseProp) {
                         }
                       ></UnlockAccess>
                     </TableCell>
-                    </>
+                  </>
               )}
-              {row.approvalDecision == ApprovalDecision.PENDING && (
+              {(row.approvalDecision == ApprovalDecision.PENDING || row.approvalDecision == ApprovalDecision.APPROVED) && (
                 <>
                   <TableCell align="right">{getStatus(row.status)}</TableCell>
-                    <TableCell align="right">
-                      <UnlockAccess
-                        role={[Role.Admin, Role.Professor]}
-                        children={
-                          <Button
-                            variant="outlined"
-                            sx={{ backgroundColor: "primary" }}
-                            onClick={() => handleCase(row.id_)}
-                          >
-                            Consulter
-                          </Button>
-                        }
-                      ></UnlockAccess>
-                  </TableCell>
+                  <TableCell align="right">
+                    <UnlockAccess
+                      role={[Role.Admin, Role.Professor]}
+                      children={
+                        <Button
+                          variant="outlined"
+                          sx={{ backgroundColor: "primary" }}
+                          onClick={() => handleCase(row.id_)}
+                        >
+                          Consulter
+                        </Button>
+                      }
+                    ></UnlockAccess>
+                </TableCell>
                 </>
               )}
             </TableRow>

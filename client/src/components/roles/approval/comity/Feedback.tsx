@@ -120,13 +120,6 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                 </form>
                 <br />
                 <br />
-                <div>
-                  <b>
-                    L’auteur sera avisé par courriel du statut de suivi de son
-                    dossier. <br />
-                  </b>
-                  <p>*si le cas est rejeté, vous pouvez suggérer de le publier en libre accès, le cas échéant.</p><br />
-                </div>
                 <div className="decision-actions">
                   <FormControl>
                     <FormLabel>Décision</FormLabel>
