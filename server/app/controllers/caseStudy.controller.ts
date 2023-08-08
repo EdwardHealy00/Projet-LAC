@@ -81,7 +81,7 @@ export class CaseStudyController {
                 const caseStudy = await this.caseStudyService.findCaseStudyById(req.params.id);
 
                 if (!caseStudy) {
-                    res.status(404).json('L\'étude de cas n\'a pas été trouvé');
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
                 
