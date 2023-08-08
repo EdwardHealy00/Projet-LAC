@@ -3,7 +3,7 @@ import * as nodemailer from 'nodemailer';
 import { EMAIL_USERNAME, EMAIL_PASSWORD } from '@app/constant/constant';
 import { CaseStudy } from '@app/models/caseStudy.model';
 import { User } from '@app/models/user.model';
-import { CaseFeedback } from '@app/models/CaseFeedback';
+import { ApprovalDecision } from '@app/models/ApprovalDecision';
 
 @Service()
 export class EmailService {
@@ -101,17 +101,13 @@ export class EmailService {
         this.sendEmail(mailOptions);
     }
 
-    sendReviewResultToUser(email: string, caseStudy: CaseStudy, isApproved: boolean, decision: string, feedback: CaseFeedback[]) {
+    sendReviewResultToUser(email: string, caseStudy: CaseStudy, isApproved: boolean, decision: ApprovalDecision, feedback: string) {
         let decisionText = '';
         switch(decision){
-            case 'minor': decisionText = 'requiert des changements mineurs.'; break;
-            case 'major': decisionText = 'requiert des changements majeurs.'; break;
-            case 'rejected': decisionText = 'a été rejetée.';
-        }
-
-        let feedbackText = '';
-        for (var element of feedback) {
-            feedbackText += element.criteria + ': ' + (element.rating? element.rating + '/5': '') + '\n' +  (element.comments? element.comments + '\n': '') + '\n';
+            case ApprovalDecision.MINOR_CHANGES: decisionText = 'requiert des changements mineurs.'; break;
+            case ApprovalDecision.MAJOR_CHANGES: decisionText = 'requiert des changements majeurs.'; break;
+            case ApprovalDecision.REJECT: decisionText = 'a été rejetée.'; break;
+            case ApprovalDecision.APPROVED: decisionText = 'a été approuvée par le comité scientifique.';
         }
     
         const mailOptions = {
@@ -119,8 +115,7 @@ export class EmailService {
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été revue`, 
             text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
-                    (isApproved ? ` a été approuvée par le comité scientifique.`
-                                : `${decisionText} Consultez l'évaluation complète ci-dessous: \n\n${feedbackText}`) + 
+                    `${decisionText} Consultez l'évaluation complète ci-dessous: \n\n${feedback}` + 
                     `\n\n Cliquez-ci pour y consulter son statut: http://localhost:3000/my-pending-case-studies` 
         }
         this.sendEmail(mailOptions);

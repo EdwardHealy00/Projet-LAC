@@ -5,6 +5,7 @@ import {
 } from '@typegoose/typegoose';
 import { CaseStep } from './CaseStatus';
 import { ComityMemberReview } from './ComityMemberReview';
+import { ApprovalDecision } from './ApprovalDecision';
 
 @modelOptions({
     schemaOptions: {
@@ -19,8 +20,11 @@ export class CaseStudy {
     @prop({ default: true}) 
     isPaidCase: boolean;
 
-    @prop({ default: false}) 
-    isRejected: boolean;
+    @prop({ default: ApprovalDecision.PENDING}) 
+    approvalDecision: ApprovalDecision;
+
+    @prop({ default: ""}) 
+    comments: string;
 
     @prop({ unique: true, required: true })
     title: string;

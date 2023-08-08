@@ -2,6 +2,7 @@ import { Case } from "../model/CaseStudy";
 import { CaseStep } from "../model/enum/CaseStatus";
 import { Document } from "../model/Document";
 import { ComityMemberReview } from "../components/deputy/newCase/CaseFeedback";
+import { ApprovalDecision } from "../model/enum/ApprovalDecision";
 
 export function createCaseFromData(
     id_: number,
@@ -13,12 +14,13 @@ export function createCaseFromData(
     page: number,
     status: CaseStep,
     isPaidCase: boolean,
-    isRejected: boolean,
     classId: string,
     discipline: string,
     subjects: string[],
     files: any[],
     comityMemberReviews: ComityMemberReview[],
+    approvalDecision: ApprovalDecision,
+    comments: string,
     ratings: number,
     votes: number
   ): Case {
@@ -37,12 +39,13 @@ export function createCaseFromData(
         page,
         status,
         isPaidCase,
-        isRejected,
         classId,
         discipline,
         subjects,
         files: filesData,
         comityMemberReviews,
+        approvalDecision,
+        comments,
         ratings,
         votes,
         url: ""

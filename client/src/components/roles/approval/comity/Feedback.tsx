@@ -37,7 +37,7 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
         }
     
         feedback.push({
-          criteria: "Other",
+          criteria: "Autre",
           comments: e.target.elements.otherComments.value
         });
     

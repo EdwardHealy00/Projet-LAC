@@ -10,6 +10,7 @@ import { ApprovalPolyPress } from "./polyPress/Approval";
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
 import { createCaseFromData } from "../../../utils/ConvertUtils";
+import { ApprovalComityDirector } from "./comityDirector/Approval";
 
 function filterByStep(caseStudies: Case[], step: CaseStep) {
   return caseStudies.filter((caseStudy) => caseStudy.status == step);
@@ -46,12 +47,13 @@ export default function Approval() {
               caseStudy.page,
               caseStudy.status,
               caseStudy.isPaidCase,
-              caseStudy.isRejected,
               caseStudy.classId,
               caseStudy.discipline,
               caseStudy.subjects,
               caseStudy.files,
               caseStudy.comityMemberReviews,
+              caseStudy.approvalDecision,
+              caseStudy.comments,
               caseStudy.ratings,
               caseStudy.votes
             );
@@ -116,6 +118,11 @@ export default function Approval() {
             ></UnlockAccess>
 
             <UnlockAccess
+              role={[Role.ComityDirector]}
+              children={<ApprovalComityDirector caseStudies={paidCaseStudiesStep2} />}
+            ></UnlockAccess>
+
+            <UnlockAccess
               role={[Role.PolyPress]}
               children={<ApprovalPolyPress caseStudies={paidCaseStudiesStep3} />}
             ></UnlockAccess>
@@ -137,11 +144,13 @@ export default function Approval() {
             <UnlockAccess
               role={[Role.Comity]}
               children={<ApprovalComity caseStudies={freeCaseStudiesStep2.filter((caseItem) => {
-                console.log(caseItem.comityMemberReviews)
-                if(caseItem.comityMemberReviews)
-                  console.log(!caseItem.comityMemberReviews.some((review) => review.reviewAuthor === localStorage.email))
                 return !caseItem.comityMemberReviews || !caseItem.comityMemberReviews.some((review) => review.reviewAuthor === localStorage.email);
               })} />}
+            ></UnlockAccess>
+
+            <UnlockAccess
+              role={[Role.ComityDirector]}
+              children={<ApprovalComityDirector caseStudies={freeCaseStudiesStep2} />}
             ></UnlockAccess>
 
             <UnlockAccess

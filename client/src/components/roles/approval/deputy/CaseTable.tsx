@@ -11,6 +11,7 @@ import { CaseStep } from "../../../../model/enum/CaseStatus";
 import { Case } from "../../../../model/CaseStudy";
 import { getStatus } from "../../../../utils/Status";
 import { NavigateFunction, useNavigate } from "react-router-dom";
+import { ApprovalDecision } from "../../../../model/enum/ApprovalDecision";
 
 interface CaseProp {
   cases: Case[];
@@ -54,7 +55,7 @@ export default function CaseTable(rows: CaseProp) {
               <TableCell align="right">{row.title}</TableCell>
               <TableCell align="right">{row.authors}</TableCell>
               <TableCell align="right">{row.date}</TableCell>
-              {row.isRejected && (
+              {row.approvalDecision == ApprovalDecision.REJECT && (
                 <>
                   <TableCell align="right" style={{ color: "red" }}>
                     Rejetée
@@ -62,7 +63,23 @@ export default function CaseTable(rows: CaseProp) {
                   <TableCell align="right"></TableCell>
                 </>
               )}
-              {!row.isRejected && (
+              {row.approvalDecision == ApprovalDecision.MINOR_CHANGES && (
+                <>
+                  <TableCell align="right" style={{ color: "orange" }}>
+                    Nécessite des changements mineurs
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                </>
+              )}
+              {row.approvalDecision == ApprovalDecision.MAJOR_CHANGES && (
+                <>
+                  <TableCell align="right" style={{ color: "orange" }}>
+                  Nécessite des changements majeurs
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                </>
+              )}
+              {row.approvalDecision != ApprovalDecision.REJECT && (
                 <>
                   <TableCell align="right">{getStatus(row.status)}</TableCell>
                   <TableCell align="right">

@@ -1,5 +1,6 @@
 import { ComityMemberReview } from "../components/deputy/newCase/CaseFeedback";
 import { Document } from "./Document";
+import { ApprovalDecision } from "./enum/ApprovalDecision";
 import { CaseStep } from "./enum/CaseStatus";
 
 // //hardcoded case study
@@ -29,13 +30,14 @@ export interface Case {
   date: string;
   page: number;
   status: CaseStep;
-  isRejected: boolean;
   isPaidCase: boolean;
   classId: string;
   discipline: string;
   subjects: string[];
   files: Document[];
   comityMemberReviews: ComityMemberReview[];
+  approvalDecision: ApprovalDecision;
+  comments: string;
   ratings: number;
   votes: number;
   url: string;

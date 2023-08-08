@@ -21,6 +21,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import SaveIcon from "@mui/icons-material/Save";
 import { Document } from "../../../../../model/Document";
 import { createCaseFromData } from "../../../../../utils/ConvertUtils";
+import { ApprovalDecision } from "../../../../../model/enum/ApprovalDecision";
 
 function PendingCaseEdit() {
   const navigate = useNavigate();
@@ -79,12 +80,13 @@ function PendingCaseEdit() {
           res.data.page,
           res.data.status,
           res.data.isPaidCase,
-          res.data.isRejected,
           res.data.classId,
           res.data.discipline,
           res.data.subjects,
           res.data.files,
           res.data.comityMemberReviews,
+          res.data.approvalDecision,
+          res.data.comments,
           res.data.ratings,
           res.data.votes
         );
@@ -186,6 +188,18 @@ function PendingCaseEdit() {
             <div>Auteur: {caseStudy.authors} </div>
             <div>Reçu le: {caseStudy.date} </div>
           </div>
+          {caseStudy.comments != "" && 
+            <Card id="comments-card">
+              <div className="comments-text">
+                <Typography>
+                  <b>Commentaires</b>
+                </Typography>
+                <Typography>
+                  {caseStudy.comments}
+                </Typography>
+              </div>
+            </Card>
+          }
           <Card>
             <Typography id="folderTitle">
               Documents soumis par l'auteur
@@ -200,7 +214,7 @@ function PendingCaseEdit() {
             />
           </Card>
           <br />
-          {caseStudy.isRejected && (
+          {caseStudy.approvalDecision != ApprovalDecision.PENDING && (
             <>
               <form
                 onSubmit={handleConfirmChanges}

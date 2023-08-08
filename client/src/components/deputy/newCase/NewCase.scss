@@ -27,13 +27,27 @@
 }
 
 .radio-form-control {
-    margin-left: 5% !important;
+    margin-left: 1% !important;
+    width: 50%;
 }
 
 .decision-actions {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    width: 30%;
+    justify-content: flex-start;
     align-items: flex-end;
+    gap: 1%;
+}
+
+.submit-info {
+    margin: 1%;
+}
+
+.criteria-summary {
+    margin: 1%;
+}
+
+.review-title {
+    margin: 1%;
+    width: 50%;
 }

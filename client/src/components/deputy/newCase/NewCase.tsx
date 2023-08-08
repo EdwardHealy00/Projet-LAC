@@ -11,6 +11,9 @@ import { CaseStep } from "../../../model/enum/CaseStatus";
 import DeputyFeedback from "../../roles/approval/deputy/Feedback";
 import ComityFeedback from "../../roles/approval/comity/Feedback";
 import PressFeedback from "../../roles/approval/polyPress/Feedback";
+import { Role } from "../../../model/enum/Role";
+import ComityDirectorFeedback from "../../roles/approval/comityDirector/Feedback";
+import { UnlockAccess } from "../../connection/UnlockAccess";
 
 function NewCase() {
   const state = useLocation().state as any;
@@ -73,19 +76,37 @@ function NewCase() {
         <br />
 
         {/* PREAPPROVAL */}
-        {((newCase as Case).status == CaseStep.WaitingPreApproval &&
-          <DeputyFeedback caseData={newCase as Case}></DeputyFeedback>  
-        )}
+        <UnlockAccess
+              role={[Role.Deputy]}
+              children={((newCase as Case).status == CaseStep.WaitingPreApproval &&
+                <DeputyFeedback caseData={newCase as Case}></DeputyFeedback>  
+              )}
+        ></UnlockAccess>
 
         {/* COMITY APPROVAL */}
-        {((newCase as Case).status == CaseStep.WaitingComity &&
-          <ComityFeedback caseData={newCase as Case}></ComityFeedback>
-        )}
+        <UnlockAccess
+              role={[Role.Comity]}
+              children={((newCase as Case).status == CaseStep.WaitingComity &&
+                <ComityFeedback caseData={newCase as Case}></ComityFeedback>
+              )}
+        ></UnlockAccess>
 
-          {/* CATALOGUE ADD SECTION*/}
-          {((newCase as Case).status == CaseStep.WaitingCatalogue && 
-            <PressFeedback caseData={newCase as Case}></PressFeedback>
-          )}
+
+        {/* COMITY DIRECTOR APPROVAL */}
+        <UnlockAccess
+              role={[Role.ComityDirector]}
+              children={((newCase as Case).status == CaseStep.WaitingComity &&
+              <ComityDirectorFeedback caseData={newCase as Case}></ComityDirectorFeedback>
+            )}
+        ></UnlockAccess>
+
+        {/* CATALOGUE ADD SECTION*/}
+        <UnlockAccess
+              role={[Role.PolyPress]}
+              children={((newCase as Case).status == CaseStep.WaitingCatalogue && 
+                <PressFeedback caseData={newCase as Case}></PressFeedback>
+              )}
+        ></UnlockAccess>
       </div>
     )
   );

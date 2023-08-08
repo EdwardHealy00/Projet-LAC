@@ -44,12 +44,13 @@ export default function PendingCaseStudies() {
               caseStudy.page,
               caseStudy.status,
               caseStudy.isPaidCase,
-              caseStudy.isRejected,
               caseStudy.classId,
               caseStudy.discipline,
               caseStudy.subjects,
               caseStudy.files,
               caseStudy.comityMemberReviews,
+              caseStudy.approvalDecision,
+              caseStudy.comments,
               caseStudy.ratings,
               caseStudy.votes
             );

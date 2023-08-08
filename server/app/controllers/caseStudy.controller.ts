@@ -8,6 +8,7 @@ import {verifyJwt} from "@app/utils/jwt";
 import {UserService} from "@app/services/database/user.service";
 import { CaseStep } from '@app/models/CaseStatus';
 import { ComityMemberReview } from '@app/models/ComityMemberReview';
+import { ApprovalDecision } from '@app/models/ApprovalDecision';
 
 export const excludedFields = ['_id', 'file', 'fieldName', 'encoding', 'mimetype', 'destination', 'filename', 'path', ];
 
@@ -24,7 +25,7 @@ export class CaseStudyController {
         this.router.use(this.middlewareDeserializeUser.bind(this));
 
 
-        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.PolyPress), async (req: Request, res: Response) => {
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.ComityDirector, Role.PolyPress), async (req: Request, res: Response) => {
             try {
                 const caseStudies = await this.caseStudyService.findAllCaseStudys();
 
@@ -46,7 +47,7 @@ export class CaseStudyController {
 
         });
 
-        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.PolyPress), async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.ComityDirector, Role.PolyPress), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const caseStudies = await this.caseStudyService.getAllPaidCaseStudies();
 
@@ -131,7 +132,7 @@ export class CaseStudyController {
                     res.status(404).json('Le fichier ' + req.params.filename+  ' n\'a pas pu être supprimé');
                     return;
                 }
-                if(!req.body.caseStudy.isRejected) {
+                if(req.body.caseStudy.approvalDecision == ApprovalDecision.PENDING) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
@@ -153,7 +154,7 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
-                if (!caseStudy.isRejected) {
+                if (caseStudy.approvalDecision == ApprovalDecision.PENDING) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
@@ -178,7 +179,7 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
-                if (!caseStudy.isRejected) {
+                if (caseStudy.approvalDecision == ApprovalDecision.PENDING) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
@@ -216,7 +217,7 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
-                if (!caseStudy.isRejected) {
+                if (caseStudy.approvalDecision == ApprovalDecision.PENDING) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
@@ -242,7 +243,7 @@ export class CaseStudyController {
                     return;
                 }
 
-                caseStudy.isRejected = false;
+                caseStudy.approvalDecision = ApprovalDecision.PENDING;
                 if (caseStudy.status == CaseStep.WaitingComity) {
                     caseStudy.status = CaseStep.WaitingPreApproval;
                 }
@@ -293,13 +294,11 @@ export class CaseStudyController {
             }
         });
 
-        this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Deputy, Role.Comity, Role.PolyPress, Role.Admin), async (req: Request, res: Response) => {
+        this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Deputy, Role.ComityDirector, Role.PolyPress, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.body.case;
                 const isApproved = req.body.approved;
                 const failedCriterias = req.body.failedCriterias;
-                const decision = req.body.decision;
-                const feedback = req.body.feedback;
                 const url = req.body.url;
 
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
@@ -322,15 +321,6 @@ export class CaseStudyController {
                     }
                 }
 
-                if(caseStudy.status == CaseStep.WaitingComity) {
-                    this.emailService.sendReviewResultToUser(caseStudy.submitter, caseStudy, isApproved, decision, feedback)
-
-                    if(isApproved) {
-                        const polyPress = await this.userService.findUsers({ role: Role.PolyPress });
-                        this.emailService.sendWaitingForFinalConfirmationToPolyPress(polyPress, caseStudy);
-                    }
-                }
-
                 if(caseStudy.status == CaseStep.WaitingCatalogue && isApproved) {
                     if (caseStudy.isPaidCase) {
                         caseStudy.url = url;
@@ -341,7 +331,7 @@ export class CaseStudyController {
                 if (isApproved) {
                     caseStudy.status++; 
                 } else {
-                    caseStudy.isRejected = true;
+                    caseStudy.approvalDecision = ApprovalDecision.REJECT;
                 }
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 res.status(200).json({
@@ -384,6 +374,49 @@ export class CaseStudyController {
                     decision: decision,
                 };
                 caseStudy.comityMemberReviews.push(comityMemberReview);
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
+        this.router.post('/finalReview', this.middlewareRestrictTo(Role.ComityDirector, Role.Admin), async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.body.case;
+                const comments = req.body.comments;
+                const decision = req.body.decision;
+
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
+
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                if(caseStudy.status != CaseStep.WaitingComity || caseStudy.approvalDecision != ApprovalDecision.PENDING) {
+                    res.status(403).json('L\'étude de cas ne peut pas être évalué dans son statut actuel');
+                    return;
+                }
+
+                const isApproved = decision == ApprovalDecision.APPROVED;
+                if(isApproved) {
+                    const polyPress = await this.userService.findUsers({ role: Role.PolyPress });
+                    this.emailService.sendWaitingForFinalConfirmationToPolyPress(polyPress, caseStudy);
+                    caseStudy.approvalDecision = ApprovalDecision.PENDING;
+                    caseStudy.status++;
+                }
+                else {
+                    caseStudy.approvalDecision = decision;
+                }
+
+                this.emailService.sendReviewResultToUser(caseStudy.submitter, caseStudy, isApproved, decision, comments)
+                caseStudy.comments = comments;
+                caseStudy.comityMemberReviews = [];
+                
                 await this.caseStudyService.updateCaseStudy(caseStudy);
 
                 res.status(200).json({
