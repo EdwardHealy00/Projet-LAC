@@ -1,6 +1,8 @@
 import React from "react";
 import { SingleCaseProp } from "../../../../model/CaseStudy";
 import {
+  Accordion,
+  AccordionSummary,
   Button,
   Card,
   FormControl,
@@ -13,8 +15,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { ApprovalDecision } from "../../../../model/enum/ApprovalDecision";
 import axios from "axios";
-import { handleDownloadAll } from "../../../../utils/FileDownloadUtil";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { getApprovalDecision } from "../../../../utils/ApprovalDecision";
+import ReviewCard from "../ReviewCard";
 
 export const comityCriteria: string[] = [
   "Pertinence du cas",
@@ -36,85 +38,68 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
     e.preventDefault();
 
     axios
-    .post(
-      `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/FinalReview`,
-      {
-        case: newCase.id_,
-        decision: decision,
-        comments: e.target.elements.Comments.value,
-      },
-      {
-        withCredentials: true,
-      }
-    )
-    .then(() => {
-      navigate("/approval");
-    });
+      .post(
+        `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/FinalReview`,
+        {
+          case: newCase.id_,
+          decision: decision,
+          comments: e.target.elements.Comments.value,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then(() => {
+        navigate("/approval");
+      });
   };
 
   return (
     <div>
-      <div id="review-grid">
-      {newCase.comityMemberReviews.map((review, index) => (
-        <Card key={index} className="review-title">
-          <Typography>
-            <b>
-              Évaluation #{index + 1} par {review.reviewAuthor}
-            </b>
-          </Typography>
-          {review.caseFeedback.map((feedback, innerIndex) => (
-            <div key={innerIndex} className="criteria-summary">
-              {feedback.criteria !== "Autre" && (
-                <Typography className="criteria-title">
-                  {feedback.criteria}: {feedback.rating}/5
-                </Typography>
-              )}
-              {feedback.criteria === "Autre" && (
-                <Typography>{feedback.criteria}:</Typography>
-              )}
-              <Typography>{feedback.comments}</Typography>
-            </div>
-          ))}
-          <div className="criteria-summary">
-            {review.decision == 0 && (
-              <Typography>
-                <b>Approuvée</b>
-              </Typography>
-            )}
-            {review.decision == 1 && (
-              <Typography>
-                <b>Changements majeurs requis</b>
-              </Typography>
-            )}
-            {review.decision == 2 && (
-              <Typography>
-                <b>Changements mineurs requis</b>
-              </Typography>
-            )}
-            {review.decision == 3 && (
-              <Typography>
-                <b>Refusée</b>
-              </Typography>
+      <div>
+        {newCase.reviewGroups.map((reviewGroup, version) => (
+          <div key={version}>
+            {version !== newCase.version && (
+              <Accordion>
+                <AccordionSummary>
+                  <Typography>Version #{version + 1}</Typography>
+                </AccordionSummary>
+                <div className="review-grid">
+                  {reviewGroup.comityMemberReviews.map((review, index) => (
+                    <ReviewCard review={review} index={index}/>
+                  ))}
+                </div>
+                <div className="director-comments">
+                  <div className="director-title">
+                    <Typography variant="h5">
+                      Commentaires de la direction
+                    </Typography>
+                  </div>
+                  <Typography>{reviewGroup.directorComments}</Typography>
+                  <Typography>
+                    <b>
+                      {getApprovalDecision(
+                        reviewGroup.directorApprovalDecision
+                      )}
+                    </b>
+                  </Typography>
+                </div>
+              </Accordion>
             )}
           </div>
-          <div id="download-option">
-          <Typography> Documents annotés déposés <b>({review!!.annotatedFiles.length})</b></Typography>
-          {review!!.annotatedFiles.length > 0 &&
-            <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              console.log(newCase.comityMemberReviews)
-              handleDownloadAll(review!!.annotatedFiles)}}
-          >
-            <FileDownloadIcon />
-          </Button>
-          }
+        ))}
+
+        <div key={newCase.version} id="current-version">
+          <Typography variant="h5">Version courante</Typography>
+          <div className="review-grid">
+            {newCase.reviewGroups[newCase.version].comityMemberReviews.map(
+              (review, index) => (
+                <ReviewCard review={review} index={index}/>
+              )
+            )}
           </div>
-        </Card>
-      ))}
+        </div>
       </div>
-      
 
       <div className="submit-info">
         <Typography>
@@ -179,3 +164,4 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
     </div>
   );
 }
+

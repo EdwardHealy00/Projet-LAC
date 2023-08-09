@@ -1,4 +1,4 @@
-import { ComityMemberReview } from "../components/deputy/newCase/CaseFeedback";
+import { ComityMemberReview, ReviewGroup } from "../components/deputy/newCase/CaseFeedback";
 import { Document } from "./Document";
 import { ApprovalDecision } from "./enum/ApprovalDecision";
 import { CaseStep } from "./enum/CaseStatus";
@@ -35,7 +35,8 @@ export interface Case {
   discipline: string;
   subjects: string[];
   files: Document[];
-  comityMemberReviews: ComityMemberReview[];
+  version: number;
+  reviewGroups: ReviewGroup[];
   approvalDecision: ApprovalDecision;
   comments: string;
   ratings: number;

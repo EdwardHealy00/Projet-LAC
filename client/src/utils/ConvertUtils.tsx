@@ -1,7 +1,7 @@
 import { Case } from "../model/CaseStudy";
 import { CaseStep } from "../model/enum/CaseStatus";
 import { Document } from "../model/Document";
-import { ComityMemberReview } from "../components/deputy/newCase/CaseFeedback";
+import { ReviewGroup } from "../components/deputy/newCase/CaseFeedback";
 import { ApprovalDecision } from "../model/enum/ApprovalDecision";
 
 export function createCaseFromData(
@@ -18,7 +18,8 @@ export function createCaseFromData(
     discipline: string,
     subjects: string[],
     files: any[],
-    comityMemberReviews: ComityMemberReview[],
+    reviewGroups: ReviewGroup[],
+    version: number,
     approvalDecision: ApprovalDecision,
     comments: string,
     ratings: number,
@@ -43,7 +44,8 @@ export function createCaseFromData(
         discipline,
         subjects,
         files: filesData,
-        comityMemberReviews,
+        reviewGroups,
+        version,
         approvalDecision,
         comments,
         ratings,

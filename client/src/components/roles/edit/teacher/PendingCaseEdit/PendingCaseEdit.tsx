@@ -22,6 +22,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import { Document } from "../../../../../model/Document";
 import { createCaseFromData } from "../../../../../utils/ConvertUtils";
 import { ApprovalDecision } from "../../../../../model/enum/ApprovalDecision";
+import { getApprovalDecision } from "../../../../../utils/ApprovalDecision";
+import ReviewCard from "../../../approval/ReviewCard";
 
 function PendingCaseEdit() {
   const location = useLocation();
@@ -83,7 +85,8 @@ function PendingCaseEdit() {
           res.data.discipline,
           res.data.subjects,
           res.data.files,
-          res.data.comityMemberReviews,
+          res.data.reviewGroups,
+          res.data.version,
           res.data.approvalDecision,
           res.data.comments,
           res.data.ratings,
@@ -187,15 +190,29 @@ function PendingCaseEdit() {
             <div>Auteur: {caseStudy.authors} </div>
             <div>Reçu le: {caseStudy.date} </div>
           </div>
-          {caseStudy.comments != "" && 
+          {caseStudy.version > 0 && 
             <Card id="comments-card">
               <div className="comments-text">
-                <Typography>
-                  <b>Commentaires</b>
-                </Typography>
-                <Typography>
-                  {caseStudy.comments}
-                </Typography>
+              <div className="review-grid">
+                  {caseStudy.reviewGroups[caseStudy.version - 1].comityMemberReviews.map((review, index) => (
+                    <ReviewCard review={review} index={index}/>
+                  ))}
+                </div>
+                <div className="director-comments">
+                  <div className="director-title">
+                    <Typography variant="h5">
+                      Commentaires de la direction
+                    </Typography>
+                  </div>
+                  <Typography>{caseStudy.reviewGroups[caseStudy.version - 1].directorComments}</Typography>
+                  <Typography>
+                    <b>
+                      {getApprovalDecision(
+                        caseStudy.reviewGroups[caseStudy.version - 1].directorApprovalDecision
+                      )}
+                    </b>
+                  </Typography>
+                </div>
               </div>
             </Card>
           }

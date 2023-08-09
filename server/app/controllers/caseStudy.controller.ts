@@ -357,7 +357,7 @@ export class CaseStudyController {
                     return;
                 }
 
-                if(caseStudy.comityMemberReviews.find(
+                if(caseStudy.reviewGroups[caseStudy.version].comityMemberReviews.find(
                     (review) => review.reviewAuthor === reviewerEmail
                   ) !== undefined) {
                     res.status(403).json('L\'étude de cas a déjà été évalué par cet utilisateur');
@@ -375,7 +375,8 @@ export class CaseStudyController {
                     comityMemberReview.annotatedFiles = ret.parsedFiles;
                 }
 
-                caseStudy.comityMemberReviews.push(comityMemberReview);
+                caseStudy.reviewGroups[caseStudy.version].comityMemberReviews.push(comityMemberReview);
+                caseStudy.markModified('reviewGroups');
                 await this.caseStudyService.updateCaseStudy(caseStudy);
 
                 const directors = await this.userService.findUsers({ role: Role.ComityDirector });
@@ -407,6 +408,14 @@ export class CaseStudyController {
                     return;
                 }
 
+                // Add to history
+                caseStudy.reviewGroups[caseStudy.version].directorComments = comments;
+                caseStudy.reviewGroups[caseStudy.version].directorApprovalDecision = decision;
+                
+                // update this part first for mongoose to notice changed fields
+                caseStudy.markModified('reviewGroups');
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+
                 const isApproved = decision == ApprovalDecision.APPROVED;
                 if(isApproved) {
                     const polyPress = await this.userService.findUsers({ role: Role.PolyPress });
@@ -416,10 +425,15 @@ export class CaseStudyController {
                 }
                 else {
                     caseStudy.approvalDecision = decision;
+
+                    caseStudy.version++;
+
+                    // Create next version in history
+                    caseStudy.reviewGroups.push({version: caseStudy.version, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING});
+                    caseStudy.markModified('reviewGroups');
                 }
 
                 caseStudy.comments = comments;
-                caseStudy.comityMemberReviews = [];
                 
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 this.emailService.sendReviewResultToUser(caseStudy.submitter, caseStudy, isApproved, decision, comments)

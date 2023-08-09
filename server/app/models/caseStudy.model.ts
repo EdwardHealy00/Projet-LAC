@@ -5,7 +5,7 @@ import {
     prop,
 } from '@typegoose/typegoose';
 import { CaseStep } from './CaseStatus';
-import { ComityMemberReview } from './ComityMemberReview';
+import { ReviewGroup } from './ComityMemberReview';
 import { ApprovalDecision } from './ApprovalDecision';
 
 @modelOptions({
@@ -42,8 +42,11 @@ export class CaseStudy {
     @prop({ required: true })
     files: any;
 
-    @prop({default: []})
-    comityMemberReviews: ComityMemberReview[];
+    @prop({default: [{version: 0, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING}]})
+    reviewGroups: ReviewGroup[];
+
+    @prop({default: 0})
+    version: number;
 
     @prop({ required: true })
     authors: string;

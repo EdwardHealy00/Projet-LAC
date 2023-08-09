@@ -51,7 +51,8 @@ export default function Approval() {
               caseStudy.discipline,
               caseStudy.subjects,
               caseStudy.files,
-              caseStudy.comityMemberReviews,
+              caseStudy.reviewGroups,
+              caseStudy.version,
               caseStudy.approvalDecision,
               caseStudy.comments,
               caseStudy.ratings,
@@ -110,12 +111,15 @@ export default function Approval() {
               }
             ></UnlockAccess>
 
+            
+            {/* 
+            For now comity members wont have access to all pending cases
             <UnlockAccess
               role={[Role.Comity]}
               children={<ApprovalComity caseStudies={paidCaseStudiesStep2.filter((caseItem) => {
                 return !caseItem.comityMemberReviews || !caseItem.comityMemberReviews.some((review) => review.reviewAuthor === localStorage.email);
               })} />}
-            ></UnlockAccess>
+            ></UnlockAccess> */}
 
             <UnlockAccess
               role={[Role.ComityDirector]}
@@ -141,12 +145,14 @@ export default function Approval() {
               }
             ></UnlockAccess>
 
+            {/* 
+             For now comity members wont have access to all pending cases
             <UnlockAccess
               role={[Role.Comity]}
               children={<ApprovalComity caseStudies={freeCaseStudiesStep2.filter((caseItem) => {
                 return !caseItem.comityMemberReviews || !caseItem.comityMemberReviews.some((review) => review.reviewAuthor === localStorage.email);
               })} />}
-            ></UnlockAccess>
+            ></UnlockAccess> */}
 
             <UnlockAccess
               role={[Role.ComityDirector]}
