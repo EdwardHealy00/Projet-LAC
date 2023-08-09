@@ -72,7 +72,7 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                 }
             )
             .then(() => {
-                navigate("/approval");
+                navigate("/catalogue");
         });
     };
     

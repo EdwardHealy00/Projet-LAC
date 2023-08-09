@@ -25,7 +25,7 @@ export class CaseStudyController {
         this.router.use(this.middlewareDeserializeUser.bind(this));
 
 
-        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.ComityDirector, Role.PolyPress), async (req: Request, res: Response) => {
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.ComityDirector, Role.PolyPress), async (req: Request, res: Response) => {
             try {
                 const caseStudies = await this.caseStudyService.findAllCaseStudys();
 
