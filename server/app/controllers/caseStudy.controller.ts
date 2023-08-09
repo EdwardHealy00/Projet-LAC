@@ -25,7 +25,7 @@ export class CaseStudyController {
         this.router.use(this.middlewareDeserializeUser.bind(this));
 
 
-        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.ComityDirector, Role.PolyPress), async (req: Request, res: Response) => {
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.ComityDirector), async (req: Request, res: Response) => {
             try {
                 const caseStudies = await this.caseStudyService.findAllCaseStudys();
 
@@ -47,7 +47,7 @@ export class CaseStudyController {
 
         });
 
-        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.ComityDirector, Role.PolyPress), async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.ComityDirector), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const caseStudies = await this.caseStudyService.getAllPaidCaseStudies();
 
@@ -289,7 +289,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Deputy, Role.ComityDirector, Role.PolyPress, Role.Admin), async (req: Request, res: Response) => {
+        this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Deputy, Role.ComityDirector, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.body.case;
                 const isApproved = req.body.approved;
@@ -418,8 +418,8 @@ export class CaseStudyController {
 
                 const isApproved = decision == ApprovalDecision.APPROVED;
                 if(isApproved) {
-                    const polyPress = await this.userService.findUsers({ role: Role.PolyPress });
-                    this.emailService.sendWaitingForFinalConfirmationToDeputies(polyPress, caseStudy); 
+                    const deputies = await this.userService.findUsers({ role: Role.Deputy });
+                    this.emailService.sendWaitingForFinalConfirmationToDeputies(deputies, caseStudy); 
                     caseStudy.approvalDecision = ApprovalDecision.PENDING;
                     caseStudy.status++;
                 }
