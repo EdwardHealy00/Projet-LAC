@@ -72,7 +72,7 @@ function App() {
       
       // Prompt user to log in if unauthorized (Session expired)
       if (error.response) {
-        if(error.response.status === 401 && error.response.message == "Authentication error") {
+        if(error.response.status === 401 && error.response.data == "Authentication error") {
           const originalRequest = error.config;
           originalRequest._retry = true;
 

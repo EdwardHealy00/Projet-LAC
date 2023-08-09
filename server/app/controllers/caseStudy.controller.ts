@@ -86,6 +86,10 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvé');
                     return;
                 }
+                if(!res.locals.user && caseStudy.status != CaseStep.Posted) {
+                    res.status(401).json("Authentication error");
+                    return;
+                }
                 
                 const role = res.locals.user.role;
                 const isNotPrivileged = role === Role.Professor || role === Role.ProfessorNotApproved || role === Role.Student;
