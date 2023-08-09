@@ -143,11 +143,11 @@ export class EmailService {
         }
     }
 
-    sendReviewNeededToComity(commity: Array<User>, caseStudy: CaseStudy) {
-        for(var committeeMember of commity) {
+    sendReviewNeededToDirector(directors: Array<User>, caseStudy: CaseStudy) {
+        for(var director of directors) {
             const mailOptions = {
                 from: EMAIL_USERNAME,
-                to: committeeMember.email,
+                to: director.email,
                 subject: "Une étude de cas pré-approuvée requiert votre attention",
                 text: `Une étude de cas pré-approuvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de revue. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
             }

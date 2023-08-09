@@ -311,8 +311,8 @@ export class CaseStudyController {
                     this.emailService.sendPreApprovalResultToUser(caseStudy.submitter, caseStudy, isApproved, writtenCriterias)
                     
                     if(isApproved) {
-                        const comity = await this.userService.findUsers({ role: Role.Comity });
-                        this.emailService.sendReviewNeededToComity(comity, caseStudy);
+                        const directors = await this.userService.findUsers({ role: Role.ComityDirector });
+                        this.emailService.sendReviewNeededToDirector(directors, caseStudy);
                     }
                 }
 
