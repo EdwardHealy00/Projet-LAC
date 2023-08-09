@@ -21,6 +21,21 @@
     }
 }
 
+#download-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 1%;
+    padding-top: 1%;
+    gap: 1%;
+}
+
+#review-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: auto;
+}
+
 .criteria-box {
     display: flex;
     flex-direction: row;
@@ -49,5 +64,7 @@
 
 .review-title {
     margin: 1%;
-    width: 50%;
+    padding: 1%;
 }
+
+

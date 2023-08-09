@@ -21,34 +21,13 @@ import { createCaseFromData } from "../../../utils/ConvertUtils";
 import { Role } from "../../../model/enum/Role";
 import ComityDirectorFeedback from "../../roles/approval/comityDirector/Feedback";
 import { UnlockAccess } from "../../connection/UnlockAccess";
+import { handleDownloadAll } from "../../../utils/FileDownloadUtil";
 
 function NewCase() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   let [caseStudy, SetCaseStudy] = React.useState<Case>();
-
-  const handleDownloadAll = (files: any[]) => {
-    for (let i = 0; i < files.length; i++) {
-      axios
-        .get(
-          `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/download/` +
-            files[i].file.filename,
-          {
-            withCredentials: true,
-            responseType: "arraybuffer",
-          }
-        )
-        .then((res) => {
-          const url = window.URL.createObjectURL(new Blob([res.data]));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", files[i].file.originalname); //or any other extension
-          document.body.appendChild(link);
-          link.click();
-        });
-    }
-  };
 
   React.useEffect(() => {
     getCaseStudy(id);
@@ -104,7 +83,10 @@ function NewCase() {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => handleDownloadAll(caseStudy!!.files)}
+            onClick={() => {
+              const files = caseStudy!!.files.map((document) => document.file); // TODO rename casestudy.files to documents, this is way too confusing...
+              handleDownloadAll(files)}
+            }
           >
             <FileDownloadIcon /> TOUT TÉLÉCHARGER
           </Button>

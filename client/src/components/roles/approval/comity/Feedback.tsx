@@ -23,6 +23,19 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
     const onDecisionChanged = (e: any) => {
         setDecision(e.target.value);
     }
+    const [caseStudyFileName, setCaseStudyFileName] = React.useState(
+      "Aucun document n'a été téléversé"
+    );
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files.length > 0) {
+        let fileNames = e.target.files[0].name;
+        for (let i = 1; i < e.target.files.length; i++) {
+          fileNames += ", " + e.target.files[i].name;
+        }
+        setCaseStudyFileName(fileNames);
+      }
+    };
 
     const onDecisionSubmit = (e: any) => {
         e.preventDefault();
@@ -40,19 +53,20 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
           criteria: "Autre",
           comments: e.target.elements.otherComments.value
         });
-    
-        sendCaseStudyResponse();
+
+        const formData = new FormData();
+        Array.from(e.target.elements.annotatedFiles.files).forEach(file => formData.append('files[]', (file as Blob)));
+        formData.append('decision', JSON.stringify(decision));
+        formData.append('feedback', JSON.stringify(feedback));
+
+        sendCaseStudyResponse(formData);
     }
 
-    const sendCaseStudyResponse = () => {
+    const sendCaseStudyResponse = (formData: FormData) => {
         axios
             .post(
-                `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/comityMemberReview`,
-                {
-                    case: newCase.id_,
-                    decision: decision,
-                    feedback: feedback,
-                },
+                `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/comityMemberReview/${newCase.id_}`,
+                formData,
                 {
                     withCredentials: true,
                 }
@@ -117,6 +131,18 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                     type="text"
                     fullWidth
                   />
+                  <Button variant="contained" component="label">
+                  Téléverser des documents annotés
+                  <input
+                    hidden
+                    accept=".docx"
+                    type="file"
+                    onChange={handleFileUpload}
+                    name="annotatedFiles"
+                    multiple
+                  />
+              </Button>
+              {caseStudyFileName && <span>{caseStudyFileName}</span>}
                 </form>
                 <br />
                 <br />

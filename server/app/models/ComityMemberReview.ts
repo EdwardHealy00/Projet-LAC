@@ -4,4 +4,5 @@ export interface ComityMemberReview {
     reviewAuthor: string
     caseFeedback: CaseFeedback[]
     decision: number
+    annotatedFiles?: any[]
 }

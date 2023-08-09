@@ -13,6 +13,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { ApprovalDecision } from "../../../../model/enum/ApprovalDecision";
 import axios from "axios";
+import { handleDownloadAll } from "../../../../utils/FileDownloadUtil";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 export const comityCriteria: string[] = [
   "Pertinence du cas",
@@ -52,6 +54,7 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
 
   return (
     <div>
+      <div id="review-grid">
       {newCase.comityMemberReviews.map((review, index) => (
         <Card key={index} className="review-title">
           <Typography>
@@ -94,8 +97,24 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
               </Typography>
             )}
           </div>
+          <div id="download-option">
+          <Typography> Documents annotés déposés <b>({review!!.annotatedFiles.length})</b></Typography>
+          {review!!.annotatedFiles.length > 0 &&
+            <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              console.log(newCase.comityMemberReviews)
+              handleDownloadAll(review!!.annotatedFiles)}}
+          >
+            <FileDownloadIcon />
+          </Button>
+          }
+          </div>
         </Card>
       ))}
+      </div>
+      
 
       <div className="submit-info">
         <Typography>

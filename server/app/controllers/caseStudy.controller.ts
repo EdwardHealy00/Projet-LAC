@@ -263,26 +263,14 @@ export class CaseStudyController {
             try {
                 const caseStudy = req.body;
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
-                let totalNbPages = 0;
-                if (req.files) {
-                    if(!validateFilesType(req.files)) {
-                        res.status(415).json('L\'étude de cas doit être en format .docx');
-                        return;
-                    }
-                    let files = [];
-                    for (let i = 0; i < req.files.length; i++) {
-                        const fileProof = req.files[i];
-                        if (fileProof) {
-                            fileProof.date = new Date().toISOString();
-                            fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
-                            files.push(fileProof);
-                            totalNbPages += await countNumberPages(fileProof.path);
-                            this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
-                        }
-                    }
-                    caseStudy["files"] = files;
+                
+                const ret = await this.parseAndSaveFiles(req.files);
+                if(!ret) {
+                    res.status(415).json('L\'étude de cas doit être en format .docx');
+                    return;
                 }
-                caseStudy["page"] = totalNbPages;
+                caseStudy["files"] = ret.parsedFiles;
+                caseStudy["page"] = ret.totalNbPages;
                 const newCaseStudy = await this.caseStudyService.createCaseStudy(caseStudy);
 
                 const deputies = await this.userService.findUsers({ role: Role.Deputy });
@@ -342,12 +330,13 @@ export class CaseStudyController {
             }
         });
 
-        this.router.post('/comityMemberReview', this.middlewareRestrictTo(Role.Comity, Role.Admin), async (req: Request, res: Response) => {
+        this.router.post('/comityMemberReview/:id', this.middlewareRestrictTo(Role.Comity, Role.Admin), async (req: Request, res: Response) => {
             try {
-                const caseStudyId = req.body.case;
-                const feedback = req.body.feedback;
-                const decision = req.body.decision;
-                const reviewerEmail = res.locals.user.email;
+                const caseStudyId = req.params.id;
+                const review = req.body;
+                const feedback = JSON.parse(review["feedback"]);
+                const decision = parseInt(review["decision"]);
+                const reviewerEmail = res.locals.user.email; 
 
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
 
@@ -373,6 +362,12 @@ export class CaseStudyController {
                     caseFeedback: feedback,
                     decision: decision,
                 };
+
+                const ret = await this.parseAndSaveFiles(req.files)
+                if(ret && ret.parsedFiles) {
+                    comityMemberReview.annotatedFiles = ret.parsedFiles;
+                }
+
                 caseStudy.comityMemberReviews.push(comityMemberReview);
                 await this.caseStudyService.updateCaseStudy(caseStudy);
 
@@ -503,6 +498,26 @@ export class CaseStudyController {
         }
     }
 
+    private async parseAndSaveFiles(files: any) {
+        if(!files || !validateFilesType(files)) {
+            return undefined;
+        }
+        let parsedFiles = [];
+        let totalNbPages = 0;
+        for (let i = 0; i < files.length; i++) {
+            const fileProof = files[i];
+            if (fileProof) {
+                fileProof.date = new Date().toISOString();
+                fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
+                parsedFiles.push(fileProof);
+                totalNbPages += await countNumberPages(fileProof.path);
+                this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
+            }
+        }
+        if (!totalNbPages) totalNbPages = 0;
+        return {parsedFiles, totalNbPages}
+    }
+
 
    /* private async middlewareRequireUser(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -539,3 +554,5 @@ function validateFilesType(files: any): boolean {
     }
     return true;
 }
+
+
