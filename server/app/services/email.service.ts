@@ -137,7 +137,7 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: deputy.email,
                 subject: isModifiedCaseStudy? `Une étude de cas modifiée requiert votre attention à nouveau`: `Une nouvelle étude de cas requiert votre attention`,
-                text: isModifiedCaseStudy? `Une étude de cas modifiée`: `Une nouvelle étude de cas`+ `nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de pré-approbation. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
+                text: (isModifiedCaseStudy? `Une étude de cas modifiée`: `Une nouvelle étude de cas`) + `nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de pré-approbation. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
