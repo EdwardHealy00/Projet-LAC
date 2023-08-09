@@ -95,7 +95,7 @@ export class EmailService {
             text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors}` + 
                     (isPreApproved ? ` est maintenant prête à être évalué par le comité scientifique.`
                                    : ` requiert des changements. Les critères suivants n'étaient pas respectés: \n\n` +`${criteriaText}`) +
-                    `\n\n Cliquez sur le lien suivant pour modifier celle-ci: http://localhost:3000/my-pending-case-studies`
+                    `\n\n Cliquez sur le lien suivant pour modifier celle-ci: http://localhost:3000/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
 
         }
         this.sendEmail(mailOptions);
@@ -116,7 +116,7 @@ export class EmailService {
             subject: `Votre étude de cas nommée ${caseStudy.title} a été revue`, 
             text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
                     `${decisionText} Consultez l'évaluation complète ci-dessous: \n\n${feedback}` + 
-                    `\n\n Cliquez-ci pour y consulter son statut: http://localhost:3000/my-pending-case-studies` 
+                    `\n\n Cliquez-ci pour y consulter son statut: http://localhost:3000/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
         }
         this.sendEmail(mailOptions);
     }
@@ -131,13 +131,13 @@ export class EmailService {
         this.sendEmail(mailOptions);
     }
 
-    sendPreApprovalNeededToDeputies(deputies: Array<User>, caseStudy: CaseStudy) {
+    sendPreApprovalNeededToDeputies(deputies: Array<User>, caseStudy: CaseStudy, isModifiedCaseStudy: boolean) {
         for(var deputy of deputies) {
             const mailOptions = {
                 from: EMAIL_USERNAME,
                 to: deputy.email,
-                subject: "Une nouvelle étude de cas requiert votre attention",
-                text: `Une nouvelle étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de pré-approbation. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval`
+                subject: isModifiedCaseStudy? `Une étude de cas modifiée requiert votre attention à nouveau`: `Une nouvelle étude de cas requiert votre attention`,
+                text: isModifiedCaseStudy? `Une étude de cas modifiée`: `Une nouvelle étude de cas`+ `nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de pré-approbation. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
@@ -149,19 +149,31 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: committeeMember.email,
                 subject: "Une étude de cas pré-approuvée requiert votre attention",
-                text: `Une étude de cas pré-approuvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de revue. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval`
+                text: `Une étude de cas pré-approuvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de revue. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
     }
 
-    sendWaitingForFinalConfirmationToPolyPress(polyPress: Array<User>, caseStudy: CaseStudy) {
-        for(var polyPressMember of polyPress) {
+    sendWaitingForFinalConfirmationToDeputies(deputies: Array<User>, caseStudy: CaseStudy) {
+        for(var deputy of deputies) {
             const mailOptions = {
                 from: EMAIL_USERNAME,
-                to: polyPressMember.email,
+                to: deputy.email,
                 subject: "Une étude de cas revue requiert votre attention",
-                text: `Une étude de cas revue nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de confirmation finale. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval`
+                text: `Une étude de cas revue nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de confirmation finale. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
+            }
+            this.sendEmail(mailOptions);
+        }
+    }
+
+    sendNewReviewSubmittedToComityDirector(directors: Array<User>, caseStudy: CaseStudy, reviewAuthor: string) {
+        for(var director of directors) {
+            const mailOptions = {
+                from: EMAIL_USERNAME,
+                to: director.email,
+                subject: `Une nouvelle revue a été complétée pour l'étude de cas ${caseStudy.title}`,
+                text: `Une nouvelle revue a été complétée par ${reviewAuthor} pour l\'étude de cas nommée ${caseStudy.title}. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }

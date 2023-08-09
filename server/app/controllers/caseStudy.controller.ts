@@ -249,7 +249,10 @@ export class CaseStudyController {
                 }
 
                 await this.caseStudyService.updateCaseStudy(caseStudy);
-                
+
+                const deputies = await this.userService.findUsers({ role: Role.Deputy });
+                this.emailService.sendPreApprovalNeededToDeputies(deputies, caseStudy, true);
+
                 res.status(200).json({
                     status: 'success',
                 });
@@ -274,7 +277,7 @@ export class CaseStudyController {
                 const newCaseStudy = await this.caseStudyService.createCaseStudy(caseStudy);
 
                 const deputies = await this.userService.findUsers({ role: Role.Deputy });
-                this.emailService.sendPreApprovalNeededToDeputies(deputies, newCaseStudy);
+                this.emailService.sendPreApprovalNeededToDeputies(deputies, newCaseStudy, false);
 
                 res.status(201).json(newCaseStudy);
             } catch (err: any) {
@@ -371,6 +374,9 @@ export class CaseStudyController {
                 caseStudy.comityMemberReviews.push(comityMemberReview);
                 await this.caseStudyService.updateCaseStudy(caseStudy);
 
+                const directors = await this.userService.findUsers({ role: Role.ComityDirector });
+                this.emailService.sendNewReviewSubmittedToComityDirector(directors, caseStudy, comityMemberReview.reviewAuthor);
+
                 res.status(200).json({
                     status: 'success',
                 });
@@ -400,7 +406,7 @@ export class CaseStudyController {
                 const isApproved = decision == ApprovalDecision.APPROVED;
                 if(isApproved) {
                     const polyPress = await this.userService.findUsers({ role: Role.PolyPress });
-                    this.emailService.sendWaitingForFinalConfirmationToPolyPress(polyPress, caseStudy);
+                    this.emailService.sendWaitingForFinalConfirmationToDeputies(polyPress, caseStudy); 
                     caseStudy.approvalDecision = ApprovalDecision.PENDING;
                     caseStudy.status++;
                 }
@@ -408,11 +414,11 @@ export class CaseStudyController {
                     caseStudy.approvalDecision = decision;
                 }
 
-                this.emailService.sendReviewResultToUser(caseStudy.submitter, caseStudy, isApproved, decision, comments)
                 caseStudy.comments = comments;
                 caseStudy.comityMemberReviews = [];
                 
                 await this.caseStudyService.updateCaseStudy(caseStudy);
+                this.emailService.sendReviewResultToUser(caseStudy.submitter, caseStudy, isApproved, decision, comments)
 
                 res.status(200).json({
                     status: 'success',
