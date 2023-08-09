@@ -50,6 +50,8 @@ const Login = forwardRef<LoginRef, Props>(
         return "Étudiant";
       case Role.Comity:
         return "Comité scientifique";
+      case Role.ComityDirector:
+        return "Directrice du comité scientifique";
       case Role.Deputy:
         return "Adjoint administratif";
       case Role.Professor:
