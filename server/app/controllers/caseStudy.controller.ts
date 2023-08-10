@@ -424,15 +424,30 @@ export class CaseStudyController {
                     caseStudy.status++;
                 }
                 else {
-                    caseStudy.approvalDecision = decision;
+                    caseStudy.status = 0;
+                    if(decision == ApprovalDecision.REJECT) {
+                        if(caseStudy.isPaidCase) {
+                            caseStudy.isPaidCase = false;
+                            this.emailService.sendReviewConvertedToFreeToUser(caseStudy.submitter, caseStudy, comments);
+                        } else {
+                            await this.caseStudyService.deleteCaseStudy(caseStudy.id);
+                            this.emailService.sendReviewDeletedToUser(caseStudy.submitter, caseStudy, comments);
+                            res.status(200).json({
+                                status: 'success',
+                            });
+                            return;
+                        }
 
-                    caseStudy.version++;
+                    }else {
+                        caseStudy.approvalDecision = decision;
 
-                    // Create next version in history
-                    caseStudy.reviewGroups.push({version: caseStudy.version, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING});
-                    caseStudy.markModified('reviewGroups');
+                        caseStudy.version++;
+
+                        // Create next version in history
+                        caseStudy.reviewGroups.push({version: caseStudy.version, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING});
+                        caseStudy.markModified('reviewGroups');
+                    }
                 }
-
                 caseStudy.comments = comments;
                 
                 await this.caseStudyService.updateCaseStudy(caseStudy);

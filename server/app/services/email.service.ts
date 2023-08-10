@@ -178,4 +178,24 @@ export class EmailService {
             this.sendEmail(mailOptions);
         }
     }
+
+    sendReviewConvertedToFreeToUser(email: string, caseStudy: CaseStudy, comments: string) {
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: email,
+            subject: `Votre étude de cas nommée ${caseStudy.title} a été rejetée`,
+            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. De ce fait, celle-ci a été redirigé dans le processus d'approbation des études de cas gratuites. Consultez l'évaluation complète ci-dessous: \n\n${comments}` + 
+            `\n\n Cliquez-ci pour y consulter son statut: http://localhost:3000/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
+        }
+        this.sendEmail(mailOptions);
+    }
+    sendReviewDeletedToUser(email: string, caseStudy: CaseStudy, comments: string) {
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: email,
+            subject: `Votre étude de cas nommée ${caseStudy.title} a été rejetée`,
+            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. De ce fait, celle-ci a été retiré du processus d'approbation. Consultez l'évaluation complète ci-dessous: \n\n${comments}`
+        }
+        this.sendEmail(mailOptions);
+    }
 }

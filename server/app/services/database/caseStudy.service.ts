@@ -78,6 +78,29 @@ export class CaseStudyService {
         return caseStudy;
     }
 
+    async deleteCaseStudy(id: string) {
+        const caseStudyQuery = CaseStudyModel.findById(id);
+        if(!caseStudyQuery) return false;
+
+        const caseStudy = await caseStudyQuery.exec();
+        if(!caseStudy) return false;
+
+        await CaseStudyModel.deleteOne({ _id: id });
+        for(const file of caseStudy.files) {
+            this.deleteCaseStudyFile(file.serverFileName)
+        }
+        for(const reviewGroup of caseStudy.reviewGroups) {
+            for(const review of reviewGroup.comityMemberReviews) {
+                if(review.annotatedFiles) {
+                    for(const file of review.annotatedFiles) {
+                        this.deleteCaseStudyFile(file.serverFileName)
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     // Find CaseStudy by Id
     async findCaseStudyById(id: string) {
         return CaseStudyModel.findById(id);
