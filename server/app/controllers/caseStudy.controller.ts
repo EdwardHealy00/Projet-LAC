@@ -364,6 +364,14 @@ export class CaseStudyController {
                     return;
                 }
 
+                for(const criteria of feedback) {
+                    if(criteria.criteria === "Autre") continue;
+                    if(criteria.ratings === "" || criteria.comments == "") {
+                        res.status(400).json('Certains critères n\'ont pas été notés ou commentés');
+                        return;
+                    }
+                }
+
                 const comityMemberReview: ComityMemberReview = {
                     reviewAuthor: reviewerEmail,
                     caseFeedback: feedback,

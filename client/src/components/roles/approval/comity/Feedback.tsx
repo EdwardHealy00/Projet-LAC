@@ -15,6 +15,13 @@ export const comityCriteria: string[] = [
     "Apport d'un point de vue pédagogique"
   ];
 
+  interface StateErrors {
+    [key: string]: {
+      isError: boolean;
+      message: string;
+    };
+  }
+
 export default function ComityFeedback(caseData: SingleCaseProp) {
     const newCase = caseData.caseData;
     const navigate = useNavigate();
@@ -26,6 +33,54 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
     const [caseStudyFileName, setCaseStudyFileName] = React.useState(
       "Aucun document n'a été téléversé"
     );
+
+  
+    const [stateErrors, setStateErrors] = React.useState<StateErrors>(() => {
+      const initialState: StateErrors = {};
+  
+      comityCriteria.forEach((_, index) => {
+        initialState[`radioGroup${index}`] = { isError: false, message: "" };
+        initialState[`comments${index}`] = { isError: false, message: "" };
+      });
+  
+      return initialState;
+    });
+
+    let firstInvalidElementId: string | null = null;
+
+    const onValidation = (e: any) => {
+      let isValid = true;
+      firstInvalidElementId = null;
+      //let newStateErrors = stateErrors;
+      for(let i = 0; i < comityCriteria.length; i++) {
+        if (e.target.elements["rating" + i].value.trim() === "") {
+          stateErrors[`radioGroup${i}`] = {
+            isError: true,
+            message: "Veuillez donner une note à ce critère",
+          };
+          isValid = false;
+
+          if (firstInvalidElementId === null) {
+            firstInvalidElementId = `rating${i}`; // Set the first invalid element ID
+          }
+        }
+        if (e.target.elements["comments" + i].value.trim() === "") {
+          stateErrors[`comments${i}`] = {
+            isError: true,
+            message: "Veuillez entrer un commentaire pour expliquer la note donnée.",
+          };
+          isValid = false;
+
+          if (firstInvalidElementId === null) {
+            firstInvalidElementId = `comments${i}`; // Set the first invalid element ID
+          }
+        }
+      }
+  
+  
+      setStateErrors( {...stateErrors}); // ?
+      return isValid;
+    };
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files && e.target.files.length > 0) {
@@ -39,6 +94,19 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
 
     const onDecisionSubmit = (e: any) => {
         e.preventDefault();
+
+        const isFormValid = onValidation(e);
+        if (!isFormValid) {
+          if(firstInvalidElementId) {
+            const firstInvalidElement = e.target.querySelector(`[name="${firstInvalidElementId}"]`);
+            if (firstInvalidElement) {
+              firstInvalidElement.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }
+          return;
+        }
     
         for (let i = 0; i < comityCriteria.length; i++)
         {
@@ -98,6 +166,9 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                 <form className="radio-form-control" onSubmit={onDecisionSubmit} id="feedbackForm">
                   {comityCriteria.map((criteria, index) => (
                     <div>
+                      <FormLabel error={stateErrors[`radioGroup${index}`].isError}>
+                          {<span>{stateErrors[`radioGroup${index}`].message}</span>}
+                      </FormLabel>
                       <div className="criteria-box">
                         <p style={{width: "40%"}}>{criteria}</p>
                         <RadioGroup row name={"rating" + index}>
@@ -108,7 +179,10 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                           <FormControlLabel control={<Radio />} value="5" label="5" labelPlacement="bottom"/>
                         </RadioGroup>
                       </div>
-                      <TextField 
+                      <FormLabel error={stateErrors[`comments${index}`].isError}>
+                      {<span>{stateErrors[`comments${index}`].message}</span>}
+                      </FormLabel>
+                      <TextField
                         multiline
                         rows={4}
                         margin="dense"
@@ -116,6 +190,7 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                         name={"comments" + index}
                         type="text"
                         fullWidth
+                        className={stateErrors[`comments${index}`].isError ? 'error-outline' : ''}
                       />
                       <br /><br /><br />
                     </div>
