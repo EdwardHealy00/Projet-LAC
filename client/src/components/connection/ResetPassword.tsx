@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
-import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import React, { useContext } from "react";
 import axios from "axios";
 import { UserPasswordReset } from "../../model/User";
 import {
@@ -11,6 +11,8 @@ import {
   InputLabel,
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
+import { AppContext } from "../App";
+import Cookies from "js-cookie";
 
 export default function ResetPassword() {
   const { resetToken } = useParams();
@@ -21,7 +23,10 @@ export default function ResetPassword() {
   });
 
   const [showPassword, setShowPassword] = React.useState(false);
-
+  const navigate = useNavigate();
+  const appContext = useContext(AppContext);
+  let passwordGotReset: boolean = true;
+  
   const validatePassword = (password: string) => {
     const passwordError = {
       isError: false,
@@ -44,6 +49,9 @@ export default function ResetPassword() {
       password: e.target.password.value,
     };
     sendNewPasswordForm(newPassword);
+    Cookies.remove("logged_in");
+    navigate("/catalogue");
+    if(appContext) appContext.openLogInPopup();
   };
 
   const sendNewPasswordForm = (user: UserPasswordReset) => {
