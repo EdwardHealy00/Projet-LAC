@@ -62,7 +62,7 @@ const NavBar = forwardRef<NavBarRef, Props>(
       <div id="profile">
         <Button className="navbutton" href="/catalogue">Catalogue</Button>
         <UnlockAccess
-            role={[Role.Deputy, Role.Comity, Role.ComityDirector, Role.PolyPress]}
+            role={[Role.Deputy, Role.ComityDirector]}
             children={<Button href="/dashboard">Tableau de bord</Button>}
         ></UnlockAccess>
         <UnlockAccess

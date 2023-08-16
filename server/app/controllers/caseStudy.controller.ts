@@ -25,7 +25,7 @@ export class CaseStudyController {
         this.router.use(this.middlewareDeserializeUser.bind(this));
 
 
-        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.ComityDirector, Role.PolyPress), async (req: Request, res: Response) => {
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.ComityDirector), async (req: Request, res: Response) => {
             try {
                 const caseStudies = await this.caseStudyService.findAllCaseStudys();
 
@@ -47,7 +47,7 @@ export class CaseStudyController {
 
         });
 
-        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.ComityDirector, Role.PolyPress), async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.ComityDirector), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const caseStudies = await this.caseStudyService.getAllPaidCaseStudies();
 
@@ -289,7 +289,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Deputy, Role.ComityDirector, Role.PolyPress, Role.Admin), async (req: Request, res: Response) => {
+        this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Deputy, Role.ComityDirector, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.body.case;
                 const isApproved = req.body.approved;
@@ -311,8 +311,8 @@ export class CaseStudyController {
                     this.emailService.sendPreApprovalResultToUser(caseStudy.submitter, caseStudy, isApproved, writtenCriterias)
                     
                     if(isApproved) {
-                        const comity = await this.userService.findUsers({ role: Role.Comity });
-                        this.emailService.sendReviewNeededToComity(comity, caseStudy);
+                        const directors = await this.userService.findUsers({ role: Role.ComityDirector });
+                        this.emailService.sendReviewNeededToDirector(directors, caseStudy);
                     }
                 }
 
@@ -362,6 +362,14 @@ export class CaseStudyController {
                   ) !== undefined) {
                     res.status(409).json('L\'étude de cas a déjà été évalué par cet utilisateur');
                     return;
+                }
+
+                for(const criteria of feedback) {
+                    if(criteria.criteria === "Autre") continue;
+                    if(criteria.ratings === "" || criteria.comments == "") {
+                        res.status(400).json('Certains critères n\'ont pas été notés ou commentés');
+                        return;
+                    }
                 }
 
                 const comityMemberReview: ComityMemberReview = {
@@ -418,21 +426,36 @@ export class CaseStudyController {
 
                 const isApproved = decision == ApprovalDecision.APPROVED;
                 if(isApproved) {
-                    const polyPress = await this.userService.findUsers({ role: Role.PolyPress });
-                    this.emailService.sendWaitingForFinalConfirmationToDeputies(polyPress, caseStudy); 
+                    const deputies = await this.userService.findUsers({ role: Role.Deputy });
+                    this.emailService.sendWaitingForFinalConfirmationToDeputies(deputies, caseStudy); 
                     caseStudy.approvalDecision = ApprovalDecision.PENDING;
                     caseStudy.status++;
                 }
                 else {
-                    caseStudy.approvalDecision = decision;
+                    caseStudy.status = 0;
+                    if(decision == ApprovalDecision.REJECT) {
+                        if(caseStudy.isPaidCase) {
+                            caseStudy.isPaidCase = false;
+                            this.emailService.sendReviewConvertedToFreeToUser(caseStudy.submitter, caseStudy, comments);
+                        } else {
+                            await this.caseStudyService.deleteCaseStudy(caseStudy.id);
+                            this.emailService.sendReviewDeletedToUser(caseStudy.submitter, caseStudy, comments);
+                            res.status(200).json({
+                                status: 'success',
+                            });
+                            return;
+                        }
 
-                    caseStudy.version++;
+                    }else {
+                        caseStudy.approvalDecision = decision;
 
-                    // Create next version in history
-                    caseStudy.reviewGroups.push({version: caseStudy.version, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING});
-                    caseStudy.markModified('reviewGroups');
+                        caseStudy.version++;
+
+                        // Create next version in history
+                        caseStudy.reviewGroups.push({version: caseStudy.version, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING});
+                        caseStudy.markModified('reviewGroups');
+                    }
                 }
-
                 caseStudy.comments = comments;
                 
                 await this.caseStudyService.updateCaseStudy(caseStudy);

@@ -18,7 +18,7 @@ import { ApprovalDecision } from './ApprovalDecision';
 // Export the User class to be used as TypeScript type
 export class CaseStudy {
 
-    @prop({ _id: true, default: new mongoose.Types.ObjectId() })
+    @prop({ _id: true, default: () => new mongoose.Types.ObjectId() })
     _id: mongoose.Types.ObjectId;
 
     @prop({ default: true}) 
