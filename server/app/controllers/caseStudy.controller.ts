@@ -304,19 +304,27 @@ export class CaseStudyController {
                 const caseStudy = req.body;
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
                 if (req.files) {
-                    if(!validateFilesType(req.files)) {
-                        res.status(415).json('L\'étude de cas doit être en format .docx');
-                        return;
-                    }
                     if(req.files.length > MAX_FILES_PER_CASE) {
                         res.status(415).json('L\'étude de cas doit avoir un maximum de 3 documents');
                         return;
                     }
 
                     const ret = await this.parseAndSaveFiles(req.files);
+                    console.log(ret)
+                    console.log(validateFilesType(req.files))
+                    if(!ret || !validateFilesType(req.files)) {
+                        res.status(415).json('L\'étude de cas doit être en format .docx');
+                        return;
+                    }
+
+                    caseStudy["files"] = ret.parsedFiles;
+                    caseStudy["page"] = ret.totalNbPages;
                 }
-                caseStudy["files"] = ret.parsedFiles;
-                caseStudy["page"] = ret.totalNbPages;
+                else{
+                    res.status(415).json('L\'étude de cas doit avoir un minimum de 1 document');
+                        return;
+                }
+
                 const newCaseStudy = await this.caseStudyService.createCaseStudy(caseStudy);
 
                 const deputies = await this.userService.findUsers({ role: Role.Deputy });
@@ -596,7 +604,7 @@ export class CaseStudyController {
                 fileProof.date = new Date().toISOString();
                 fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
                 fileProof.pages = await countNumberPages(fileProof.path);
-                files.push(fileProof);
+                parsedFiles.push(fileProof);
                 totalNbPages += fileProof.pages;
                 this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
             }
