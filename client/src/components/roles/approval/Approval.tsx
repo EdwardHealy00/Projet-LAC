@@ -10,6 +10,7 @@ import { ApprovalPolyPress } from "./polyPress/Approval";
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
 import { createCaseFromData } from "../../../utils/ConvertUtils";
+import { ApprovalComityDirector } from "./comityDirector/Approval";
 
 function filterByStep(caseStudies: Case[], step: CaseStep) {
   return caseStudies.filter((caseStudy) => caseStudy.status == step);
@@ -32,39 +33,46 @@ export default function Approval() {
     axios
       .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/`, {withCredentials: true})
       .then((res) => {
-        const paidCases: Case[] = [];
-        const freeCases: Case[] = [];
-        for (const caseStudy of res.data) {
-          const newData = createCaseFromData(
-            caseStudy._id,
-            caseStudy.title,
-            caseStudy.desc,
-            caseStudy.authors,
-            caseStudy.submitter,
-            caseStudy.date,
-            caseStudy.page,
-            caseStudy.status,
-            caseStudy.isPaidCase,
-            caseStudy.isRejected,
-            caseStudy.classId,
-            caseStudy.discipline,
-            caseStudy.subjects,
-            caseStudy.files,
-            caseStudy.ratings,
-            caseStudy.votes
-          );
-          caseStudy.isPaidCase ? paidCases.push(newData) : freeCases.push(newData);
+        if(res.status === 200) {
+          const paidCases: Case[] = [];
+          const freeCases: Case[] = [];
+          for (const caseStudy of res.data) {
+            const newData = createCaseFromData(
+              caseStudy._id,
+              caseStudy.title,
+              caseStudy.desc,
+              caseStudy.authors,
+              caseStudy.submitter,
+              caseStudy.date,
+              caseStudy.page,
+              caseStudy.status,
+              caseStudy.isPaidCase,
+              caseStudy.classId,
+              caseStudy.discipline,
+              caseStudy.subjects,
+              caseStudy.files,
+              caseStudy.reviewGroups,
+              caseStudy.version,
+              caseStudy.approvalDecision,
+              caseStudy.comments,
+              caseStudy.ratings,
+              caseStudy.votes
+            );
+            caseStudy.isPaidCase ? paidCases.push(newData) : freeCases.push(newData);
+          }
+  
+          setPaidCaseStudies(paidCases);
+          setPaidCaseStudiesStep1(filterByStep(paidCases, CaseStep.WaitingPreApproval));
+          setPaidCaseStudiesStep2(filterByStep(paidCases, CaseStep.WaitingComity));
+          setPaidCaseStudiesStep3(filterByStep(paidCases, CaseStep.WaitingCatalogue));
+  
+          setFreeCaseStudies(freeCases);
+          setFreeCaseStudiesStep1(filterByStep(freeCases, CaseStep.WaitingPreApproval));
+          setFreeCaseStudiesStep2(filterByStep(freeCases, CaseStep.WaitingComity));
+          setFreeCaseStudiesStep3(filterByStep(freeCases, CaseStep.WaitingCatalogue));
         }
-
-        setPaidCaseStudies(paidCases);
-        setPaidCaseStudiesStep1(filterByStep(paidCases, CaseStep.WaitingPreApproval));
-        setPaidCaseStudiesStep2(filterByStep(paidCases, CaseStep.WaitingComity));
-        setPaidCaseStudiesStep3(filterByStep(paidCases, CaseStep.WaitingCatalogue));
-
-        setFreeCaseStudies(freeCases);
-        setFreeCaseStudiesStep1(filterByStep(freeCases, CaseStep.WaitingPreApproval));
-        setFreeCaseStudiesStep2(filterByStep(freeCases, CaseStep.WaitingComity));
-        setFreeCaseStudiesStep3(filterByStep(freeCases, CaseStep.WaitingCatalogue));
+      }).catch((err) => {
+        console.log(err);
       });
   };
 
@@ -103,9 +111,19 @@ export default function Approval() {
               }
             ></UnlockAccess>
 
+            
+            {/* 
+            For now comity members wont have access to all pending cases
             <UnlockAccess
               role={[Role.Comity]}
-              children={<ApprovalComity caseStudies={paidCaseStudiesStep2} />}
+              children={<ApprovalComity caseStudies={paidCaseStudiesStep2.filter((caseItem) => {
+                return !caseItem.comityMemberReviews || !caseItem.comityMemberReviews.some((review) => review.reviewAuthor === localStorage.email);
+              })} />}
+            ></UnlockAccess> */}
+
+            <UnlockAccess
+              role={[Role.ComityDirector]}
+              children={<ApprovalComityDirector caseStudies={paidCaseStudiesStep2} />}
             ></UnlockAccess>
 
             <UnlockAccess
@@ -127,9 +145,18 @@ export default function Approval() {
               }
             ></UnlockAccess>
 
+            {/* 
+             For now comity members wont have access to all pending cases
             <UnlockAccess
               role={[Role.Comity]}
-              children={<ApprovalComity caseStudies={freeCaseStudiesStep2} />}
+              children={<ApprovalComity caseStudies={freeCaseStudiesStep2.filter((caseItem) => {
+                return !caseItem.comityMemberReviews || !caseItem.comityMemberReviews.some((review) => review.reviewAuthor === localStorage.email);
+              })} />}
+            ></UnlockAccess> */}
+
+            <UnlockAccess
+              role={[Role.ComityDirector]}
+              children={<ApprovalComityDirector caseStudies={freeCaseStudiesStep2} />}
             ></UnlockAccess>
 
             <UnlockAccess

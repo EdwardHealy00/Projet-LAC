@@ -8,6 +8,8 @@ import {verifyJwt} from "@app/utils/jwt";
 import {UserService} from "@app/services/database/user.service";
 import { CaseStep } from '@app/models/CaseStatus';
 import { MAX_FILES_PER_CASE } from '@app/constant/constant';
+import { ComityMemberReview } from '@app/models/ComityMemberReview';
+import { ApprovalDecision } from '@app/models/ApprovalDecision';
 
 export const excludedFields = ['_id', 'file', 'fieldName', 'encoding', 'mimetype', 'destination', 'filename', 'path', ];
 
@@ -24,7 +26,7 @@ export class CaseStudyController {
         this.router.use(this.middlewareDeserializeUser.bind(this));
 
 
-        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response) => {
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.ComityDirector), async (req: Request, res: Response) => {
             try {
                 const caseStudies = await this.caseStudyService.findAllCaseStudys();
 
@@ -46,7 +48,7 @@ export class CaseStudyController {
 
         });
 
-        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response, next: NextFunction) => {
+        this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.ComityDirector), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const caseStudies = await this.caseStudyService.getAllPaidCaseStudies();
 
@@ -80,6 +82,23 @@ export class CaseStudyController {
         this.router.get('/:id', async (req: Request, res: Response) => {
             try {
                 const caseStudy = await this.caseStudyService.findCaseStudyById(req.params.id);
+
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+                if(!res.locals.user && caseStudy.status != CaseStep.Posted) {
+                    res.status(401).json("Authentication error");
+                    return;
+                }
+                
+                const role = res.locals.user.role;
+                const isNotPrivileged = role === Role.Professor || role === Role.ProfessorNotApproved || role === Role.Student;
+                if(isNotPrivileged && caseStudy.status != CaseStep.Posted && res.locals.user.email !== caseStudy.submitter) {
+                    res.status(403).json('Il est interdit de consulter une étude de cas en cours d\'évaluation déposée par un autre utilisateur');
+                    return;
+                }
+
                 res.json(caseStudy);
             } catch (err: any) {
                 console.log(err);
@@ -118,7 +137,7 @@ export class CaseStudyController {
                     res.status(404).json('Le fichier ' + req.params.filename+  ' n\'a pas pu être supprimé');
                     return;
                 }
-                if(!req.body.caseStudy.isRejected) {
+                if(req.body.caseStudy.approvalDecision == ApprovalDecision.PENDING) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
@@ -144,7 +163,7 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
-                if (!caseStudy.isRejected) {
+                if (caseStudy.approvalDecision == ApprovalDecision.PENDING) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
@@ -173,7 +192,7 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
-                if (!caseStudy.isRejected) {
+                if (caseStudy.approvalDecision == ApprovalDecision.PENDING) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
@@ -221,7 +240,7 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
-                if (!caseStudy.isRejected) {
+                if (caseStudy.approvalDecision == ApprovalDecision.PENDING) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
@@ -261,13 +280,16 @@ export class CaseStudyController {
                 }
                 caseStudy.page = totalNbPages;
 
-                caseStudy.isRejected = false;
+                caseStudy.approvalDecision = ApprovalDecision.PENDING;
                 if (caseStudy.status == CaseStep.WaitingComity) {
                     caseStudy.status = CaseStep.WaitingPreApproval;
                 }
 
                 await this.caseStudyService.updateCaseStudy(caseStudy);
-                
+
+                const deputies = await this.userService.findUsers({ role: Role.Deputy });
+                this.emailService.sendPreApprovalNeededToDeputies(deputies, caseStudy, true);
+
                 res.status(200).json({
                     status: 'success',
                 });
@@ -281,7 +303,6 @@ export class CaseStudyController {
             try {
                 const caseStudy = req.body;
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
-                let totalNbPages = 0;
                 if (req.files) {
                     if(!validateFilesType(req.files)) {
                         res.status(415).json('L\'étude de cas doit être en format .docx');
@@ -292,25 +313,14 @@ export class CaseStudyController {
                         return;
                     }
 
-                    let files = [];
-                    for (let i = 0; i < req.files.length; i++) {
-                        const fileProof = req.files[i];
-                        if (fileProof) {
-                            fileProof.date = new Date().toISOString();
-                            fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
-                            fileProof.pages = await countNumberPages(fileProof.path);
-                            files.push(fileProof);
-                            totalNbPages += fileProof.pages;
-                            this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
-                        }
-                    }
-                    caseStudy["files"] = files;
+                    const ret = await this.parseAndSaveFiles(req.files);
                 }
-                caseStudy["page"] = totalNbPages;
+                caseStudy["files"] = ret.parsedFiles;
+                caseStudy["page"] = ret.totalNbPages;
                 const newCaseStudy = await this.caseStudyService.createCaseStudy(caseStudy);
 
                 const deputies = await this.userService.findUsers({ role: Role.Deputy });
-                this.emailService.sendPreApprovalNeededToDeputies(deputies, newCaseStudy);
+                this.emailService.sendPreApprovalNeededToDeputies(deputies, newCaseStudy, false);
 
                 res.status(201).json(newCaseStudy);
             } catch (err: any) {
@@ -318,13 +328,11 @@ export class CaseStudyController {
             }
         });
 
-        this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Deputy, Role.Comity, Role.PolyPress, Role.Admin), async (req: Request, res: Response) => {
+        this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Deputy, Role.ComityDirector, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.body.case;
                 const isApproved = req.body.approved;
                 const failedCriterias = req.body.failedCriterias;
-                const decision = req.body.decision;
-                const feedback = req.body.feedback;
                 const url = req.body.url;
 
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
@@ -342,17 +350,8 @@ export class CaseStudyController {
                     this.emailService.sendPreApprovalResultToUser(caseStudy.submitter, caseStudy, isApproved, writtenCriterias)
                     
                     if(isApproved) {
-                        const comity = await this.userService.findUsers({ role: Role.Comity });
-                        this.emailService.sendReviewNeededToComity(comity, caseStudy);
-                    }
-                }
-
-                if(caseStudy.status == CaseStep.WaitingComity) {
-                    this.emailService.sendReviewResultToUser(caseStudy.submitter, caseStudy, isApproved, decision, feedback)
-
-                    if(isApproved) {
-                        const polyPress = await this.userService.findUsers({ role: Role.PolyPress });
-                        this.emailService.sendWaitingForFinalConfirmationToPolyPress(polyPress, caseStudy);
+                        const directors = await this.userService.findUsers({ role: Role.ComityDirector });
+                        this.emailService.sendReviewNeededToDirector(directors, caseStudy);
                     }
                 }
 
@@ -366,9 +365,141 @@ export class CaseStudyController {
                 if (isApproved) {
                     caseStudy.status++; 
                 } else {
-                    caseStudy.isRejected = true;
+                    caseStudy.approvalDecision = ApprovalDecision.REJECT;
                 }
                 await this.caseStudyService.updateCaseStudy(caseStudy);
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
+        this.router.post('/comityMemberReview/:id', this.middlewareRestrictTo(Role.Comity, Role.Admin), async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.params.id;
+                const review = req.body;
+                const feedback = JSON.parse(review["feedback"]);
+                const decision = parseInt(review["decision"]);
+                const reviewerEmail = res.locals.user.email; 
+
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
+
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                if(caseStudy.status != CaseStep.WaitingComity) {
+                    res.status(403).json('L\'étude de cas ne peut pas être évalué dans son statut actuel');
+                    return;
+                }
+
+                if(caseStudy.reviewGroups[caseStudy.version].comityMemberReviews.find(
+                    (review) => review.reviewAuthor === reviewerEmail
+                  ) !== undefined) {
+                    res.status(409).json('L\'étude de cas a déjà été évalué par cet utilisateur');
+                    return;
+                }
+
+                for(const criteria of feedback) {
+                    if(criteria.criteria === "Autre") continue;
+                    if(criteria.ratings === "" || criteria.comments == "") {
+                        res.status(400).json('Certains critères n\'ont pas été notés ou commentés');
+                        return;
+                    }
+                }
+
+                const comityMemberReview: ComityMemberReview = {
+                    reviewAuthor: reviewerEmail,
+                    caseFeedback: feedback,
+                    decision: decision,
+                };
+
+                const ret = await this.parseAndSaveFiles(req.files)
+                if(ret && ret.parsedFiles) {
+                    comityMemberReview.annotatedFiles = ret.parsedFiles;
+                }
+
+                caseStudy.reviewGroups[caseStudy.version].comityMemberReviews.push(comityMemberReview);
+                caseStudy.markModified('reviewGroups');
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+
+                const directors = await this.userService.findUsers({ role: Role.ComityDirector });
+                this.emailService.sendNewReviewSubmittedToComityDirector(directors, caseStudy, comityMemberReview.reviewAuthor);
+
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                console.log(err);
+            }
+        });
+
+        this.router.post('/finalReview', this.middlewareRestrictTo(Role.ComityDirector, Role.Admin), async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.body.case;
+                const comments = req.body.comments;
+                const decision = req.body.decision;
+
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
+
+                if (!caseStudy) {
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                if(caseStudy.status != CaseStep.WaitingComity || caseStudy.approvalDecision != ApprovalDecision.PENDING) {
+                    res.status(403).json('L\'étude de cas ne peut pas être évalué dans son statut actuel');
+                    return;
+                }
+
+                // Add to history
+                caseStudy.reviewGroups[caseStudy.version].directorComments = comments;
+                caseStudy.reviewGroups[caseStudy.version].directorApprovalDecision = decision;
+                
+                // update this part first for mongoose to notice changed fields
+                caseStudy.markModified('reviewGroups');
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+
+                const isApproved = decision == ApprovalDecision.APPROVED;
+                if(isApproved) {
+                    const deputies = await this.userService.findUsers({ role: Role.Deputy });
+                    this.emailService.sendWaitingForFinalConfirmationToDeputies(deputies, caseStudy); 
+                    caseStudy.approvalDecision = ApprovalDecision.PENDING;
+                    caseStudy.status++;
+                }
+                else {
+                    caseStudy.status = 0;
+                    if(decision == ApprovalDecision.REJECT) {
+                        if(caseStudy.isPaidCase) {
+                            caseStudy.isPaidCase = false;
+                            this.emailService.sendReviewConvertedToFreeToUser(caseStudy.submitter, caseStudy, comments);
+                        } else {
+                            await this.caseStudyService.deleteCaseStudy(caseStudy.id);
+                            this.emailService.sendReviewDeletedToUser(caseStudy.submitter, caseStudy, comments);
+                            res.status(200).json({
+                                status: 'success',
+                            });
+                            return;
+                        }
+
+                    }else {
+                        caseStudy.approvalDecision = decision;
+
+                        caseStudy.version++;
+
+                        // Create next version in history
+                        caseStudy.reviewGroups.push({version: caseStudy.version, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING});
+                        caseStudy.markModified('reviewGroups');
+                    }
+                }
+                caseStudy.comments = comments;
+                
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+                this.emailService.sendReviewResultToUser(caseStudy.submitter, caseStudy, isApproved, decision, comments)
+
                 res.status(200).json({
                     status: 'success',
                 });
@@ -453,6 +584,27 @@ export class CaseStudyController {
         }
     }
 
+    private async parseAndSaveFiles(files: any) {
+        if(!files || !validateFilesType(files)) {
+            return undefined;
+        }
+        let parsedFiles = [];
+        let totalNbPages = 0;
+        for (let i = 0; i < files.length; i++) {
+            const fileProof = files[i];
+            if (fileProof) {
+                fileProof.date = new Date().toISOString();
+                fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
+                fileProof.pages = await countNumberPages(fileProof.path);
+                files.push(fileProof);
+                totalNbPages += fileProof.pages;
+                this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
+            }
+        }
+        if (!totalNbPages) totalNbPages = 0;
+        return {parsedFiles, totalNbPages}
+    }
+
 
    /* private async middlewareRequireUser(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -489,3 +641,5 @@ function validateFilesType(files: any): boolean {
     }
     return true;
 }
+
+

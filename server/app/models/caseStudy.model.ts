@@ -1,9 +1,12 @@
 import {
     getModelForClass,
     modelOptions,
+    mongoose,
     prop,
 } from '@typegoose/typegoose';
 import { CaseStep } from './CaseStatus';
+import { ReviewGroup } from './ComityMemberReview';
+import { ApprovalDecision } from './ApprovalDecision';
 
 @modelOptions({
     schemaOptions: {
@@ -15,11 +18,17 @@ import { CaseStep } from './CaseStatus';
 // Export the User class to be used as TypeScript type
 export class CaseStudy {
 
+    @prop({ _id: true, default: () => new mongoose.Types.ObjectId() })
+    _id: mongoose.Types.ObjectId;
+
     @prop({ default: true}) 
     isPaidCase: boolean;
 
-    @prop({ default: false}) 
-    isRejected: boolean;
+    @prop({ default: ApprovalDecision.PENDING}) 
+    approvalDecision: ApprovalDecision;
+
+    @prop({ default: ""}) 
+    comments: string;
 
     @prop({ unique: true, required: true })
     title: string;
@@ -32,6 +41,12 @@ export class CaseStudy {
 
     @prop({ required: true })
     files: any;
+
+    @prop({default: [{version: 0, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING}]})
+    reviewGroups: ReviewGroup[];
+
+    @prop({default: 0})
+    version: number;
 
     @prop({ required: true })
     authors: string;

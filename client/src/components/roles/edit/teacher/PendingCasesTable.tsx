@@ -12,6 +12,7 @@ import { Role } from "../../../../model/enum/Role";
 import { getStatus } from "../../../../utils/Status";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { UnlockAccess } from "../../../connection/UnlockAccess";
+import { ApprovalDecision } from "../../../../model/enum/ApprovalDecision";
 
 interface CaseProp {
   cases: Case[];
@@ -19,8 +20,7 @@ interface CaseProp {
 
 function navigateHandleCase(navigate: NavigateFunction, caseStudy?: Case) {
   navigate(
-    `/my-pending-case-studies/case-edit?id=${caseStudy ? caseStudy.id_ : 0}`,
-    { state: caseStudy }
+    `/my-pending-case-studies/case-edit?id=${caseStudy ? caseStudy.id_ : 0}`
   );
 }
 
@@ -57,11 +57,29 @@ export default function CaseTable(prop: CaseProp) {
               <TableCell align="right">{row.title}</TableCell>
               <TableCell align="right">{row.authors}</TableCell>
               <TableCell align="right">{row.date}</TableCell>
-              {row.isRejected && (
+              {row.approvalDecision == ApprovalDecision.REJECT && (
                 <>
                   <TableCell align="right" style={{ color: "red" }}>
                     Rejetée
                   </TableCell>
+                </>
+              )}
+              {row.approvalDecision == ApprovalDecision.MAJOR_CHANGES && (
+                <>
+                  <TableCell align="right" style={{ color: "orange" }}>
+                    Nécessite des changements majeurs
+                  </TableCell>
+                </>
+              )}
+              {row.approvalDecision == ApprovalDecision.MINOR_CHANGES && (
+                <>
+                  <TableCell align="right" style={{ color: "orange" }}>
+                    Nécessite des changements mineurs
+                  </TableCell>
+                </>
+              )}
+              {row.approvalDecision != ApprovalDecision.PENDING && row.approvalDecision != ApprovalDecision.APPROVED && (
+                <>
                   <TableCell align="right">
                       <UnlockAccess
                         role={[Role.Admin, Role.Professor]}
@@ -76,25 +94,25 @@ export default function CaseTable(prop: CaseProp) {
                         }
                       ></UnlockAccess>
                     </TableCell>
-                </>
+                  </>
               )}
-              {!row.isRejected && (
+              {(row.approvalDecision == ApprovalDecision.PENDING || row.approvalDecision == ApprovalDecision.APPROVED) && (
                 <>
                   <TableCell align="right">{getStatus(row.status)}</TableCell>
-                    <TableCell align="right">
-                      <UnlockAccess
-                        role={[Role.Admin, Role.Professor]}
-                        children={
-                          <Button
-                            variant="outlined"
-                            sx={{ backgroundColor: "primary" }}
-                            onClick={() => handleCase(row.id_)}
-                          >
-                            Consulter
-                          </Button>
-                        }
-                      ></UnlockAccess>
-                  </TableCell>
+                  <TableCell align="right">
+                    <UnlockAccess
+                      role={[Role.Admin, Role.Professor]}
+                      children={
+                        <Button
+                          variant="outlined"
+                          sx={{ backgroundColor: "primary" }}
+                          onClick={() => handleCase(row.id_)}
+                        >
+                          Consulter
+                        </Button>
+                      }
+                    ></UnlockAccess>
+                </TableCell>
                 </>
               )}
             </TableRow>

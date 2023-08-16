@@ -15,6 +15,7 @@ import { Case } from "../../../../../model/CaseStudy";
 import { forwardRef, useImperativeHandle } from "react";
 import { createDocumentFromFile } from "../../../../../utils/ConvertUtils";
 import { MAX_FILES_PER_CASE } from "../../../../../utils/Constants";
+import { ApprovalDecision } from "../../../../../model/enum/ApprovalDecision";
 
 interface CaseProp {
   case: Case;
@@ -201,7 +202,7 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
                       <FileDownloadIcon /> Télécharger
                     </Button>
                   )}
-                  {props.case.isRejected && (
+                  {props.case.approvalDecision != ApprovalDecision.PENDING && (
                     <Button
                       variant="outlined"
                       color="error"

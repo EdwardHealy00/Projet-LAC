@@ -1,7 +1,7 @@
 import { Button, ButtonGroup } from "@mui/material";
-import React, { useCallback } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react";
 import "./NavBar.scss";
-import Login from "../connection/Login";
+import Login, { LoginRef } from "../connection/Login";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,22 @@ import { UnlockAccess } from "../connection/UnlockAccess";
 
 interface Props {}
 
-const NavBar: React.FC<Props> = ({}) => {
+export interface NavBarRef {
+  SetIsLoggedIn(value: boolean): void;
+}
+
+const NavBar = forwardRef<NavBarRef, Props>(
+  (_props, ref) => {
+  useImperativeHandle(ref, () => ({
+    SetIsLoggedIn(value: boolean) {
+      if(loginRef.current) {
+        loginRef.current.SetIsLoggedIn(value);
+      }
+    },
+  }));
+  
+  const loginRef = useRef<LoginRef | null>(null);
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -47,13 +62,14 @@ const NavBar: React.FC<Props> = ({}) => {
       <div id="profile">
         <Button className="navbutton" href="/catalogue">Catalogue</Button>
         <UnlockAccess
-            role={[Role.Deputy, Role.Comity, Role.PolyPress]}
+            role={[Role.Deputy, Role.ComityDirector]}
             children={<Button href="/dashboard">Tableau de bord</Button>}
         ></UnlockAccess>
         <UnlockAccess
             role={[Role.Professor]}
             children={<Button className="navbutton" href="/my-pending-case-studies">Mes études de cas</Button>}
         ></UnlockAccess>
+        <Button className="navbutton" href="/guide">Guides</Button>
         <span>
           <Button
               id="basic-button"
@@ -83,10 +99,10 @@ const NavBar: React.FC<Props> = ({}) => {
         </span>
       </div>
       <div id="loginStatus">
-        <Login />
+        <Login ref={loginRef}/>
       </div>
     </div>
   );
-};
+});
 
 export default NavBar;

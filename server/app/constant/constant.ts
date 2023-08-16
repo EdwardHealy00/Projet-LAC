@@ -5,7 +5,7 @@ dotenv.config();
 // JWT
 export const PRIVATE_KEY = process.env.ACCESS_TOKEN_PRIVATE_KEY as string;
 export const PUBLIC_KEY = process.env.ACCESS_TOKEN_PUBLIC_KEY as string;
-export const ACCESS_TOKEN_EXPIRES_IN = "30m";
+export const ACCESS_TOKEN_EXPIRES_IN = "60m";
 
 // Email
 export const EMAIL_USERNAME = process.env.EMAIL_USERNAME as string;

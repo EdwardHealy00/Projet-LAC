@@ -237,7 +237,6 @@ export default function AddCaseStudy() {
 
   return (
     <div>
-      <NavBar></NavBar>
       <div style={{margin: '0px 200px'}}>
         <DialogTitle>Ajouter une étude de cas</DialogTitle>
         <DialogContent>
