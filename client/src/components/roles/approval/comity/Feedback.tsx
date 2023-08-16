@@ -51,7 +51,6 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
     const onValidation = (e: any) => {
       let isValid = true;
       firstInvalidElementId = null;
-      //let newStateErrors = stateErrors;
       for(let i = 0; i < comityCriteria.length; i++) {
         if (e.target.elements["rating" + i].value.trim() === "") {
           stateErrors[`radioGroup${i}`] = {
