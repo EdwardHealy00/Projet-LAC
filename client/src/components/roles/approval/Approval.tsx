@@ -10,6 +10,7 @@ import { ApprovalPolyPress } from "./polyPress/Approval";
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
 import { createCaseFromData } from "../../../utils/ConvertUtils";
+import { ApprovalComityDirector } from "./comityDirector/Approval";
 
 function filterByStep(caseStudies: Case[], step: CaseStep) {
   return caseStudies.filter((caseStudy) => caseStudy.status == step);
@@ -46,11 +47,14 @@ export default function Approval() {
               caseStudy.page,
               caseStudy.status,
               caseStudy.isPaidCase,
-              caseStudy.isRejected,
               caseStudy.classId,
               caseStudy.discipline,
               caseStudy.subjects,
               caseStudy.files,
+              caseStudy.reviewGroups,
+              caseStudy.version,
+              caseStudy.approvalDecision,
+              caseStudy.comments,
               caseStudy.ratings,
               caseStudy.votes
             );
@@ -107,9 +111,19 @@ export default function Approval() {
               }
             ></UnlockAccess>
 
+            
+            {/* 
+            For now comity members wont have access to all pending cases
             <UnlockAccess
               role={[Role.Comity]}
-              children={<ApprovalComity caseStudies={paidCaseStudiesStep2} />}
+              children={<ApprovalComity caseStudies={paidCaseStudiesStep2.filter((caseItem) => {
+                return !caseItem.comityMemberReviews || !caseItem.comityMemberReviews.some((review) => review.reviewAuthor === localStorage.email);
+              })} />}
+            ></UnlockAccess> */}
+
+            <UnlockAccess
+              role={[Role.ComityDirector]}
+              children={<ApprovalComityDirector caseStudies={paidCaseStudiesStep2} />}
             ></UnlockAccess>
 
             <UnlockAccess
@@ -131,9 +145,18 @@ export default function Approval() {
               }
             ></UnlockAccess>
 
+            {/* 
+             For now comity members wont have access to all pending cases
             <UnlockAccess
               role={[Role.Comity]}
-              children={<ApprovalComity caseStudies={freeCaseStudiesStep2} />}
+              children={<ApprovalComity caseStudies={freeCaseStudiesStep2.filter((caseItem) => {
+                return !caseItem.comityMemberReviews || !caseItem.comityMemberReviews.some((review) => review.reviewAuthor === localStorage.email);
+              })} />}
+            ></UnlockAccess> */}
+
+            <UnlockAccess
+              role={[Role.ComityDirector]}
+              children={<ApprovalComityDirector caseStudies={freeCaseStudiesStep2} />}
             ></UnlockAccess>
 
             <UnlockAccess

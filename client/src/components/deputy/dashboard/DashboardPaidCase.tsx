@@ -31,7 +31,7 @@ function DashboardPaidCase() {
       </div>
       <div>
         <UnlockAccess
-          role={[Role.Deputy, Role.Comity, Role.PolyPress]}
+          role={[Role.Deputy, Role.Comity, Role.ComityDirector, Role.PolyPress]}
           children={
             <Button variant="contained" onClick={() => onConsult()}>
               Consulter les études de cas

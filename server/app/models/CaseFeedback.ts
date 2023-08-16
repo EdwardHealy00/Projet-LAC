@@ -3,3 +3,4 @@ export interface CaseFeedback {
     rating?: number;
     comments: string;
 }
+

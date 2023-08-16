@@ -21,19 +21,64 @@
     }
 }
 
+.download-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 1%;
+    padding-top: 1%;
+    gap: 1%;
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: auto;
+}
+
 .criteria-box {
     display: flex;
     flex-direction: row;
 }
 
 .radio-form-control {
-    margin-left: 5% !important;
+    margin-left: 1% !important;
+    width: 50%;
 }
 
 .decision-actions {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    width: 30%;
+    justify-content: flex-start;
     align-items: flex-end;
+    gap: 1%;
 }
+
+.submit-info {
+    margin: 1%;
+}
+
+.criteria-summary {
+    margin: 1%;
+}
+
+.review-title {
+    margin: 1%;
+    padding: 1%;
+}
+
+.director-comments {
+    margin: 1%;
+    padding: 1%;
+}
+
+.director-title {
+    margin-bottom: 1%;
+}
+
+#current-version {
+    margin: 1%;
+    padding: 1%;
+}
+
+

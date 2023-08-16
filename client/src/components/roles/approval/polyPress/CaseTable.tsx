@@ -10,13 +10,16 @@ import Button from "@mui/material/Button";
 import { Case } from "../../../../model/CaseStudy";
 import { getStatus } from "../../../../utils/Status";
 import { NavigateFunction, useNavigate } from "react-router-dom";
+import { ApprovalDecision } from "../../../../model/enum/ApprovalDecision";
 
 interface CaseProp {
     cases: Case[];
 }
 
 function navigateHandleCase(navigate: NavigateFunction, caseStudy?: Case) {
-  navigate("/new-case-approval", { state: { caseStudy } });
+  navigate(
+    `/approval/new-case?id=${caseStudy ? caseStudy.id_ : 0}`
+  );
 }
 
 export default function CaseTable(rows: CaseProp) {
@@ -51,15 +54,29 @@ const handleCase = (id: number) => {
               <TableCell align="right">{row.authors}</TableCell>
               <TableCell align="right">{row.date}</TableCell>
               <TableCell align="right">{getStatus(row.status)}</TableCell>
-              <TableCell align="right">
-                <Button
-                  variant="contained"
-                  sx={{ backgroundColor: "#ff9b00" }}
-                  onClick={() => handleCase(row.id_)}
-                >
+
+              {row.approvalDecision == ApprovalDecision.REJECT && (
+                <>
+                  <TableCell align="right" style={{ color: "red" }}>
+                    Rejetée
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                </>
+              )}
+              {row.approvalDecision == ApprovalDecision.PENDING && (
+                <>
+                  <TableCell align="right">{getStatus(row.status)}</TableCell>
+                  <TableCell align="right">
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "#ff9b00" }}
+                    onClick={() => handleCase(row.id_)}
+                  >
                   Traiter
                 </Button>
               </TableCell>
+                </>
+              )}
             </TableRow>
           ))}
         </TableBody>

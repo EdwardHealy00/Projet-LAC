@@ -4,6 +4,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Button, FormControl, For
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useNavigate } from "react-router-dom";
 import { CaseFeedback } from "../../../deputy/newCase/CaseFeedback";
+import { ApprovalDecision } from "../../../../model/enum/ApprovalDecision";
 import axios from "axios";
 
 export const comityCriteria: string[] = [
@@ -13,20 +14,28 @@ export const comityCriteria: string[] = [
     "Style",
     "Apport d'un point de vue pédagogique"
   ];
-  
-  const APPROVED_STR: string = "approved";
-  const MAJOR_STR: string = "major";
-  const MINOR_STR: string = "minor";
-  const REJECT_STR: string = "rejected";
 
 export default function ComityFeedback(caseData: SingleCaseProp) {
     const newCase = caseData.caseData;
     const navigate = useNavigate();
     const [feedback] = React.useState<CaseFeedback[]>(new Array());
-    const [decision, setDecision] = React.useState("");
+    const [decision, setDecision] = React.useState<ApprovalDecision | string>('');
     const onDecisionChanged = (e: any) => {
         setDecision(e.target.value);
     }
+    const [caseStudyFileName, setCaseStudyFileName] = React.useState(
+      "Aucun document n'a été téléversé"
+    );
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files.length > 0) {
+        let fileNames = e.target.files[0].name;
+        for (let i = 1; i < e.target.files.length; i++) {
+          fileNames += ", " + e.target.files[i].name;
+        }
+        setCaseStudyFileName(fileNames);
+      }
+    };
 
     const onDecisionSubmit = (e: any) => {
         e.preventDefault();
@@ -41,23 +50,23 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
         }
     
         feedback.push({
-          criteria: "Other",
+          criteria: "Autre",
           comments: e.target.elements.otherComments.value
         });
-    
-        sendCaseStudyResponse();
+
+        const formData = new FormData();
+        Array.from(e.target.elements.annotatedFiles.files).forEach(file => formData.append('files[]', (file as Blob)));
+        formData.append('decision', JSON.stringify(decision));
+        formData.append('feedback', JSON.stringify(feedback));
+
+        sendCaseStudyResponse(formData);
     }
 
-    const sendCaseStudyResponse = () => {
+    const sendCaseStudyResponse = (formData: FormData) => {
         axios
             .post(
-                `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/approvalResult`,
-                {
-                    case: newCase.id_,
-                    approved: decision === APPROVED_STR,
-                    decision: decision,
-                    feedback: feedback
-                },
+                `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/comityMemberReview/${newCase.id_}`,
+                formData,
                 {
                     withCredentials: true,
                 }
@@ -122,16 +131,21 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                     type="text"
                     fullWidth
                   />
+                  <Button variant="contained" component="label">
+                  Téléverser des documents annotés
+                  <input
+                    hidden
+                    accept=".docx"
+                    type="file"
+                    onChange={handleFileUpload}
+                    name="annotatedFiles"
+                    multiple
+                  />
+              </Button>
+              {caseStudyFileName && <span>{caseStudyFileName}</span>}
                 </form>
                 <br />
                 <br />
-                <div>
-                  <b>
-                    L’auteur sera avisé par courriel du statut de suivi de son
-                    dossier. <br />
-                  </b>
-                  <p>*si le cas est rejeté, vous pouvez suggérer de le publier en libre accès, le cas échéant.</p><br />
-                </div>
                 <div className="decision-actions">
                   <FormControl>
                     <FormLabel>Décision</FormLabel>
@@ -142,13 +156,13 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                       onChange={onDecisionChanged}
                       style={{width: '300px'}}
                     >
-                      <MenuItem value={APPROVED_STR}>Publication dans l'état</MenuItem>
-                      <MenuItem value={MAJOR_STR}>Publication avec révision majeure</MenuItem>
-                      <MenuItem value={MINOR_STR}>Publication avec révision mineure</MenuItem>
-                      <MenuItem value={REJECT_STR}>Rejet</MenuItem>
+                      <MenuItem value={ApprovalDecision.APPROVED}>Publication dans l'état</MenuItem>
+                      <MenuItem value={ApprovalDecision.MAJOR_CHANGES}>Publication avec révision majeure</MenuItem>
+                      <MenuItem value={ApprovalDecision.MINOR_CHANGES}>Publication avec révision mineure</MenuItem>
+                      <MenuItem value={ApprovalDecision.REJECT}>Rejet</MenuItem>
                     </Select>
                   </FormControl>
-                  <Button variant="contained" disabled={decision.length == 0} type="submit" form="feedbackForm">
+                  <Button variant="contained" disabled={decision === ''} type="submit" form="feedbackForm">
                     Compléter
                   </Button>
                 </div>
