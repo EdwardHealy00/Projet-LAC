@@ -57,7 +57,7 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: userEmail,
             subject: "Réinitialiser votre mot de passe",
-            text: `Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant: http://localhost:3000/reset-password/${resetToken}`,
+            text: `Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant: ${process.env.REACT_APP_BASE_API_URL}/reset-password/${resetToken}`,
         }
         this.sendEmail(mailOptions);
     }
@@ -95,7 +95,7 @@ export class EmailService {
             text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors}` + 
                     (isPreApproved ? ` est maintenant prête à être évalué par le comité scientifique.`
                                    : ` requiert des changements. Les critères suivants n'étaient pas respectés: \n\n` +`${criteriaText}`) +
-                    `\n\n Cliquez sur le lien suivant pour modifier celle-ci: http://localhost:3000/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
+                    `\n\n Cliquez sur le lien suivant pour modifier celle-ci: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
 
         }
         this.sendEmail(mailOptions);
@@ -116,7 +116,7 @@ export class EmailService {
             subject: `Votre étude de cas nommée ${caseStudy.title} a été revue`, 
             text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
                     `${decisionText} Consultez l'évaluation complète ci-dessous: \n\n${feedback}` + 
-                    `\n\n Cliquez-ci pour y consulter son statut: http://localhost:3000/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
+                    `\n\n Cliquez-ci pour y consulter son statut: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
         }
         this.sendEmail(mailOptions);
     }
@@ -126,7 +126,7 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été publiée`,
-            text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors} a été approuvée par la Presse Internationale de Polytechnique. \n\n Vous pouvez accédez à sa version publiée au lien suivant: http://localhost:3000/catalogue`
+            text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors} a été approuvée par la Presse Internationale de Polytechnique. \n\n Vous pouvez accédez à sa version publiée au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/catalogue`
         }
         this.sendEmail(mailOptions);
     }
@@ -137,7 +137,7 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: deputy.email,
                 subject: isModifiedCaseStudy? `Une étude de cas modifiée requiert votre attention à nouveau`: `Une nouvelle étude de cas requiert votre attention`,
-                text: (isModifiedCaseStudy? `Une étude de cas modifiée`: `Une nouvelle étude de cas`) + `nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de pré-approbation. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
+                text: (isModifiedCaseStudy? `Une étude de cas modifiée`: `Une nouvelle étude de cas`) + `nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de pré-approbation. \n\n Vous pouvez y accéder au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
@@ -149,7 +149,7 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: director.email,
                 subject: "Une étude de cas pré-approuvée requiert votre attention",
-                text: `Une étude de cas pré-approuvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de revue. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
+                text: `Une étude de cas pré-approuvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de revue. \n\n Vous pouvez y accéder au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
@@ -161,7 +161,7 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: deputy.email,
                 subject: "Une étude de cas revue requiert votre attention",
-                text: `Une étude de cas revue nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de confirmation finale. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
+                text: `Une étude de cas revue nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de confirmation finale. \n\n Vous pouvez y accéder au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
@@ -173,7 +173,7 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: director.email,
                 subject: `Une nouvelle revue a été complétée pour l'étude de cas ${caseStudy.title}`,
-                text: `Une nouvelle revue a été complétée par ${reviewAuthor} pour l\'étude de cas nommée ${caseStudy.title}. \n\n Vous pouvez y accéder au lien suivant: http://localhost:3000/approval/new-case?id=${caseStudy._id}`,
+                text: `Une nouvelle revue a été complétée par ${reviewAuthor} pour l\'étude de cas nommée ${caseStudy.title}. \n\n Vous pouvez y accéder au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
@@ -185,7 +185,7 @@ export class EmailService {
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été rejetée`,
             text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. De ce fait, celle-ci a été redirigée dans le processus d'approbation des études de cas gratuites. Consultez l'évaluation complète ci-dessous: \n\n${comments}` + 
-            `\n\n Cliquez-ci pour y consulter son statut: http://localhost:3000/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
+            `\n\n Cliquez-ci pour y consulter son statut: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
         }
         this.sendEmail(mailOptions);
     }
