@@ -360,7 +360,7 @@ export class CaseStudyController {
                 if(caseStudy.reviewGroups[caseStudy.version].comityMemberReviews.find(
                     (review) => review.reviewAuthor === reviewerEmail
                   ) !== undefined) {
-                    res.status(403).json('L\'étude de cas a déjà été évalué par cet utilisateur');
+                    res.status(409).json('L\'étude de cas a déjà été évalué par cet utilisateur');
                     return;
                 }
 
