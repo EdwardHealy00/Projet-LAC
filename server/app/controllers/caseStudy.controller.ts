@@ -83,7 +83,7 @@ export class CaseStudyController {
                 const caseStudy = await this.caseStudyService.findCaseStudyById(req.params.id);
 
                 if (!caseStudy) {
-                    res.status(404).json('L\'étude de cas n\'a pas été trouvé');
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
                 if(!res.locals.user && caseStudy.status != CaseStep.Posted) {
@@ -360,7 +360,7 @@ export class CaseStudyController {
                 if(caseStudy.reviewGroups[caseStudy.version].comityMemberReviews.find(
                     (review) => review.reviewAuthor === reviewerEmail
                   ) !== undefined) {
-                    res.status(403).json('L\'étude de cas a déjà été évalué par cet utilisateur');
+                    res.status(409).json('L\'étude de cas a déjà été évalué par cet utilisateur');
                     return;
                 }
 
