@@ -1,0 +1,1 @@
+export const MAX_FILES_PER_CASE = 3;

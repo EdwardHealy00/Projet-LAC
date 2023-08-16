@@ -7,6 +7,7 @@ import {Criteria} from "@app/models/Criteria";
 import {verifyJwt} from "@app/utils/jwt";
 import {UserService} from "@app/services/database/user.service";
 import { CaseStep } from '@app/models/CaseStatus';
+import { MAX_FILES_PER_CASE } from '@app/constant/constant';
 import { ComityMemberReview } from '@app/models/ComityMemberReview';
 import { ApprovalDecision } from '@app/models/ApprovalDecision';
 
@@ -140,6 +141,10 @@ export class CaseStudyController {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
+                if(res.locals.user.email !== req.body.caseStudy.submitter) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
+                    return;
+                }
                 
                 res.status(200).json({
                     status: 'success',
@@ -160,6 +165,10 @@ export class CaseStudyController {
                 }
                 if (caseStudy.approvalDecision == ApprovalDecision.PENDING) {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
+                    return;
+                }
+                if(res.locals.user.email !== caseStudy.submitter) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
                     return;
                 }
 
@@ -187,14 +196,24 @@ export class CaseStudyController {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
+                if(res.locals.user.email !== caseStudy.submitter) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
+                    return;
+                }
 
                 if (req.files) {
+                    if(req.files.length + caseStudy.files.length > MAX_FILES_PER_CASE) {
+                        res.status(405).json(`Il est interdit d\'inclure plus de ${MAX_FILES_PER_CASE} documents dans une étude de cas`);
+                        return;
+                    }
+
                     let newFiles = [];
                     for (let i = 0; i < req.files.length; i++) {
                         const fileProof = req.files[i];
                         if (fileProof) {
                             fileProof.date = new Date().toISOString();
                             fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
+                            fileProof.pages = await countNumberPages(fileProof.path);
                             newFiles.push(fileProof);
                             this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
                         }
@@ -225,6 +244,10 @@ export class CaseStudyController {
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
+                if(res.locals.user.email !== caseStudy.submitter) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
+                    return;
+                }
 
                 caseStudy.isPaidCase = false;
                 await this.caseStudyService.updateCaseStudy(caseStudy);
@@ -246,6 +269,16 @@ export class CaseStudyController {
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
+                if(res.locals.user.email !== caseStudy.submitter) {
+                    res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
+                    return;
+                }
+                
+                let totalNbPages = 0;
+                for (let i = 0; i < caseStudy.files.length; i++) {
+                    totalNbPages += caseStudy.files[i].pages;
+                }
+                caseStudy.page = totalNbPages;
 
                 caseStudy.approvalDecision = ApprovalDecision.PENDING;
                 if (caseStudy.status == CaseStep.WaitingComity) {
@@ -270,11 +303,17 @@ export class CaseStudyController {
             try {
                 const caseStudy = req.body;
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
-                
-                const ret = await this.parseAndSaveFiles(req.files);
-                if(!ret) {
-                    res.status(415).json('L\'étude de cas doit être en format .docx');
-                    return;
+                if (req.files) {
+                    if(!validateFilesType(req.files)) {
+                        res.status(415).json('L\'étude de cas doit être en format .docx');
+                        return;
+                    }
+                    if(req.files.length > MAX_FILES_PER_CASE) {
+                        res.status(415).json('L\'étude de cas doit avoir un maximum de 3 documents');
+                        return;
+                    }
+
+                    const ret = await this.parseAndSaveFiles(req.files);
                 }
                 caseStudy["files"] = ret.parsedFiles;
                 caseStudy["page"] = ret.totalNbPages;
@@ -556,8 +595,9 @@ export class CaseStudyController {
             if (fileProof) {
                 fileProof.date = new Date().toISOString();
                 fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
-                parsedFiles.push(fileProof);
-                totalNbPages += await countNumberPages(fileProof.path);
+                fileProof.pages = await countNumberPages(fileProof.path);
+                files.push(fileProof);
+                totalNbPages += fileProof.pages;
                 this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
             }
         }

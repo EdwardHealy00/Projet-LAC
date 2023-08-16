@@ -25,3 +25,6 @@ export const HTTP_STATUS_NOT_FOUND = 404;
 export const HTTP_STATUS_UNPROCESSABLE_ENTITY = 422;
 export const HTTP_STATUS_TOO_MANY_REQUESTS = 429;
 export const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
+
+// Case Study
+export const MAX_FILES_PER_CASE = 3;
