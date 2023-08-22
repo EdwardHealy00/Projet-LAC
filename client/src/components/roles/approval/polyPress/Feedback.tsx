@@ -5,7 +5,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function PressFeedback(caseData: SingleCaseProp) {
+export default function AddToCatalogueFeedback(caseData: SingleCaseProp) {
     const newCase = caseData.caseData;
     const navigate = useNavigate();
 
