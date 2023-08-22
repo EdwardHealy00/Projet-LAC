@@ -366,6 +366,9 @@ export class CaseStudyController {
                     if (caseStudy.isPaidCase) {
                         caseStudy.url = url;
                     }
+                    // Delete review files once published and main files if paid case
+                    await this.caseStudyService.deleteFilesForCaseStudy(caseStudy, caseStudy.isPaidCase); 
+
                     this.emailService.sendNotifyCaseStudyPublishedToUser(caseStudy.submitter, caseStudy);
                 }
 

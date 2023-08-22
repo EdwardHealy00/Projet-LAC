@@ -82,22 +82,11 @@ export class CaseStudyService {
         const caseStudyQuery = CaseStudyModel.findById(id);
         if(!caseStudyQuery) return false;
 
-        const caseStudy = await caseStudyQuery.exec();
+        const caseStudy: DocumentType<CaseStudy> | null = await caseStudyQuery.exec();
         if(!caseStudy) return false;
 
         await CaseStudyModel.deleteOne({ _id: id });
-        for(const file of caseStudy.files) {
-            this.deleteCaseStudyFile(file.serverFileName)
-        }
-        for(const reviewGroup of caseStudy.reviewGroups) {
-            for(const review of reviewGroup.comityMemberReviews) {
-                if(review.annotatedFiles) {
-                    for(const file of review.annotatedFiles) {
-                        this.deleteCaseStudyFile(file.serverFileName)
-                    }
-                }
-            }
-        }
+        this.deleteFilesForCaseStudy(caseStudy, true);
         return true;
     }
 
@@ -133,5 +122,29 @@ export class CaseStudyService {
     // Find All Authors
     async findAllCaseStudyAuthors(): Promise<(string)[]> {
         return await CaseStudyModel.find({status: CaseStep.Posted}).distinct('authors');
+    }
+
+    async deleteFilesForCaseStudy(caseStudy: DocumentType<CaseStudy>, removePrimaryFiles: boolean) {
+
+        if(removePrimaryFiles) {
+            for(const file of caseStudy.files) {
+                await this.deleteCaseStudyFile(file.serverFileName)
+            }
+            caseStudy.files = [];
+            caseStudy.markModified('files');
+        }
+        for(const reviewGroup of caseStudy.reviewGroups) {
+            for(const review of reviewGroup.comityMemberReviews) {
+                if(review.annotatedFiles) {
+                    for(const file of review.annotatedFiles) {
+                        await this.deleteCaseStudyFile(file.serverFileName);
+                    }
+                }
+            }
+        }
+        caseStudy.reviewGroups = [];
+        caseStudy.markModified('reviewGroups');
+
+        await this.updateCaseStudy(caseStudy);
     }
 }
