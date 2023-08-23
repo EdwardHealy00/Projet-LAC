@@ -20,7 +20,8 @@ import { Case } from "../../model/CaseStudy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
-import NavBar from "../common/NavBar";
+import { Download } from "@mui/icons-material";
+import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
 
 interface Filter {
   name: string;
@@ -399,6 +400,10 @@ export default function Catalogue() {
             <div id="addCaseRectangle">
               <Button variant="contained" href="/create">
                 Ajouter une étude de cas
+              </Button>
+              <Button variant="text" onClick={() => downloadCaseStudyTemplate()}>
+                <u>Télécharger le gabarit</u>
+                <Download></Download>
               </Button>
             </div>
           }

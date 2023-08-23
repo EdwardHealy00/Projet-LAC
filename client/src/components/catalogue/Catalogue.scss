@@ -10,7 +10,9 @@
 #addCaseRectangle {
     margin: 15px 0;
     display: flex;
-    place-content: space-around;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center; 
 }
 
 #rectangleFilter {

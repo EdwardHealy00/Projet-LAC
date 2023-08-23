@@ -4,6 +4,8 @@ import "./GuidePage.scss";
 import { Button, Typography } from "@mui/material";
 import Cookies from "js-cookie";
 import { AppContext } from "../App";
+import { Download } from "@mui/icons-material";
+import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
 
 function GuidePage() {
   const appContext = useContext(AppContext);
@@ -43,6 +45,12 @@ function GuidePage() {
     <>
       <div className="guide-page">
         <h1>Ressources pédagogiques</h1>
+        <div id="template-download">
+        <Button variant="contained" className="download-button" onClick={() => downloadCaseStudyTemplate()}> Télécharger le gabarit
+        <Download></Download>
+      </Button>
+        </div>
+        
         <h2>Comment rédiger et animer une étude de cas ?</h2>
         <div className="accordions-container">
           {unrestrictedPdfFiles.map((pdfFile, index) => (
