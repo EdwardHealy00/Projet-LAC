@@ -28,15 +28,17 @@ interface Filter {
 }
 
 export const Disciplines = [
-  "aérospatial",
-  "biomédical",
-  "chimique",
-  "civil",
-  "électrique",
-  "géologique",
-  "industriel",
-  "mécanique",
-  "des mines",
+  "Génie aérospatial",
+  "Génie biomédical",
+  "Génie chimique",
+  "Génie civil",
+  "Génie électrique",
+  "Génie géologique",
+  "Génie industriel",
+  "Génie mécanique",
+  "Génie des mines",
+  "Mathématiques",
+  "Sciences sociales",
 ];
 
 export const Subjects = [
@@ -49,6 +51,8 @@ export const Subjects = [
   "Gestion de la qualité",
   "Gestion du changement",
   "Recherche opérationnelle",
+  "Économie circulaire",
+  "Développement durable"
 ];
 
 const PAID_STR: string = "payant";
@@ -471,7 +475,7 @@ export default function Catalogue() {
                             name={discipline}
                           />
                         }
-                        label={"Génie " + discipline}
+                        label={discipline}
                       />
                     ))}
                   </FormGroup>

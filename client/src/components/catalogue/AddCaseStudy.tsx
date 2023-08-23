@@ -343,7 +343,7 @@ export default function AddCaseStudy() {
                 style={{width: '250px'}}
             >
               {Disciplines.map((discipline) => (
-                <MenuItem value={discipline}>{"Génie " + discipline}</MenuItem>
+                <MenuItem value={discipline}>{discipline}</MenuItem>
               ))}
             </Select>
             <InputLabel
