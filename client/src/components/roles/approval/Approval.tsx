@@ -4,9 +4,7 @@ import { Case } from "../../../model/CaseStudy";
 import { CaseStep } from "../../../model/enum/CaseStatus";
 import { Role } from "../../../model/enum/Role";
 import { UnlockAccess } from "../../connection/UnlockAccess";
-import { ApprovalComity } from "./comity/Approval";
 import { ApprovalDeputy } from "./deputy/Approval";
-import { ApprovalPolyPress } from "./polyPress/Approval";
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
 import { createCaseFromData } from "../../../utils/ConvertUtils";
@@ -125,11 +123,6 @@ export default function Approval() {
               role={[Role.ComityDirector]}
               children={<ApprovalComityDirector caseStudies={paidCaseStudiesStep2} />}
             ></UnlockAccess>
-
-            <UnlockAccess
-              role={[Role.PolyPress]}
-              children={<ApprovalPolyPress caseStudies={paidCaseStudiesStep3} />}
-            ></UnlockAccess>
           </TabPanel>
 
           {/*FREE CASES TAB*/}
@@ -157,11 +150,6 @@ export default function Approval() {
             <UnlockAccess
               role={[Role.ComityDirector]}
               children={<ApprovalComityDirector caseStudies={freeCaseStudiesStep2} />}
-            ></UnlockAccess>
-
-            <UnlockAccess
-              role={[Role.PolyPress]}
-              children={<ApprovalPolyPress caseStudies={freeCaseStudiesStep3} />}
             ></UnlockAccess>
           </TabPanel>
         </TabContext>

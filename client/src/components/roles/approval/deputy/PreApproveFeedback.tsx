@@ -10,7 +10,7 @@ export const checkList = Object.values(Criteria).filter(
   (value) => typeof value === "string"
 );
 
-export default function DeputyFeedback(caseData: SingleCaseProp) {
+export default function PreApproveFeedback(caseData: SingleCaseProp) {
     const newCase = caseData.caseData;
     const navigate = useNavigate();
     const [checkedState, setCheckedState] = React.useState<boolean[]>(new Array(checkList.length).fill(false));

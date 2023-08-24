@@ -25,12 +25,6 @@ export function PendingCasesTeacher(caseStudiesProp: TeacherCaseStudyProps) {
         </b>
         <CaseTable cases={caseStudiesProp.step3}/>
       </div>
-      <div className="stepApproval">
-        <b>
-          <h2>Publiés</h2>
-        </b>
-        <CaseTable cases={caseStudiesProp.step4}/>
-      </div>
       <Outlet />
     </div>
   );

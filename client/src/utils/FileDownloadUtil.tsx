@@ -21,3 +21,13 @@ export function handleDownloadAll(files: any[])  {
         });
     }
 };
+
+export function downloadCaseStudyTemplate() {
+  const templateDocxFile = require(`../docx/template.docx`)
+
+  const downloadLink = document.createElement("a");
+  downloadLink.href = templateDocxFile;
+  downloadLink.download = "gabarit.docx";
+  downloadLink.click();
+  URL.revokeObjectURL(templateDocxFile);
+};

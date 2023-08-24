@@ -12,7 +12,7 @@ import { Disciplines, Subjects } from "./Catalogue";
 import NavBar from "../common/NavBar";
 import { useNavigate } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { checkList } from "../roles/approval/deputy/Feedback";
+import { checkList } from "../roles/approval/deputy/PreApproveFeedback";
 import { MAX_FILES_PER_CASE } from "../../utils/Constants";
 import PaidSwitch from "./PaidSwitch";
 
@@ -343,7 +343,7 @@ export default function AddCaseStudy() {
                 style={{width: '250px'}}
             >
               {Disciplines.map((discipline) => (
-                <MenuItem value={discipline}>{"Génie " + discipline}</MenuItem>
+                <MenuItem value={discipline}>{discipline}</MenuItem>
               ))}
             </Select>
             <InputLabel

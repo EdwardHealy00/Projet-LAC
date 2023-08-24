@@ -14,9 +14,9 @@ import { useLocation } from "react-router-dom";
 import NewCaseTable from "./NewCaseTable";
 import axios from "axios";
 import { CaseStep } from "../../../model/enum/CaseStatus";
-import DeputyFeedback from "../../roles/approval/deputy/Feedback";
+import PreApproveFeedback from "../../roles/approval/deputy/PreApproveFeedback";
 import ComityFeedback from "../../roles/approval/comity/Feedback";
-import PressFeedback from "../../roles/approval/polyPress/Feedback";
+import AddToCatalogueFeedback from "../../roles/approval/deputy/AddToCatalogueFeedback";
 import { createCaseFromData } from "../../../utils/ConvertUtils";
 import { Role } from "../../../model/enum/Role";
 import ComityDirectorFeedback from "../../roles/approval/comityDirector/Feedback";
@@ -112,7 +112,7 @@ function NewCase() {
             role={[Role.Deputy]}
             children={
               (caseStudy as Case).status == CaseStep.WaitingPreApproval && (
-                <DeputyFeedback caseData={caseStudy as Case}></DeputyFeedback>
+                <PreApproveFeedback caseData={caseStudy as Case}></PreApproveFeedback>
               )
             }
           ></UnlockAccess>
@@ -141,10 +141,10 @@ function NewCase() {
 
           {/* CATALOGUE ADD SECTION*/}
           <UnlockAccess
-            role={[Role.PolyPress]}
+            role={[Role.Deputy]}
             children={
               (caseStudy as Case).status == CaseStep.WaitingCatalogue && (
-                <PressFeedback caseData={caseStudy as Case}></PressFeedback>
+                <AddToCatalogueFeedback caseData={caseStudy as Case}></AddToCatalogueFeedback>
               )
             }
           ></UnlockAccess>

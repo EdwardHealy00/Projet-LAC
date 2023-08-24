@@ -39,7 +39,7 @@ export class CaseStudy {
     @prop({ default: new Date().toISOString() })
     date: string;
 
-    @prop({ required: true })
+    @prop({})
     files: any;
 
     @prop({default: [{version: 0, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING}]})

@@ -310,8 +310,7 @@ export class CaseStudyController {
                     }
 
                     const ret = await this.parseAndSaveFiles(req.files);
-                    console.log(ret)
-                    console.log(validateFilesType(req.files))
+
                     if(!ret || !validateFilesType(req.files)) {
                         res.status(415).json('L\'étude de cas doit être en format .docx');
                         return;
@@ -367,6 +366,9 @@ export class CaseStudyController {
                     if (caseStudy.isPaidCase) {
                         caseStudy.url = url;
                     }
+                    // Delete review files once published and main files if paid case
+                    await this.caseStudyService.deleteFilesForCaseStudy(caseStudy, caseStudy.isPaidCase); 
+
                     this.emailService.sendNotifyCaseStudyPublishedToUser(caseStudy.submitter, caseStudy);
                 }
 
