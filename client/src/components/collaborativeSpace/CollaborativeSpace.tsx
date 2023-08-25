@@ -1,11 +1,13 @@
 import { InputAdornment, TextField } from '@mui/material';
-import React from 'react';
+import React, {useRef} from 'react';
 import "./CollaborativeSpace.scss";
 import SearchIcon from "@mui/icons-material/Search";
 import Tabs from './Tabs';
+import {NavBarRef} from "../common/NavBar";
 
 function CollaborativeSpace() {
   return (
+
     <div id="collaborative">
         <div id='menuCollaborative'> 
             <div id="searchCollaborative">

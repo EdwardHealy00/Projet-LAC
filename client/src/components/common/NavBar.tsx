@@ -70,33 +70,6 @@ const NavBar = forwardRef<NavBarRef, Props>(
             children={<Button className="navbutton" href="/my-pending-case-studies">Mes études de cas</Button>}
         ></UnlockAccess>
         <Button className="navbutton" href="/guide">Guides</Button>
-        <span>
-          <Button
-              id="basic-button"
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleOpen}
-          >
-            À propos
-          </Button>
-          <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-          >
-            <MenuItem onClick={navigateSummary}>Sommaire</MenuItem>
-            <MenuItem onClick={navigateMission}>
-              Mission, vision et objectifs
-            </MenuItem>
-            <MenuItem onClick={navigateTeam}>Équipe</MenuItem>
-            <MenuItem onClick={navigateCreation}>Création du LAC</MenuItem>
-          </Menu>
-        </span>
       </div>
       <div id="loginStatus">
         <Login ref={loginRef}/>

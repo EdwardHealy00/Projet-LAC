@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import "./Catalogue.scss";
 import SearchIcon from "@mui/icons-material/Search";
 import Results from "./Results";
@@ -22,6 +22,7 @@ import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
 import { Download } from "@mui/icons-material";
 import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
+import NavBar, {NavBarRef} from "../common/NavBar";
 
 interface Filter {
   name: string;
@@ -69,7 +70,7 @@ export default function Catalogue() {
     "7+ ans",
   ];
   const numberPages = ["1 à 4 pages", "5 à 10 pages", "11+ pages"];
-
+  const navBarRef = useRef<NavBarRef | null>(null);
   const [filters, setFilters] = React.useState<Filter[]>([]);
   const [typeFilters, setTypeFilters] = React.useState<string[]>([]);
   const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>([]);
@@ -374,6 +375,7 @@ export default function Catalogue() {
 
   return (
     <div>
+      <NavBar ref={navBarRef}/>
       <div id="content">
         <div id="rectangle">
           <div id="catalogue-des-cas">Catalogue des cas</div>

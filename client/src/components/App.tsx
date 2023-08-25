@@ -32,11 +32,10 @@ export const AppContext = createContext<AppContextValue | undefined>(undefined);
 function App() {
   env.config({ path: `.env.${process.env.NODE_ENV}`})
   const snackBarRef = useRef<SnackbarObject>(null);
-  const navBarRef = useRef<NavBarRef | null>(null);
   const loginPopupRef = useRef<LoginPopupRef | null>(null);
   let resolveLogIn: ((value: void | PromiseLike<void>) => void) | undefined;
   const navigate = useNavigate();
-
+  const navBarRef = useRef<NavBarRef | null>(null);
   const openLogInPopup = () => {
     if (loginPopupRef.current) {
       loginPopupRef.current.setPopupOpen();
@@ -105,7 +104,6 @@ function App() {
   return (
     <div>
       <AppContext.Provider value={contextValue}>
-      <NavBar ref={navBarRef}/>
       <div id="content">
         <ResponseSnackbar ref={snackBarRef} />
         <Routes>

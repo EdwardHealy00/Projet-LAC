@@ -1,9 +1,15 @@
 .student-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  row-gap: 60%;
+  flex-direction: column;
   width: 100%;
   height: 30vh;
   background-size: cover;
   background-position: center 17%;
-  background-image: url("../../img/students.jpg");
+  background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.9)),
+  url("../../img/students.jpg");
 }
 .value-paragraphs-container {
   display: inline-grid;
@@ -11,6 +17,10 @@
   grid-template-columns: min-content min-content;
   grid-template-rows: min-content min-content;
   margin: 2% 0;
+}
+
+#access-platform {
+
 }
 
 .landing-segment-container {

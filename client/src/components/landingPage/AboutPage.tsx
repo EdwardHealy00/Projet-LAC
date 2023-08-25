@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import "./../fonts.scss";
 import "./AboutPage.scss";
 import LandingNavBar from "./landingNavBar/LandingNavBar";
@@ -13,10 +13,132 @@ import LIGHT from "../../img/icons/light.svg";
 import MEDIA from "../../img/icons/media.svg";
 import PENCIL from "../../img/icons/pencil.svg";
 import SPELL from "../../img/icons/spell.svg";
+import Login, {LoginRef} from "../connection/Login";
+import {TeamMember} from "../../model/Team";
+import {Accordion, AccordionDetails, AccordionSummary} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
 export default function AboutPage() {
+
+    const loginRef = useRef<LoginRef | null>(null);
+    const teamMembersManagement: TeamMember[] = [
+        {
+            id: 1,
+            name: "Virginie Francoeur",
+            title: "Ph.D",
+            role: "Fondatrice et directrice du LAC",
+            occupation: "Professeure adjointe, gestion du changement",
+            picture: "./img/member1.jpg",
+        },
+        {
+            id: 2,
+            name: "Grégoire Banse",
+            role: "Adjoint à la direction",
+            occupation: "Étudiant, génie industriel",
+            picture: "./img/member2.jpg",
+        },
+        {
+            id: 3,
+            name: "Olivier Gendreau",
+            title: "Ph.D",
+            role: "Gestion du volet technologique",
+            occupation: "Maître d'enseignement, génie logiciel",
+            picture: "./img/member3.jpg",
+        },
+    ];
+
+    const teamMembersComity: TeamMember[] = [
+        {
+            id: 1,
+            name: "Virginie Francoeur",
+            title: "Ph.D",
+            occupation: "Professeure adjointe, gestion du changement",
+            picture: "./img/member1.jpg",
+        },
+        {
+            id: 4,
+            name: "Samira Keivanpour",
+            title: "Ph.D",
+            occupation: "Professeure adjointe, sujet",
+            picture: "./img/member4.jpg",
+        },
+        {
+            id: 5,
+            name: "Fabiano Armellini",
+            title: "Ph.D",
+            occupation: "Professeur agrégé, entrepreunariat technologique",
+            picture: "./img/member5.jpg",
+        },
+    ];
+    const studentsPrisme: TeamMember[] = [
+        {
+            id: 1,
+            name: "Annabelle Auger",
+            picture: "./img/student1.png",
+        },
+        {
+            id: 2,
+            name: "Arlo Demsepy",
+            picture: "./img/student2.png",
+        },
+        {
+            id: 3,
+            name: "Aurélie Dumont-Lavoie",
+            picture: "./img/student3.png",
+        },
+        {
+            id: 4,
+            name: "David Jiang",
+            picture: "./img/student4.png",
+        },
+        {
+            id: 5,
+            name: "Cristian Samson",
+            picture: "./img/student5.png",
+        },
+        {
+            id: 6,
+            name: "Anthony Prost-A-Petit",
+            picture: "./img/student6.png",
+        },
+    ];
+
+    const studentsLog: TeamMember[] = [
+        {
+            id: 7,
+            name: "Sophie Baillargeon-Laporte",
+            picture: "./img/student7.png",
+        },
+        {
+            id: 8,
+            name: "Yanis Toubal",
+            picture: "./img/student8.png",
+        },
+        {
+            id: 9,
+            name: "Jimmy Bell",
+            title: "B. Ing., CPI",
+            picture: "./img/member2.jpg",
+        },
+        {
+            id: 10,
+            name: "Charles Poulin",
+            picture: "./img/member2.jpg",
+        },
+        {
+            id: 11,
+            name: "Edward Haley",
+            picture: "./img/member2.jpg",
+        },
+    ];
     return <div>
             <LandingNavBar></LandingNavBar>
-            <header className="student-banner"></header>
+            <header className="student-banner">
+                <div></div>
+                <div id="access-platform">
+                    <Login ref={loginRef}/>
+                </div>
+            </header>
             <div className="landing-segment-container">
                 <div className="landing-segment-column-left">
                     <h1 id="a-propos">À propos</h1>
@@ -115,5 +237,131 @@ export default function AboutPage() {
                     </div>
                     </div>
             </div>
+        <BrainSeparator></BrainSeparator>
+        <div className="landing-segment-container">
+            <div className="landing-segment-column-left">
+                <h1 id="equipe">Équipe derrière le LAC</h1>
+                <p className="item-font">Vous pouvez sélectionner les onglets pour découvrir les différentes personnes impliquées.</p>
+                <div className="all-items-margins">
+                    <Accordion sx={{ background: 'transparent' }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            Gestion
+                        </AccordionSummary>
+                        <AccordionDetails>
+                                <div className="teamContent">
+                                        {teamMembersManagement.map((member) => (
+                                            <div className="team-list-item" key={member.id}>
+                                                <img
+                                                    src={member.picture}
+                                                    alt={member.name}
+                                                    className="teamMemberPicture"
+                                                />
+                                                <div>
+                                                    {member.name}
+                                                    {member.title && ", " + member.title} <br />
+                                                    {member.role && (
+                                                        <>
+                                                            <b>{member.role}</b>
+                                                            <br />
+                                                        </>
+                                                    )}
+                                                    {member.occupation}
+                                                </div>
+                                            </div>
+                                        ))}
+                                </div>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion sx={{ background: 'transparent' }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            Comité scientifique
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <div className="teamContent">
+                                    {teamMembersComity.map((member) => (
+                                        <div className="team-list-item" key={member.id}>
+                                            <img
+                                                src={member.picture}
+                                                alt={member.name}
+                                                className="teamMemberPicture"
+                                            />
+                                            <div>
+                                                {member.name}
+                                                {member.title && ", " + member.title} <br />
+                                                {member.role && (
+                                                    <>
+                                                        <b>{member.role}</b>
+                                                        <br />
+                                                    </>
+                                                )}
+                                                {member.occupation}
+                                            </div>
+                                        </div>
+                                    ))}
+                            </div>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion sx={{ background: 'transparent' }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            Étudiants PRISME
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <div className="teamContent">
+                                {studentsPrisme.map((member) => (
+                                    <div className="team-list-item" key={member.id}>
+                                        <img
+                                            src={member.picture}
+                                            alt={member.name}
+                                            className="teamMemberPicture"
+                                        />
+                                        <div>
+                                            {member.name}
+                                            {member.title && ", " + member.title} <br />
+                                            {member.role && (
+                                                <>
+                                                    <b>{member.role}</b>
+                                                    <br />
+                                                </>
+                                            )}
+                                            {member.occupation}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion sx={{ background: 'transparent' }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            Étudiants en génie logiciel (développement)
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <div className="teamContent">
+                                {studentsLog.map((member) => (
+                                    <div className="team-list-item" key={member.id}>
+                                        <img
+                                            src={member.picture}
+                                            alt={member.name}
+                                            className="teamMemberPicture"
+                                        />
+                                        <div>
+                                            {member.name}
+                                            {member.title && ", " + member.title} <br />
+                                            {member.role && (
+                                                <>
+                                                    <b>{member.role}</b>
+                                                    <br />
+                                                </>
+                                            )}
+                                            {member.occupation}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </AccordionDetails>
+                    </Accordion>
+
+                </div>
+            </div>
+        </div>
         </div>;
 }

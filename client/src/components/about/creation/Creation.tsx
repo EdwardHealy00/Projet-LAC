@@ -6,51 +6,7 @@ import { TeamMember } from "../../../model/Team";
 import Timeline from "./Timeline";
 
 export default function Creation() {
-  const studentsPrisme: TeamMember[] = [
-    {
-      id: 1,
-      name: "Annabelle Auger",
-      picture: "./img/student1.png",
-    },
-    {
-      id: 2,
-      name: "Arlo Demsepy",
-      picture: "./img/student2.png",
-    },
-    {
-      id: 3,
-      name: "Aurélie Dumont-Lavoie",
-      picture: "./img/student3.png",
-    },
-    {
-      id: 4,
-      name: "David Jiang",
-      picture: "./img/student4.png",
-    },
-    {
-      id: 5,
-      name: "Cristian Samson",
-      picture: "./img/student5.png",
-    },
-    {
-      id: 6,
-      name: "Anthony Prost-A-Petit",
-      picture: "./img/student6.png",
-    },
-  ];
 
-  const studentsLog: TeamMember[] = [
-    {
-      id: 7,
-      name: "Sophie Baillargeon-Laporte",
-      picture: "./img/student7.png",
-    },
-    {
-      id: 8,
-      name: "Yanis Toubal",
-      picture: "./img/student8.png",
-    },
-  ];
 
   return (
     <div>
@@ -80,18 +36,7 @@ export default function Creation() {
         </p>
         <br />
         <div className="studentsHeader">Étudiants PRISME 2021-2022</div>
-        <div className="studentList">
-          {studentsPrisme.map((student) => (
-            <div key={student.name}>
-              <div>{student.name}</div>
-              <img
-                src={student.picture}
-                alt={student.name}
-                className="studentPicture"
-              />
-            </div>
-          ))}
-        </div>
+
       </div>
 
       <div className="aboutHeader">
@@ -116,18 +61,7 @@ export default function Creation() {
         </p>
         <br />
         <div className="studentsHeader">Étudiants génie logiciel 2022</div>
-        <div className="studentList">
-          {studentsLog.map((student) => (
-            <div key={student.name}>
-              <div>{student.name}</div>
-              <img
-                src={student.picture}
-                alt={student.name}
-                className="studentPicture"
-              />
-            </div>
-          ))}
-        </div>
+
       </div>
 
       <div className="aboutHeader">
