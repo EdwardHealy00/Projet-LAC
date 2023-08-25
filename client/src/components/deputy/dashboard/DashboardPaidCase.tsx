@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from "react";
+import React from "react";
 import "./DashboardPaidCase.scss";
 import CasesRecieved from "./CasesRecieved";
 import CasesWaitingApproval from "./CasesWaitingApproval";
@@ -7,12 +7,10 @@ import { UnlockAccess } from "../../connection/UnlockAccess";
 import { Role } from "../../../model/enum/Role";
 import { useNavigate } from "react-router-dom";
 import ValidateTeacherList from "./ValidateTeacher";
-import {NavBarRef} from "../../common/NavBar";
 
 function DashboardPaidCase() {
 
   const navigate = useNavigate();
-  const navBarRef = useRef<NavBarRef | null>(null);
   const onConsult = () => {
       navigate("/approval");
   }

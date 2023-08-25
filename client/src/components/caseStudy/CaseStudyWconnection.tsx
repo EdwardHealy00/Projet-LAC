@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from "react";
+import React, {useCallback} from "react";
 import "./CaseStudy.scss";
 import Button from "@mui/material/Button";
 import "../img/normal_search.svg";
@@ -9,7 +9,6 @@ import { Case } from "../../model/CaseStudy";
 import axios from "axios";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import {NavBarRef} from "../common/NavBar";
 
 const CaseStudyWconnection = () => {
   const state = useLocation().state as any;

@@ -1,4 +1,4 @@
-import React, {useContext, useRef} from "react";
+import React, {useContext} from "react";
 import PdfAccordion from "./PdfAccordion";
 import "./GuidePage.scss";
 import { Button, Typography } from "@mui/material";
@@ -6,11 +6,9 @@ import Cookies from "js-cookie";
 import { AppContext } from "../App";
 import { Download } from "@mui/icons-material";
 import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
-import NavBar, {NavBarRef} from "../common/NavBar";
 
 function GuidePage() {
   const appContext = useContext(AppContext);
-  const navBarRef = useRef<NavBarRef | null>(null);
   const numberOfUnrestrictedPdfFiles = 1;
   const numberOfRestrictedPdfFiles = 9;
   const totalNumberOfPdfFiles = numberOfUnrestrictedPdfFiles + numberOfRestrictedPdfFiles;
@@ -44,7 +42,6 @@ function GuidePage() {
 
   return (
     <>
-      <NavBar ref={navBarRef}/>
       <div className="guide-page">
         <h1>Ressources pédagogiques</h1>
         <div id="template-download">

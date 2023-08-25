@@ -104,6 +104,7 @@ function App() {
   return (
     <div>
       <AppContext.Provider value={contextValue}>
+        <NavBar ref={navBarRef}/>
       <div id="content">
         <ResponseSnackbar ref={snackBarRef} />
         <Routes>
