@@ -8,10 +8,6 @@ import DashboardPaidCase from "./deputy/dashboard/DashboardPaidCase";
 import Approval from "./roles/approval/Approval";
 import * as env from "dotenv";
 import NewCase from "./deputy/newCase/NewCase";
-import Summary from "./about/Summary";
-import Mission from "./about/Mission";
-import Team from "./about/Team";
-import Creation from "./about/creation/Creation";
 import ResetPassword from "./connection/ResetPassword";
 import axios from "axios";
 import { ResponseSnackbar, SnackbarObject } from "../utils/ResponseSnackbar";
@@ -104,7 +100,7 @@ function App() {
   return (
     <div>
       <AppContext.Provider value={contextValue}>
-        <NavBar ref={navBarRef}/>
+          <NavBar ref={navBarRef}/>
       <div id="content">
         <ResponseSnackbar ref={snackBarRef} />
         <Routes>
@@ -125,10 +121,6 @@ function App() {
           <Route path="/approval/new-case" element={<NewCase />} />
           <Route path="/create" element={<AddCaseStudy />} />
 
-          <Route path="/summary" element={<Summary />} />
-          <Route path="/mission" element={<Mission />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/creation" element={<Creation />} />
           <Route path="/forbidden" element={<ForbiddenPage />} />
           <Route
             path="/reset-password/:resetToken"

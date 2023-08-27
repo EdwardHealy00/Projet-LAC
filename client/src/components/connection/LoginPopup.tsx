@@ -30,7 +30,7 @@ const LoginPopup = forwardRef<LoginPopupRef, Props>(
     };
 
     const handleCancel = () => {
-      if(location.pathname != '/') {
+      if(location.pathname != '/' && location.pathname != '/about') {
         navigate('/catalogue'); 
       } else {
         navigate('/'); 

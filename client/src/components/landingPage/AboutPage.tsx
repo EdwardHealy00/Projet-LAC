@@ -1,6 +1,7 @@
 import React, {useRef} from "react";
 import "./../fonts.scss";
 import "./AboutPage.scss";
+import "../about/Team.scss"
 import LandingNavBar from "./landingNavBar/LandingNavBar";
 import LandingValueGroupParagraph from "./landingValueGroupParagraph/LandingValueGroupParagraph";
 import BrainSeparator from "./brainSeparator/BrainSeparator";
@@ -17,9 +18,8 @@ import Login, {LoginRef} from "../connection/Login";
 import {TeamMember} from "../../model/Team";
 import {Accordion, AccordionDetails, AccordionSummary} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Typography from "@mui/material/Typography";
+import Timeline from "../about/creation/Timeline";
 export default function AboutPage() {
-
     const loginRef = useRef<LoginRef | null>(null);
     const teamMembersManagement: TeamMember[] = [
         {
@@ -118,7 +118,7 @@ export default function AboutPage() {
             id: 9,
             name: "Jimmy Bell",
             title: "B. Ing., CPI",
-            picture: "./img/member2.jpg",
+            picture: "./img/student9.jpg",
         },
         {
             id: 10,
@@ -127,11 +127,11 @@ export default function AboutPage() {
         },
         {
             id: 11,
-            name: "Edward Haley",
+            name: "Edward Healy",
             picture: "./img/member2.jpg",
         },
     ];
-    return <div>
+    return <div id="landingPage">
             <LandingNavBar></LandingNavBar>
             <header className="student-banner">
                 <div></div>
@@ -269,6 +269,11 @@ export default function AboutPage() {
                                                 </div>
                                             </div>
                                         ))}
+                                    <div>
+                                        Avec l’appui du:
+                                        <div>Bureau d’Appui et d’Innovation Pédagogique (BAIP)</div>
+                                        <div>Presses Internationales Polytechnique</div>
+                                    </div>
                                 </div>
                         </AccordionDetails>
                     </Accordion>
@@ -303,9 +308,26 @@ export default function AboutPage() {
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Étudiants PRISME
+                            Étudiants PRISME 2021-2022
                         </AccordionSummary>
                         <AccordionDetails>
+                            <p>
+                                Dans le cadre du projet intégrateur&nbsp;
+                                <a
+                                    href="https://www.polymtl.ca/programmes/cours/prisme"
+                                    target="_blank"
+                                >
+                                    PRISME
+                                </a>
+                                , six étudiantes et étudiants de baccalauréat en génie industriel ont
+                                aidé à la conception du LAC. Le projet, étalé sur deux trimestres
+                                (automne 2021 et hiver 2022) à portée notamment sur l'identification
+                                des besoins, l’élaboration d’un plan stratégique et la détermination
+                                de la viabilité technologique et économique des propositions. Ce
+                                projet a donné l’opportunité aux étudiantes et étudiants de transférer
+                                des notions acquises dans les différents cours du programme de génie
+                                industriel en contexte réel.
+                            </p>
                             <div className="teamContent">
                                 {studentsPrisme.map((member) => (
                                     <div className="team-list-item" key={member.id}>
@@ -335,6 +357,19 @@ export default function AboutPage() {
                             Étudiants en génie logiciel (développement)
                         </AccordionSummary>
                         <AccordionDetails>
+                            <p>
+                                Dans le cadre d’une subvention du&nbsp;
+                                <a href="https://www.polymtl.ca/appui-pedagogique/" target="_blank">
+                                    Fonds d’actions pédagogiques stratégiques
+                                </a>
+                                &nbsp; (FAPS), des étudiants de génie logiciel ont eu le mandat de
+                                développer la plateforme numérique et ses fonctionnalités (ex. : page
+                                d'accueil, gestion du catalogue de cas, gestion des comptes et des
+                                accès aux ressources). La phase 1 du projet s’est étalé sur deux
+                                ans (hiver 2022 à été 2023). La phase 2 qui consiste à tester la
+                                plateforme au sein de petit groupe sera lancé à l’automne 2023 avant
+                                le lancement officiel (hiver 2024).
+                            </p>
                             <div className="teamContent">
                                 {studentsLog.map((member) => (
                                     <div className="team-list-item" key={member.id}>
@@ -361,6 +396,14 @@ export default function AboutPage() {
                     </Accordion>
 
                 </div>
+            </div>
+        </div>
+        <BrainSeparator></BrainSeparator>
+        <div className="landing-segment-container">
+            <div className="landing-segment-column-left">
+                <h1 id="histoire">Histoire du LAC</h1>
+                <p className="item-font">Dans le but de rendre reproductible notre démarche, les grandes étapes sont indiquées dans la chronologie ci-dessous.</p>
+                <Timeline></Timeline>
             </div>
         </div>
         </div>;
