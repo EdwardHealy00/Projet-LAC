@@ -6,6 +6,7 @@ import Tabs from './Tabs';
 
 function CollaborativeSpace() {
   return (
+
     <div id="collaborative">
         <div id='menuCollaborative'> 
             <div id="searchCollaborative">

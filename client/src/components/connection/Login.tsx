@@ -73,7 +73,7 @@ const Login = forwardRef<LoginRef, Props>(
     <div>
       {!loggedIn && (
         <Button id="loginButton" variant="contained" onClick={openPopup}>
-          Se connecter
+          {window.location.pathname === '/' ? "Accéder à la plateforme" : "Se connecter"}
         </Button>
       )}
       {loggedIn && (

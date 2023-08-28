@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useRef} from "react";
 import "./../fonts.scss";
 import "./AboutPage.scss";
+import "../about/Team.scss"
 import LandingNavBar from "./landingNavBar/LandingNavBar";
 import LandingValueGroupParagraph from "./landingValueGroupParagraph/LandingValueGroupParagraph";
 import BrainSeparator from "./brainSeparator/BrainSeparator";
@@ -13,10 +14,131 @@ import LIGHT from "../../img/icons/light.svg";
 import MEDIA from "../../img/icons/media.svg";
 import PENCIL from "../../img/icons/pencil.svg";
 import SPELL from "../../img/icons/spell.svg";
+import Login, {LoginRef} from "../connection/Login";
+import {TeamMember} from "../../model/Team";
+import {Accordion, AccordionDetails, AccordionSummary} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Timeline from "../about/creation/Timeline";
 export default function AboutPage() {
-    return <div>
+    const loginRef = useRef<LoginRef | null>(null);
+    const teamMembersManagement: TeamMember[] = [
+        {
+            id: 1,
+            name: "Virginie Francoeur",
+            title: "Ph.D",
+            role: "Fondatrice et directrice du LAC",
+            occupation: "Professeure adjointe, gestion du changement",
+            picture: "./img/member1.jpg",
+        },
+        {
+            id: 2,
+            name: "Grégoire Banse",
+            role: "Adjoint à la direction",
+            occupation: "Étudiant, génie industriel",
+            picture: "./img/member2.jpg",
+        },
+        {
+            id: 3,
+            name: "Olivier Gendreau",
+            title: "Ph.D",
+            role: "Gestion du volet technologique",
+            occupation: "Maître d'enseignement, génie logiciel",
+            picture: "./img/member3.jpg",
+        },
+    ];
+
+    const teamMembersComity: TeamMember[] = [
+        {
+            id: 1,
+            name: "Virginie Francoeur",
+            title: "Ph.D",
+            occupation: "Professeure adjointe, gestion du changement",
+            picture: "./img/member1.jpg",
+        },
+        {
+            id: 4,
+            name: "Samira Keivanpour",
+            title: "Ph.D",
+            occupation: "Professeure adjointe, sujet",
+            picture: "./img/member4.jpg",
+        },
+        {
+            id: 5,
+            name: "Fabiano Armellini",
+            title: "Ph.D",
+            occupation: "Professeur agrégé, entrepreunariat technologique",
+            picture: "./img/member5.jpg",
+        },
+    ];
+    const studentsPrisme: TeamMember[] = [
+        {
+            id: 1,
+            name: "Annabelle Auger",
+            picture: "./img/student1.png",
+        },
+        {
+            id: 2,
+            name: "Arlo Demsepy",
+            picture: "./img/student2.png",
+        },
+        {
+            id: 3,
+            name: "Aurélie Dumont-Lavoie",
+            picture: "./img/student3.png",
+        },
+        {
+            id: 4,
+            name: "David Jiang",
+            picture: "./img/student4.png",
+        },
+        {
+            id: 5,
+            name: "Cristian Samson",
+            picture: "./img/student5.png",
+        },
+        {
+            id: 6,
+            name: "Anthony Prost-A-Petit",
+            picture: "./img/student6.png",
+        },
+    ];
+
+    const studentsLog: TeamMember[] = [
+        {
+            id: 7,
+            name: "Sophie Baillargeon-Laporte",
+            picture: "./img/student7.png",
+        },
+        {
+            id: 8,
+            name: "Yanis Toubal",
+            picture: "./img/student8.png",
+        },
+        {
+            id: 9,
+            name: "Jimmy Bell",
+            title: "B. Ing., CPI",
+            picture: "./img/student9.jpg",
+        },
+        {
+            id: 10,
+            name: "Charles Poulin",
+            picture: "./img/member2.jpg",
+        },
+        {
+            id: 11,
+            name: "Edward Healy",
+            picture: "./img/member2.jpg",
+        },
+    ];
+    return <div id="landingPage">
             <LandingNavBar></LandingNavBar>
-            <header className="student-banner"></header>
+            <header className="student-banner">
+                <div></div>
+                <div id="access-platform">
+                    <Login ref={loginRef}/>
+                </div>
+            </header>
             <div className="landing-segment-container">
                 <div className="landing-segment-column-left">
                     <h1 id="a-propos">À propos</h1>
@@ -115,5 +237,174 @@ export default function AboutPage() {
                     </div>
                     </div>
             </div>
+        <BrainSeparator></BrainSeparator>
+        <div className="landing-segment-container">
+            <div className="landing-segment-column-left">
+                <h1 id="equipe">Équipe derrière le LAC</h1>
+                <p className="item-font">Vous pouvez sélectionner les onglets pour découvrir les différentes personnes impliquées.</p>
+                <div className="all-items-margins">
+                    <Accordion sx={{ background: 'transparent' }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            Gestion
+                        </AccordionSummary>
+                        <AccordionDetails>
+                                <div className="teamContent">
+                                        {teamMembersManagement.map((member) => (
+                                            <div className="team-list-item" key={member.id}>
+                                                <img
+                                                    src={member.picture}
+                                                    alt={member.name}
+                                                    className="teamMemberPicture"
+                                                />
+                                                <div>
+                                                    {member.name}
+                                                    {member.title && ", " + member.title} <br />
+                                                    {member.role && (
+                                                        <>
+                                                            <b>{member.role}</b>
+                                                            <br />
+                                                        </>
+                                                    )}
+                                                    {member.occupation}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    <div>
+                                        Avec l’appui du:
+                                        <div>Bureau d’Appui et d’Innovation Pédagogique (BAIP)</div>
+                                        <div>Presses Internationales Polytechnique</div>
+                                    </div>
+                                </div>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion sx={{ background: 'transparent' }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            Comité scientifique
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <div className="teamContent">
+                                    {teamMembersComity.map((member) => (
+                                        <div className="team-list-item" key={member.id}>
+                                            <img
+                                                src={member.picture}
+                                                alt={member.name}
+                                                className="teamMemberPicture"
+                                            />
+                                            <div>
+                                                {member.name}
+                                                {member.title && ", " + member.title} <br />
+                                                {member.role && (
+                                                    <>
+                                                        <b>{member.role}</b>
+                                                        <br />
+                                                    </>
+                                                )}
+                                                {member.occupation}
+                                            </div>
+                                        </div>
+                                    ))}
+                            </div>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion sx={{ background: 'transparent' }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            Étudiants PRISME 2021-2022
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <p>
+                                Dans le cadre du projet intégrateur&nbsp;
+                                <a
+                                    href="https://www.polymtl.ca/programmes/cours/prisme"
+                                    target="_blank"
+                                >
+                                    PRISME
+                                </a>
+                                , six étudiantes et étudiants de baccalauréat en génie industriel ont
+                                aidé à la conception du LAC. Le projet, étalé sur deux trimestres
+                                (automne 2021 et hiver 2022) à portée notamment sur l'identification
+                                des besoins, l’élaboration d’un plan stratégique et la détermination
+                                de la viabilité technologique et économique des propositions. Ce
+                                projet a donné l’opportunité aux étudiantes et étudiants de transférer
+                                des notions acquises dans les différents cours du programme de génie
+                                industriel en contexte réel.
+                            </p>
+                            <div className="teamContent">
+                                {studentsPrisme.map((member) => (
+                                    <div className="team-list-item" key={member.id}>
+                                        <img
+                                            src={member.picture}
+                                            alt={member.name}
+                                            className="teamMemberPicture"
+                                        />
+                                        <div>
+                                            {member.name}
+                                            {member.title && ", " + member.title} <br />
+                                            {member.role && (
+                                                <>
+                                                    <b>{member.role}</b>
+                                                    <br />
+                                                </>
+                                            )}
+                                            {member.occupation}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion sx={{ background: 'transparent' }}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            Étudiants en génie logiciel (développement)
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <p>
+                                Dans le cadre d’une subvention du&nbsp;
+                                <a href="https://www.polymtl.ca/appui-pedagogique/" target="_blank">
+                                    Fonds d’actions pédagogiques stratégiques
+                                </a>
+                                &nbsp; (FAPS), des étudiants de génie logiciel ont eu le mandat de
+                                développer la plateforme numérique et ses fonctionnalités (ex. : page
+                                d'accueil, gestion du catalogue de cas, gestion des comptes et des
+                                accès aux ressources). La phase 1 du projet s’est étalé sur deux
+                                ans (hiver 2022 à été 2023). La phase 2 qui consiste à tester la
+                                plateforme au sein de petit groupe sera lancé à l’automne 2023 avant
+                                le lancement officiel (hiver 2024).
+                            </p>
+                            <div className="teamContent">
+                                {studentsLog.map((member) => (
+                                    <div className="team-list-item" key={member.id}>
+                                        <img
+                                            src={member.picture}
+                                            alt={member.name}
+                                            className="teamMemberPicture"
+                                        />
+                                        <div>
+                                            {member.name}
+                                            {member.title && ", " + member.title} <br />
+                                            {member.role && (
+                                                <>
+                                                    <b>{member.role}</b>
+                                                    <br />
+                                                </>
+                                            )}
+                                            {member.occupation}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </AccordionDetails>
+                    </Accordion>
+
+                </div>
+            </div>
+        </div>
+        <BrainSeparator></BrainSeparator>
+        <div className="landing-segment-container">
+            <div className="landing-segment-column-left">
+                <h1 id="histoire">Histoire du LAC</h1>
+                <p className="item-font">Dans le but de rendre reproductible notre démarche, les grandes étapes sont indiquées dans la chronologie ci-dessous.</p>
+                <Timeline></Timeline>
+            </div>
+        </div>
         </div>;
 }

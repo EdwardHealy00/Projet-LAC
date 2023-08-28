@@ -81,6 +81,7 @@ export default function PendingCaseStudies() {
   };
 
   return (
+
     <div>      
       <Button className="return" href="/catalogue">
         &gt; Retour au catalogue

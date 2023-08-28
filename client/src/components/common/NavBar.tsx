@@ -58,50 +58,30 @@ const NavBar = forwardRef<NavBarRef, Props>(
   }, [navigate]);
 
   return (
-    <div id="navbar">
-      <div id="profile">
-        <Button className="navbutton" href="/catalogue">Catalogue</Button>
-        <UnlockAccess
-            role={[Role.Deputy, Role.ComityDirector]}
-            children={<Button href="/dashboard">Tableau de bord</Button>}
-        ></UnlockAccess>
-        <UnlockAccess
-            role={[Role.Professor]}
-            children={<Button className="navbutton" href="/my-pending-case-studies">Mes études de cas</Button>}
-        ></UnlockAccess>
-        <Button className="navbutton" href="/guide">Guides</Button>
-        <span>
-          <Button
-              id="basic-button"
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleOpen}
-          >
-            À propos
-          </Button>
-          <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-          >
-            <MenuItem onClick={navigateSummary}>Sommaire</MenuItem>
-            <MenuItem onClick={navigateMission}>
-              Mission, vision et objectifs
-            </MenuItem>
-            <MenuItem onClick={navigateTeam}>Équipe</MenuItem>
-            <MenuItem onClick={navigateCreation}>Création du LAC</MenuItem>
-          </Menu>
-        </span>
+      <div>
+        {(!(window.location.pathname === '/' || window.location.pathname === '/about')) && (
+            <div id="navbar">
+              <div id="profile">
+                <Button className="navbutton" href="/catalogue">Catalogue</Button>
+                <UnlockAccess
+                    role={[Role.Deputy, Role.ComityDirector]}
+                    children={<Button href="/dashboard">Tableau de bord</Button>}
+                ></UnlockAccess>
+                <UnlockAccess
+                    role={[Role.Professor]}
+                    children={<Button className="navbutton" href="/my-pending-case-studies">Mes études de cas</Button>}
+                ></UnlockAccess>
+                <Button className="navbutton" href="/guide">Guides</Button>
+              </div>
+              <div id="loginStatus">
+                <Login ref={loginRef}/>
+              </div>
+            </div>
+        )
+
+        }
       </div>
-      <div id="loginStatus">
-        <Login ref={loginRef}/>
-      </div>
-    </div>
+
   );
 });
 

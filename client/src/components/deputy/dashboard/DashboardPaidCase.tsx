@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import "./DashboardPaidCase.scss";
 import CasesRecieved from "./CasesRecieved";
 import CasesWaitingApproval from "./CasesWaitingApproval";
@@ -11,12 +11,12 @@ import ValidateTeacherList from "./ValidateTeacher";
 function DashboardPaidCase() {
 
   const navigate = useNavigate();
-
   const onConsult = () => {
       navigate("/approval");
   }
 
   return (
+
     <div id="dashboard">
       <div id="titleDashboard">
         <h2>Tableau de bord - catalogue des cas payants</h2>

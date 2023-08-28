@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, {useCallback} from "react";
 import "./CaseStudy.scss";
 import Button from "@mui/material/Button";
 import "../img/normal_search.svg";
@@ -13,7 +13,6 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 const CaseStudyWconnection = () => {
   const state = useLocation().state as any;
   const displayedCase = state ? (state.caseData as Case) : state;
-
   const [open, setOpen] = React.useState(false);
 
   const navigate = useNavigate();

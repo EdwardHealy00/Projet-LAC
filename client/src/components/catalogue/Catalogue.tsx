@@ -69,7 +69,6 @@ export default function Catalogue() {
     "7+ ans",
   ];
   const numberPages = ["1 à 4 pages", "5 à 10 pages", "11+ pages"];
-
   const [filters, setFilters] = React.useState<Filter[]>([]);
   const [typeFilters, setTypeFilters] = React.useState<string[]>([]);
   const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>([]);

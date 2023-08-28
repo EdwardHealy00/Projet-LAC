@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, {useContext} from "react";
 import PdfAccordion from "./PdfAccordion";
 import "./GuidePage.scss";
 import { Button, Typography } from "@mui/material";
@@ -9,7 +9,6 @@ import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
 
 function GuidePage() {
   const appContext = useContext(AppContext);
-
   const numberOfUnrestrictedPdfFiles = 1;
   const numberOfRestrictedPdfFiles = 9;
   const totalNumberOfPdfFiles = numberOfUnrestrictedPdfFiles + numberOfRestrictedPdfFiles;
