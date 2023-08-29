@@ -35,12 +35,12 @@
 
 #articles {
     width: 90%;
-    background-color: #ffffff;
-    font-family: "ArialMT", "Arial", sans-serif;
-    color: #333333;
-    text-align: center;
-    line-height: normal;
     margin-left: 10%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    align-items: stretch;
+    align-content: stretch;
 }
 
 #rows {
