@@ -1,26 +1,23 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef } from "react";
 import "./Catalogue.scss";
 import SearchBar from "./SearchBar";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
+  Box,
   Button,
-  Checkbox,
+  Card,
   Chip,
-  FormControlLabel,
-  FormGroup,
-  InputAdornment,
-  InputBase,
-  TextField,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
   Typography,
   alpha,
   styled,
   useTheme,
 } from "@mui/material";
 import axios from "axios";
-import { Case } from "../../model/CaseStudy";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
 import { Download } from "@mui/icons-material";
@@ -86,6 +83,49 @@ export default function Catalogue() {
 
   const articlesRef = useRef<ArticlesRef | null>(null);
 
+  const OnChangeType = (event: SelectChangeEvent<any>) => {
+    const { target: { value } } = event;
+    setTypeFilters(
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const OnChangeDiscipline = (event: SelectChangeEvent<any>) => {
+    const { target: { value } } = event;
+    setDisciplineFilters(
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const OnChangeSubject= (event: SelectChangeEvent<any>) => {
+    const { target: { value } } = event;
+    setSubjectFilters(
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const OnChangeDate = (event: SelectChangeEvent<any>) => {
+    const { target: { value } } = event;
+    setDateFilters(
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const OnChangePages = (event: SelectChangeEvent<any>) => {
+    const { target: { value } } = event;
+    setNumberPagesFilters(
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const OnChangeAuthor = (event: SelectChangeEvent<any>) => {
+    const { target: { value } } = event;
+    setAuthorsFilters(
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+
   const onResetFilters = () => {
     for (const filter of filters) {
       filter.checkboxRef.click();
@@ -99,79 +139,14 @@ export default function Catalogue() {
     setAuthorsFilters([]);
   };
 
-  const onCheckboxChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    filtersType: string[]
-  ) => {
-    const checked = e.target.checked;
-    const value = e.target.name;
-    const newFilters = [...filters];
-    const filtersToUpdate = [...filtersType];
-    const filter: Filter = { name: value, checkboxRef: e.target };
-
-    if (checked) {
-      newFilters.push(filter);
-      setFilters(newFilters);
-      filtersToUpdate.push(value.toLowerCase());
-    } else {
-      newFilters.splice(newFilters.indexOf(filter), 1);
-      setFilters(newFilters);
-      filtersToUpdate.splice(filtersType.indexOf(value.toLowerCase()), 1);
-    }
-    return filtersToUpdate;
-  };
-
-  const onCheckboxChangeType = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTypeFilters = onCheckboxChange(e, typeFilters);
-    setTypeFilters(newTypeFilters);
-  };
-
-  const onCheckboxChangeDiscipline = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const displineFilters = onCheckboxChange(e, disciplineFilters);
-    setDisciplineFilters(displineFilters);
-  };
-
-  const onCheckboxChangeSubject = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSubjectFilters = onCheckboxChange(e, subjectFilters);
-    setSubjectFilters(newSubjectFilters);
-  };
-
-  const onCheckboxChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDateFilters = onCheckboxChange(e, dateFilters);
-    setDateFilters(newDateFilters);
-  };
-
-  const onCheckboxChangeNumberPages = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newNumberPagesFilters = onCheckboxChange(e, numberPagesFilters);
-    setNumberPagesFilters(newNumberPagesFilters);
-  };
-
-  const onCheckboxChangeAuthorName = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newAuthorsFilters = onCheckboxChange(e, authorsFilters);
-    setAuthorsFilters(newAuthorsFilters);
-  };
-
-  const onDeleteChip = (filter: Filter) => {
-    const newFilters = [...filters];
-    filter.checkboxRef.click();
-    newFilters.splice(filters.indexOf(filter), 1);
-    setFilters(newFilters);
-  };
-
   const theme = useTheme();
   const WhiteTypography = styled(Typography)({
-    color: theme.palette.primary.contrastText, 
+    color: theme.palette.primary.contrastText,
   });
   const WhiteButton = styled(Button)({
-    color: theme.palette.primary.contrastText, 
+    color: theme.palette.primary.contrastText,
 
-    '&:hover': {
+    "&:hover": {
       backgroundColor: alpha(theme.palette.common.white, 0.15), // Change to the desired hover color
     },
   });
@@ -224,172 +199,193 @@ export default function Catalogue() {
           }
         ></UnlockAccess>
       </div>
-
-      <div className="smallRectangle">
-        <div id="type-de-contenu">Type de contenu :</div>
-        {filters.map((filter) => (
-          <Chip
-            label={filter.name}
-            variant="outlined"
-            onDelete={() => onDeleteChip(filter)}
-          />
-        ))}
-        <div id="effacer-tous-les-fil" onClick={onResetFilters}>
-          Effacer tous les filtres
-        </div>
-      </div>
-      <div className="smallRectangle">
-        <div id="filtrer-par">Filtrer par</div>
-      </div>
       <div id="rows">
-        <div id="rectangleFilter">
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>TYPE DE CAS</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox onChange={onCheckboxChangeType} name="Libre" />
-                    }
-                    label="Libre d'accès"
+        <Card id="filter-card">
+          <div id="filter-header">
+            <Typography variant="h5">Filtrer par:</Typography>
+            <Button onClick={onResetFilters}>
+              <u>Effacer tous les filtres</u>
+            </Button>
+          </div>
+          <div className="filter-form-container">
+            <FormControl className="filter-form-control ">
+              <InputLabel id="type-select-label">Type de cas</InputLabel>
+              <Select
+                labelId="type-select-label"
+                id="type-select"
+                multiple
+                value={typeFilters}
+                onChange={OnChangeType}
+                input={
+                  <OutlinedInput
+                    id="select-multiple-chip"
+                    label="Type de cas"
                   />
-                  <FormControlLabel
-                    control={
-                      <Checkbox onChange={onCheckboxChangeType} name="Payant" />
-                    }
-                    label="Payant"
-                  />
-                </FormGroup>
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>DISCIPLINE</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                <FormGroup>
-                  {Disciplines.map((discipline) => (
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          onChange={onCheckboxChangeDiscipline}
-                          name={discipline}
-                        />
-                      }
-                      label={discipline}
-                    />
-                  ))}
-                </FormGroup>
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>SUJET</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                {Subjects.map((subject) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        onChange={onCheckboxChangeSubject}
-                        name={subject}
-                      />
-                    }
-                    label={subject}
-                  />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+              >
+                <MenuItem key={0} value={"Libre d'accès"}>
+                  Libre d'accès
+                </MenuItem>
+                <MenuItem key={1} value={"Payant"}>
+                  Payant
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="filter-form-container">
+            <FormControl className="filter-form-control ">
+              <InputLabel id="type-select-label">Discipline</InputLabel>
+              <Select
+                labelId="type-select-label"
+                id="type-select"
+                multiple
+                value={disciplineFilters}
+                onChange={OnChangeDiscipline}
+                input={
+                  <OutlinedInput id="select-multiple-chip" label="Discipline" />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+              >
+                {Disciplines.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
                 ))}
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>DATE DE PARUTION</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                {dates.map((date) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox onChange={onCheckboxChangeDate} name={date} />
-                    }
-                    label={date}
-                  />
+              </Select>
+            </FormControl>
+          </div>
+          <div className="filter-form-container">
+            <FormControl className="filter-form-control ">
+              <InputLabel id="type-select-label">Sujet</InputLabel>
+              <Select
+                labelId="type-select-label"
+                id="type-select"
+                multiple
+                value={subjectFilters}
+                onChange={OnChangeSubject}
+                input={
+                  <OutlinedInput id="select-multiple-chip" label="Sujet" />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+              >
+                {Subjects.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
                 ))}
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>NOMBRE DE PAGES</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                {numberPages.map((nbPage) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        onChange={onCheckboxChangeNumberPages}
-                        name={nbPage}
-                      />
-                    }
-                    label={nbPage}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="filter-form-container">
+            <FormControl className="filter-form-control ">
+              <InputLabel id="type-select-label">Date de parution</InputLabel>
+              <Select
+                labelId="type-select-label"
+                id="type-select"
+                multiple
+                value={dateFilters}
+                onChange={OnChangeDate}
+                input={
+                  <OutlinedInput
+                    id="select-multiple-chip"
+                    label="Date de parution"
                   />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+              >
+                {dates.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
                 ))}
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>AUTEUR</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                {caseStudyAuthors.map((author) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        onChange={onCheckboxChangeAuthorName}
-                        name={author}
-                      />
-                    }
-                    label={author}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="filter-form-container">
+            <FormControl className="filter-form-control ">
+              <InputLabel id="type-select-label">Nombre de pages</InputLabel>
+              <Select
+                labelId="type-select-label"
+                id="type-select"
+                multiple
+                value={numberPagesFilters}
+                onChange={OnChangePages}
+                input={
+                  <OutlinedInput
+                    id="select-multiple-chip"
+                    label="Nombre de pages"
                   />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+              >
+                {numberPages.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
                 ))}
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-        </div>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="filter-form-container">
+            <FormControl className="filter-form-control ">
+              <InputLabel id="type-select-label">Auteur</InputLabel>
+              <Select
+                labelId="type-select-label"
+                id="type-select"
+                multiple
+                value={authorsFilters}
+                onChange={OnChangeAuthor}
+                input={
+                  <OutlinedInput id="select-multiple-chip" label="Auteur" />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+              >
+                {caseStudyAuthors.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        </Card>
         <Articles
           ref={articlesRef}
           typeFilters={typeFilters}

@@ -18,8 +18,8 @@ export interface ArticlesRef {
   onSearch(e: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-const PAID_STR: string = "payant";
-const FREE_STR: string = "libre";
+const PAID_STR: string = "Payant";
+const FREE_STR: string = "Libre d'accès";
 
 const Articles = forwardRef<ArticlesRef, ArticlesProps>((props, ref) => {
   useImperativeHandle(ref, () => ({
@@ -77,7 +77,7 @@ const Articles = forwardRef<ArticlesRef, ArticlesProps>((props, ref) => {
           return false;
         }
         return props.disciplineFilters.includes(
-          (caseStudy as Case).discipline.toLowerCase()
+          (caseStudy as Case).discipline
         );
       });
     }
