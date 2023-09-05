@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useMemo, useRef, useState } from "react";
 import "./Catalogue.scss";
-import SearchIcon from "@mui/icons-material/Search";
-import Results from "./Results";
+import SearchBar from "./SearchBar";
 import {
   Accordion,
   AccordionDetails,
@@ -12,8 +11,12 @@ import {
   FormControlLabel,
   FormGroup,
   InputAdornment,
+  InputBase,
   TextField,
   Typography,
+  alpha,
+  styled,
+  useTheme,
 } from "@mui/material";
 import axios from "axios";
 import { Case } from "../../model/CaseStudy";
@@ -21,7 +24,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
 import { Download } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
+import Articles, { ArticlesRef } from "./Articles";
 
 interface Filter {
   name: string;
@@ -53,11 +58,8 @@ export const Subjects = [
   "Gestion du changement",
   "Recherche opérationnelle",
   "Économie circulaire",
-  "Développement durable"
+  "Développement durable",
 ];
-
-const PAID_STR: string = "payant";
-const FREE_STR: string = "libre";
 
 export default function Catalogue() {
   const dates = [
@@ -71,45 +73,18 @@ export default function Catalogue() {
   const numberPages = ["1 à 4 pages", "5 à 10 pages", "11+ pages"];
   const [filters, setFilters] = React.useState<Filter[]>([]);
   const [typeFilters, setTypeFilters] = React.useState<string[]>([]);
-  const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>([]);
+  const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>(
+    []
+  );
   const [subjectFilters, setSubjectFilters] = React.useState<string[]>([]);
   const [dateFilters, setDateFilters] = React.useState<string[]>([]);
-  const [numberPagesFilters, setNumberPagesFilters] = React.useState<string[]>([]);
+  const [numberPagesFilters, setNumberPagesFilters] = React.useState<string[]>(
+    []
+  );
   const [authorsFilters, setAuthorsFilters] = React.useState<string[]>([]);
-
-  const [caseStudies, setCaseStudies] = React.useState<Case[]>([]);
-  const [showCaseStudies, setShowCaseStudies] = React.useState<Case[]>([]);
   const [caseStudyAuthors, setCaseStudyAuthors] = React.useState<string[]>([]);
 
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const search = e.target.value;
-
-    if (search.length > 0) {
-      const filteredCaseStudies = caseStudies
-        .filter((caseStudy) => {
-          return onFilter(caseStudy, search);
-        })
-        .slice(0, 10);
-      setShowCaseStudies(filteredCaseStudies);
-    } else {
-      setShowCaseStudies(caseStudies);
-    }
-  };
-
-  const onFilter = (caseStudy: Case, searchFilter: string) => {
-    for (const property in caseStudy) {
-      if (caseStudy.hasOwnProperty(property)) {
-        if (
-          caseStudy[property as keyof typeof caseStudy]
-            .toString()
-            .toLowerCase()
-            .includes(searchFilter.toLowerCase())
-        ) {
-          return true;
-        }
-      }
-    }
-  };
+  const articlesRef = useRef<ArticlesRef | null>(null);
 
   const onResetFilters = () => {
     for (const filter of filters) {
@@ -122,7 +97,6 @@ export default function Catalogue() {
     setDateFilters([]);
     setNumberPagesFilters([]);
     setAuthorsFilters([]);
-    setShowCaseStudies(caseStudies);
   };
 
   const onCheckboxChange = (
@@ -147,12 +121,10 @@ export default function Catalogue() {
     return filtersToUpdate;
   };
 
-  const onCheckboxChangeType = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const onCheckboxChangeType = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTypeFilters = onCheckboxChange(e, typeFilters);
     setTypeFilters(newTypeFilters);
-  }
+  };
 
   const onCheckboxChangeDiscipline = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -185,171 +157,24 @@ export default function Catalogue() {
     setAuthorsFilters(newAuthorsFilters);
   };
 
-  React.useEffect(() => {
-    onFilterChange();
-  }, [typeFilters, disciplineFilters, subjectFilters, dateFilters, numberPagesFilters, authorsFilters]);
-
-  const onFilterChange = () => {
-    let caseStudiesToFilter = [...caseStudies];
-
-    if (typeFilters.length > 0) {
-      caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        return ((typeFilters.includes(FREE_STR) && !(caseStudy as Case).isPaidCase) 
-                  || (typeFilters.includes(PAID_STR) && (caseStudy as Case).isPaidCase));
-      });
-    }
-
-    if (disciplineFilters.length > 0) {
-      caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if (!(caseStudy as Case).discipline) {
-          return false;
-        }
-        return disciplineFilters.includes(
-          (caseStudy as Case).discipline.toLowerCase()
-        );
-      });
-    }
-
-    if (subjectFilters.length > 0) {
-      caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        return subjectFilters.some((subject) => {
-          if (!(caseStudy as Case).subjects) {
-            return false;
-          }
-          return (
-            (caseStudy as Case).subjects.find(
-              (tag) => tag.toLowerCase() === subject.toLowerCase()
-            ) !== undefined
-          );
-        });
-      });
-    }
-
-    if (dateFilters.length > 0) {
-      caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if (!(caseStudy as Case).date) {
-          return false;
-        }
-        return verifyDates((caseStudy as Case).date, dateFilters);
-      });
-    }
-
-    if (numberPagesFilters.length > 0) {
-      caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if (!(caseStudy as Case).page) {
-          return false;
-        }
-        return verifyPages((caseStudy as Case).page, numberPagesFilters);
-      });
-    }
-
-    if (authorsFilters.length > 0) {
-      caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
-        if (!(caseStudy as Case).authors) {
-          return false;
-        }
-        return verifyAuthors((caseStudy as Case).authors, authorsFilters);
-      });
-    }
-
-    setShowCaseStudies(caseStudiesToFilter);
+  const onDeleteChip = (filter: Filter) => {
+    const newFilters = [...filters];
+    filter.checkboxRef.click();
+    newFilters.splice(filters.indexOf(filter), 1);
+    setFilters(newFilters);
   };
 
-  const verifyPages = (page: number, pageFilters: string[]) => {
-    //TODO: check if there is a better way to do it
-    for (const numberPage of pageFilters) {
-      if (numberPage.includes("4") && page >= 1 && page <= 4) {
-        return true;
-      } else if (numberPage.includes("10") && page >= 5 && page <= 10) {
-        return true;
-      } else if (numberPage.includes("11") && page >= 11) {
-        return true;
-      }
-    }
-    return false;
-  };
+  const theme = useTheme();
+  const WhiteTypography = styled(Typography)({
+    color: theme.palette.primary.contrastText, 
+  });
+  const WhiteButton = styled(Button)({
+    color: theme.palette.primary.contrastText, 
 
-  const verifyAuthors = (author: string, authorsFilters: string[]) => {
-    for (const selectedAuthor of authorsFilters) {
-      if (selectedAuthor.toLowerCase() === author.toLowerCase()) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const verifyDates = (date: string, dateFilters: string[]) => {
-    //TODO: check if there is a better way to do it
-    for (const filter of dateFilters) {
-      const dateToCompare = new Date(date);
-      const today = new Date();
-      const fourMonthsAgo = new Date(
-        today.getFullYear(),
-        today.getMonth() - 4,
-        today.getDate()
-      );
-      const nineMonthsAgo = new Date(
-        today.getFullYear(),
-        today.getMonth() - 9,
-        today.getDate()
-      );
-      const oneYearAgo = new Date(
-        today.getFullYear() - 1,
-        today.getMonth(),
-        today.getDate()
-      );
-      const threeYearsAgo = new Date(
-        today.getFullYear() - 3,
-        today.getMonth(),
-        today.getDate()
-      );
-      const sevenYearsAgo = new Date(
-        today.getFullYear() - 7,
-        today.getMonth(),
-        today.getDate()
-      );
-
-      if (filter.includes("0-3") && +dateToCompare >= +fourMonthsAgo) {
-        return true;
-      } else if (
-        filter.includes("4-8") &&
-        +dateToCompare < +fourMonthsAgo &&
-        +dateToCompare >= +nineMonthsAgo
-      ) {
-        return true;
-      } else if (
-        filter.includes("9-12") &&
-        +dateToCompare < +nineMonthsAgo &&
-        +dateToCompare >= +oneYearAgo
-      ) {
-        return true;
-      } else if (
-        filter.includes("1-2") &&
-        +dateToCompare < +oneYearAgo &&
-        +dateToCompare >= +threeYearsAgo
-      ) {
-        return true;
-      } else if (
-        filter.includes("3-6") &&
-        +dateToCompare < +threeYearsAgo &&
-        +dateToCompare >= +sevenYearsAgo
-      ) {
-        return true;
-      } else if (filter.includes("7") && +dateToCompare < +sevenYearsAgo) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const getCaseStudies = async () => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/all-catalog`)
-      .then((res) => {
-        setShowCaseStudies(res.data);
-        setCaseStudies(res.data);
-      });
-  };
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.common.white, 0.15), // Change to the desired hover color
+    },
+  });
 
   const getCaseStudyAuthors = async () => {
     axios
@@ -360,233 +185,220 @@ export default function Catalogue() {
   };
 
   React.useEffect(() => {
-    getCaseStudies();
     getCaseStudyAuthors();
   }, []);
 
-  const onDeleteChip = (filter: Filter) => {
-    const newFilters = [...filters];
-    filter.checkboxRef.click();
-    newFilters.splice(filters.indexOf(filter), 1);
-    setFilters(newFilters);
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!articlesRef.current) return;
+    articlesRef.current.onSearch(e);
   };
 
   return (
     <div>
-      <div id="content">
-        <div id="rectangle">
-          <div id="catalogue-des-cas">Catalogue des cas</div>
-          <div id="searchField">
-            <TextField
-              onChange={onSearch}
-              label="Rechercher dans le catalogue"
-              id="searchBar"
-              variant="filled"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </div>
+      <div
+        id="rectangle"
+        style={{ backgroundColor: theme.palette.primary.main }}
+      >
+        <WhiteTypography variant="h2" id="catalogue-title">
+          Catalogue d'études de cas
+        </WhiteTypography>
+        <div id="search-bar">
+          <SearchBar onFilter={onSearch}></SearchBar>
         </div>
         <UnlockAccess
           role={[Role.Professor]}
           children={
             <div id="addCaseRectangle">
-              <Button variant="contained" href="/create">
-                Ajouter une étude de cas
-              </Button>
-              <Button variant="text" onClick={() => downloadCaseStudyTemplate()}>
-                <u>Télécharger le gabarit</u>
+              <WhiteButton
+                variant="outlined"
+                onClick={() => downloadCaseStudyTemplate()}
+              >
                 <Download></Download>
-              </Button>
+                Télécharger le gabarit
+              </WhiteButton>
+              <WhiteButton variant="contained" href="/create">
+                <Add></Add>
+                Ajouter une étude de cas
+              </WhiteButton>
             </div>
           }
         ></UnlockAccess>
+      </div>
 
-        <div className="smallRectangle">
-          <div id="type-de-contenu">Type de contenu :</div>
-          {filters.map((filter) => (
-            <Chip
-              label={filter.name}
-              variant="outlined"
-              onDelete={() => onDeleteChip(filter)}
-            />
-          ))}
-          <div id="effacer-tous-les-fil" onClick={onResetFilters}>
-            Effacer tous les filtres
-          </div>
+      <div className="smallRectangle">
+        <div id="type-de-contenu">Type de contenu :</div>
+        {filters.map((filter) => (
+          <Chip
+            label={filter.name}
+            variant="outlined"
+            onDelete={() => onDeleteChip(filter)}
+          />
+        ))}
+        <div id="effacer-tous-les-fil" onClick={onResetFilters}>
+          Effacer tous les filtres
         </div>
-        <div className="smallRectangle">
-          <div id="filtrer-par">Filtrer par</div>
-          <div id="results"> {showCaseStudies.length} résultats</div>
-        </div>
-        <div id="rows">
-          <div id="rectangleFilter">
+      </div>
+      <div className="smallRectangle">
+        <div id="filtrer-par">Filtrer par</div>
+      </div>
+      <div id="rows">
+        <div id="rectangleFilter">
           <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>TYPE DE CAS</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  <FormGroup>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>TYPE DE CAS</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox onChange={onCheckboxChangeType} name="Libre" />
+                    }
+                    label="Libre d'accès"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox onChange={onCheckboxChangeType} name="Payant" />
+                    }
+                    label="Payant"
+                  />
+                </FormGroup>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>DISCIPLINE</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                <FormGroup>
+                  {Disciplines.map((discipline) => (
                     <FormControlLabel
                       control={
                         <Checkbox
-                          onChange={onCheckboxChangeType}
-                          name="Libre"
+                          onChange={onCheckboxChangeDiscipline}
+                          name={discipline}
                         />
                       }
-                      label="Libre d'accès"
+                      label={discipline}
                     />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          onChange={onCheckboxChangeType}
-                          name="Payant"
-                        />
-                      }
-                      label="Payant"
-                    />
-                  </FormGroup>
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>DISCIPLINE</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  <FormGroup>
-                    {Disciplines.map((discipline) => (
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            onChange={onCheckboxChangeDiscipline}
-                            name={discipline}
-                          />
-                        }
-                        label={discipline}
+                  ))}
+                </FormGroup>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>SUJET</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                {Subjects.map((subject) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={onCheckboxChangeSubject}
+                        name={subject}
                       />
-                    ))}
-                  </FormGroup>
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>SUJET</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  {Subjects.map((subject) => (
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          onChange={onCheckboxChangeSubject}
-                          name={subject}
-                        />
-                      }
-                      label={subject}
-                    />
-                  ))}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>DATE DE PARUTION</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  {dates.map((date) => (
-                    <FormControlLabel
-                      control={
-                        <Checkbox onChange={onCheckboxChangeDate} name={date} />
-                      }
-                      label={date}
-                    />
-                  ))}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>NOMBRE DE PAGES</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  {numberPages.map((nbPage) => (
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          onChange={onCheckboxChangeNumberPages}
-                          name={nbPage}
-                        />
-                      }
-                      label={nbPage}
-                    />
-                  ))}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>AUTEUR</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  {caseStudyAuthors.map((author) => (
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          onChange={onCheckboxChangeAuthorName}
-                          name={author}
-                        />
-                      }
-                      label={author}
-                    />
-                  ))}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          </div>
-          <div id="articles">
-            {showCaseStudies.map(
-              (caseStudy) =>
-                <Results caseData={(caseStudy as Case)}></Results>
-            )}
-          </div>
+                    }
+                    label={subject}
+                  />
+                ))}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>DATE DE PARUTION</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                {dates.map((date) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox onChange={onCheckboxChangeDate} name={date} />
+                    }
+                    label={date}
+                  />
+                ))}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>NOMBRE DE PAGES</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                {numberPages.map((nbPage) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={onCheckboxChangeNumberPages}
+                        name={nbPage}
+                      />
+                    }
+                    label={nbPage}
+                  />
+                ))}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>AUTEUR</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                {caseStudyAuthors.map((author) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={onCheckboxChangeAuthorName}
+                        name={author}
+                      />
+                    }
+                    label={author}
+                  />
+                ))}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
         </div>
+        <Articles
+          ref={articlesRef}
+          typeFilters={typeFilters}
+          disciplineFilters={disciplineFilters}
+          subjectFilters={subjectFilters}
+          dateFilters={dateFilters}
+          numberPagesFilters={numberPagesFilters}
+          authorsFilters={authorsFilters}
+        />
       </div>
     </div>
   );
