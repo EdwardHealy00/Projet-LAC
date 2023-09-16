@@ -104,8 +104,8 @@ function App() {
       mode: 'light',
       primary: {
         main: '#41aae6', 
-        light: '#63a4ff', 
-        dark: '#004ba0', 
+        light: '#4aaee7', 
+        dark: '#34a4e4', 
         contrastText: '#fff',
       },
       secondary: {

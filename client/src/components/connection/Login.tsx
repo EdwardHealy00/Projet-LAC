@@ -1,12 +1,12 @@
-import React, { forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useContext, useImperativeHandle, useState } from 'react';
 import Button from "@mui/material/Button";
 import "./Login.scss";
 import axios from "axios";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Role } from "../../model/enum/Role";
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../App';
 import Cookies from 'js-cookie';
+import { Typography, alpha, styled, useTheme } from '@mui/material';
 
 export interface Props{}
 export interface LoginRef {
@@ -77,11 +77,12 @@ const Login = forwardRef<LoginRef, Props>(
         </Button>
       )}
       {loggedIn && (
-        <div>
-          <AccountCircle sx={{ verticalAlign: "middle", fontSize: "32px" }} />
-          {localStorage.getItem("name")} &nbsp;
-          <span>{showRole(localStorage.getItem("role") as Role)}</span>
-          <Button id="logoutButton" variant="contained" onClick={onLogout}>Déconnexion</Button>
+        <div id='login'>
+          <div id='loginInfo'>
+            <Typography variant='body1'>Bienvenue, <b>{localStorage.getItem("name")}</b></Typography>
+            <Typography variant='caption'>{showRole(localStorage.getItem("role") as Role)}</Typography>
+          </div>
+          <Button id="logoutButton" variant="contained" color='error' onClick={onLogout}>Déconnexion</Button>
         </div>
       )}
     </div>

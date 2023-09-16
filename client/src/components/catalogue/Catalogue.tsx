@@ -172,7 +172,7 @@ export default function Catalogue() {
     <div>
       <div
         id="rectangle"
-        style={{ backgroundColor: theme.palette.primary.main }}
+        style={{ backgroundColor: theme.palette.primary.light }}
       >
         <WhiteTypography variant="h2" id="catalogue-title">
           Catalogue d'études de cas
