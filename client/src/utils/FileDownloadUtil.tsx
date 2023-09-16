@@ -27,11 +27,18 @@ export function handleFileDownload(file: any) {
 };
 
 export function downloadCaseStudyTemplate() {
-  const templateDocxFile = require(`../docx/template.docx`)
+  const templateDocxFile1 = require(`../docx/Gabarit_Conception d'un cas.docx`)
+  const templateDocxFile2 = require(`../docx/Gabarit_NotesPédagogiques.docx`)
 
-  const downloadLink = document.createElement("a");
-  downloadLink.href = templateDocxFile;
-  downloadLink.download = "gabarit.docx";
-  downloadLink.click();
-  URL.revokeObjectURL(templateDocxFile);
+  const downloadLink1 = document.createElement("a");
+  downloadLink1.href = templateDocxFile1;
+  downloadLink1.download = "Gabarit_Conception d'un cas.docx";
+  downloadLink1.click();
+  URL.revokeObjectURL(templateDocxFile1);
+
+  const downloadLink2 = document.createElement("a");
+  downloadLink2.href = templateDocxFile2;
+  downloadLink2.download = "Gabarit_NotesPédagogiques.docx";
+  downloadLink2.click();
+  URL.revokeObjectURL(templateDocxFile2);
 };

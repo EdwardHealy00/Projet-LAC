@@ -189,7 +189,7 @@ export default function Catalogue() {
                 onClick={() => downloadCaseStudyTemplate()}
               >
                 <Download></Download>
-                Télécharger le gabarit
+                Télécharger les gabarits
               </WhiteButton>
               <WhiteButton variant="contained" href="/create">
                 <Add></Add>

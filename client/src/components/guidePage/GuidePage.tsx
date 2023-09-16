@@ -45,7 +45,7 @@ function GuidePage() {
       <div className="guide-page">
         <h1>Ressources pédagogiques</h1>
         <div id="template-download">
-        <Button variant="contained" className="download-button" onClick={() => downloadCaseStudyTemplate()}> Télécharger le gabarit
+        <Button variant="contained" className="download-button" onClick={() => downloadCaseStudyTemplate()}> Télécharger les gabarits
         <Download></Download>
       </Button>
         </div>
