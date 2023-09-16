@@ -42,14 +42,16 @@ export class EmailService {
         this.sendEmail(mailOptions);
     }
 
-    sendNewUserEmail() {
-        const mailOptions = {
-            from: EMAIL_USERNAME,
-            to: "yanis.toubal@hotmail.com",
-            subject: "Un nouvel enseignant s'est enregistré",
-            text: "Un nouvel enseignant s'est enregistré, veuillez consulter votre compte pour évaluer celui-ci.",
-        };
-        this.sendEmail(mailOptions);
+    sendNewUserEmail(deputies: Array<User>) {
+        for(var deputy of deputies) {
+            const mailOptions = {
+                from: EMAIL_USERNAME,
+                to: deputy.email,
+                subject: "Un nouvel enseignant s'est enregistré",
+                text: "Un nouvel enseignant s'est enregistré, veuillez consulter votre compte pour évaluer celui-ci.",
+            };
+            this.sendEmail(mailOptions);
+        }
     }
 
     sendResetPasswordEmail(userEmail: string, resetToken: string) {

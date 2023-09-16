@@ -155,9 +155,9 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
             <AccordionDetails>
               <Typography>
                 <b>
-                  Le processus d'évaluation a trois objectifs : <br />
-                  &emsp;1. L'évaluation des études de cas par des spécialistes pour aider la direction du LAC à prendre une décision;<br />
-                  &emsp;2. Fournir aux auteurs une rétroaction constructive;<br />
+                  Le processus d'évaluation vise trois objectifs : <br />
+                  &emsp;1. L'évaluation des études de cas par des spécialistes pour aider la direction du LAC à prendre une décision ;<br />
+                  &emsp;2. Fournir aux auteurs une rétroaction constructive ;<br />
                   &emsp;3. Déterminer si le cas est suffisamment pertinent pour être publié aux Presses internationales Polytechniques. 
                   Si vous jugez que ce n’est pas le cas, les auteurs pourraient être redirigés vers le libre accès. <br /><br />
                   Nous vous prions de lire l’étude de cas dans un esprit d'aide aux auteurs.<br />
