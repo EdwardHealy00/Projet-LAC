@@ -86,7 +86,7 @@ export class Application {
         this.app.use(cookieParser());
         // TODO: change cors origin when deployed
         this.app.use(cors({
-            credentials: true, origin: ['http://10.0.0.57:3000', 'http://localhost:3000'] //TODO : update!
+            credentials: true, origin: ['http://10.0.0.57:3000', 'http://localhost:3000', 'https://lac-yagt.onrender.com'] //TODO : update!
         }
         ));
         this.app.use(this.upload.any());
