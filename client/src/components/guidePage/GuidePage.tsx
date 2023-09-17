@@ -61,7 +61,7 @@ function GuidePage() {
               disabled={false}
             />
           ))}
-          {!Cookies.get("logged_in") && (
+          {!localStorage.get("logged_in") && (
             <Button className="login-prompt" onClick={openPopup}>
               <Typography className="login-prompt-text">
                 Connectez-vous pour consulter le reste des fiches!
@@ -74,7 +74,7 @@ function GuidePage() {
               pdfFile={pdfFile}
               index={index + 1 + numberOfUnrestrictedPdfFiles}
               title={restrictedPdfTitles[index]}
-              disabled={!Cookies.get("logged_in")}
+              disabled={!localStorage.get("logged_in")}
             />
           ))}
         </div>
