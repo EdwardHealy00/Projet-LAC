@@ -2,7 +2,6 @@ import React, {useContext} from "react";
 import PdfAccordion from "./PdfAccordion";
 import "./GuidePage.scss";
 import { Button, Typography } from "@mui/material";
-import Cookies from "js-cookie";
 import { AppContext } from "../App";
 import { Download } from "@mui/icons-material";
 import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
@@ -61,7 +60,7 @@ function GuidePage() {
               disabled={false}
             />
           ))}
-          {!localStorage.get("logged_in") && (
+          {!localStorage.getItem("logged_in") && (
             <Button className="login-prompt" onClick={openPopup}>
               <Typography className="login-prompt-text">
                 Connectez-vous pour consulter le reste des fiches!
@@ -74,7 +73,7 @@ function GuidePage() {
               pdfFile={pdfFile}
               index={index + 1 + numberOfUnrestrictedPdfFiles}
               title={restrictedPdfTitles[index]}
-              disabled={!localStorage.get("logged_in")}
+              disabled={!localStorage.getItem("logged_in")}
             />
           ))}
         </div>

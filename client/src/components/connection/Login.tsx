@@ -22,7 +22,7 @@ const Login = forwardRef<LoginRef, Props>(
 
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.get('logged_in')));
+  const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem('logged_in')));
 
   const onLogout = () => {
     axios
