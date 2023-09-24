@@ -177,9 +177,6 @@ export default function Catalogue() {
         <WhiteTypography variant="h2" id="catalogue-title">
           Catalogue d'études de cas
         </WhiteTypography>
-        <div id="search-bar">
-          <SearchBar onFilter={onSearch}></SearchBar>
-        </div>
         <UnlockAccess
           role={[Role.Professor]}
           children={
@@ -198,6 +195,9 @@ export default function Catalogue() {
             </div>
           }
         ></UnlockAccess>
+          <div id="search-bar">
+          <SearchBar onFilter={onSearch}></SearchBar>
+        </div>
       </div>
       <div id="rows">
         <Card id="filter-card">
