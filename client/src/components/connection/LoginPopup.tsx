@@ -57,13 +57,12 @@ const LoginPopup = forwardRef<LoginPopupRef, Props>(
         if (res.status === 200) {
           handleClose();
 
-          const hasExpired = localStorage.getItem("email") == res.data.email;
           localStorage.setItem("name", res.data.name);
           localStorage.setItem("role", res.data.role);
           localStorage.setItem("email", res.data.email);
-          if(!hasExpired){
+          if(location.pathname == '/') {
             navigate("/catalogue") // User logged in from landing page
-          } else if(props.onLoggedIn){
+          } else if(props.onLoggedIn) {
             props.onLoggedIn(); // Refresh only Login/Logout button to not lose changes
           } 
         }
