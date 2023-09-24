@@ -24,10 +24,6 @@ export interface NavBarRef {
 const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
   const navigate = useNavigate()
 
-  const goToLandingPage = () => {
-    navigate("/");
-  }
-
   useImperativeHandle(ref, () => ({
     SetIsLoggedIn(value: boolean) {
       if (loginRef.current) {
@@ -60,7 +56,7 @@ const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
       ) && (
         <AppBar position="fixed" id="nav-bar" style={appBarStyles}>
           <Toolbar disableGutters id="toolbar">
-            <img src={logo} alt="LAC logo" onClick={goToLandingPage} id="lac-logo"/>
+            <a href="/"><img src={logo} alt="LAC logo" id="lac-logo"/></a>
             <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
               <WhiteButton className="navbutton" href="/catalogue">
                 Catalogue

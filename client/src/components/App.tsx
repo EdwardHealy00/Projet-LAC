@@ -193,7 +193,7 @@ function App() {
     const mainNavBar = document.querySelector('#nav-bar') as HTMLElement;
     const mainContent = document.querySelector('#content') as HTMLElement;
 
-    if (mainNavBar && mainContent) {
+    if (mainNavBar && mainContent && window.location.pathname !== "/") {
         const navbarHeight = mainNavBar.clientHeight;
         mainContent.style.marginTop = `${navbarHeight}px`;
     }

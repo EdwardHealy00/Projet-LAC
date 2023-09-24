@@ -24,6 +24,7 @@ import { Download } from "@mui/icons-material";
 import { Add } from "@mui/icons-material";
 import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
 import Articles, { ArticlesRef } from "./Articles";
+import AddCaseStudy, { AddCaseStudyDialogRef } from "./AddCaseStudy";
 
 interface Filter {
   name: string;
@@ -82,6 +83,13 @@ export default function Catalogue() {
   const [caseStudyAuthors, setCaseStudyAuthors] = React.useState<string[]>([]);
 
   const articlesRef = useRef<ArticlesRef | null>(null);
+  const addCaseStudyRef = useRef<AddCaseStudyDialogRef | null>(null);
+
+  const openAddCaseStudyDialog = () => {
+    if(addCaseStudyRef.current) {
+      addCaseStudyRef.current.setDialogOpen();
+    }
+  }
 
   const OnChangeType = (event: SelectChangeEvent<any>) => {
     const { target: { value } } = event;
@@ -211,7 +219,7 @@ export default function Catalogue() {
                 <Download></Download>
                 Télécharger les gabarits
               </WhiteButton>
-              <WhiteButton variant="contained" href="/create">
+              <WhiteButton variant="contained" onClick={openAddCaseStudyDialog}>
                 <Add></Add>
                 Ajouter une étude de cas
               </WhiteButton>
@@ -419,6 +427,7 @@ export default function Catalogue() {
           authorsFilters={authorsFilters}
         />
       </div>
+      <AddCaseStudy ref={addCaseStudyRef}/>
     </div>
   );
 }

@@ -18,18 +18,9 @@ import {TeamMember} from "../../model/Team";
 import {Accordion, AccordionDetails, AccordionSummary, Button, Fab, SxProps, Tooltip, makeStyles} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Timeline from "../about/creation/Timeline";
-import { useNavigate } from "react-router-dom";
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
 export default function AboutPage() {
-
-    const navigate = useNavigate();
-    const accessPlatform = () => {
-        navigate('/catalogue');
-    }
-    const accessGuides = () => {
-        navigate('/guide');
-    }
 
     const teamMembersManagement: TeamMember[] = [
         {
@@ -158,13 +149,13 @@ export default function AboutPage() {
     return <div id="landingPage">
             <LandingNavBar></LandingNavBar>
             <Tooltip title= "Accéder aux ressources pédagogiques" arrow>
-                <Fab sx={fabStyle as SxProps} id="guide-button" color="primary" size="large"><LightbulbIcon sx={iconStyle as SxProps} fontSize="large" onClick={accessGuides}/>
+                <Fab sx={fabStyle as SxProps} id="guide-button" color="primary" size="large" href="/guide"><LightbulbIcon sx={iconStyle as SxProps} fontSize="large"/>
                 </Fab>
             </Tooltip>
             <header className="student-banner">
                 <div></div>
                 <div id="access-platform">
-                    <Button variant="contained" color="primary" onClick={accessPlatform}>Accéder à la plateforme</Button>
+                    <Button variant="contained" color="primary"  href="/catalogue">Accéder à la plateforme</Button>
                 </div>
             </header>
             <div className="landing-segment-container">

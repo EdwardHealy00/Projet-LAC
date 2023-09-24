@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormControlLabel } from "@mui/material";
+import { FormControlLabel, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import "./PaidSwitch.scss";
@@ -78,12 +78,12 @@ interface Prop {
           <MaterialUISwitch
             checked={isChecked}
             onChange={handleSwitchChange}
-            sx={{ m: 1 }}
+            sx={{ m: 0.5 }}
           />
         }
         label={paidLabel}
       />
-      <span>{infoText}</span>
+      <Typography variant="body2">{infoText}</Typography>
     </div>
   );
 }
