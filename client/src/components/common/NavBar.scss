@@ -10,3 +10,9 @@
     flex-grow: 1;
     justify-self: end;
 }
+
+#lac-logo {
+    &:hover {
+        cursor: pointer;
+    } 
+}

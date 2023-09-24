@@ -13,6 +13,7 @@ import Login, { LoginRef } from "../connection/Login";
 import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
 import logo from "../../img/logo-lac-short.png";
+import { useNavigate } from "react-router-dom";
 
 interface Props {}
 
@@ -21,6 +22,12 @@ export interface NavBarRef {
 }
 
 const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
+  const navigate = useNavigate()
+
+  const goToLandingPage = () => {
+    navigate("/");
+  }
+
   useImperativeHandle(ref, () => ({
     SetIsLoggedIn(value: boolean) {
       if (loginRef.current) {
@@ -53,7 +60,7 @@ const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
       ) && (
         <AppBar position="static" id="nav-bar" style={appBarStyles}>
           <Toolbar disableGutters id="toolbar">
-            <img src={logo} alt="LAC logo" />
+            <img src={logo} alt="LAC logo" onClick={goToLandingPage} id="lac-logo"/>
             <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
               <WhiteButton className="navbutton" href="/catalogue">
                 Catalogue
