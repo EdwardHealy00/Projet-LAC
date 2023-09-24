@@ -15,15 +15,22 @@ import MEDIA from "../../img/icons/media.svg";
 import PENCIL from "../../img/icons/pencil.svg";
 import SPELL from "../../img/icons/spell.svg";
 import {TeamMember} from "../../model/Team";
-import {Accordion, AccordionDetails, AccordionSummary, Button} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Button, Fab, SxProps, Tooltip, makeStyles} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Timeline from "../about/creation/Timeline";
 import { useNavigate } from "react-router-dom";
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+
 export default function AboutPage() {
+
     const navigate = useNavigate();
     const accessPlatform = () => {
         navigate('/catalogue');
     }
+    const accessGuides = () => {
+        navigate('/guide');
+    }
+
     const teamMembersManagement: TeamMember[] = [
         {
             id: 1,
@@ -134,12 +141,30 @@ export default function AboutPage() {
             picture: "./img/member2.jpg",
         },
     ];
+
+    const fabStyle = {
+        position: 'fixed',
+        bottom: 16,
+        right: 16,
+        width: "4vw",
+        height: "4vw"
+    };
+
+    const iconStyle = {
+        width: "2.5vw",
+        height: "2.5vw"
+      };
+
     return <div id="landingPage">
             <LandingNavBar></LandingNavBar>
+            <Tooltip title= "Accéder aux ressources pédagogiques" arrow>
+                <Fab sx={fabStyle as SxProps} id="guide-button" color="primary" size="large"><LightbulbIcon sx={iconStyle as SxProps} fontSize="large" onClick={accessGuides}/>
+                </Fab>
+            </Tooltip>
             <header className="student-banner">
                 <div></div>
                 <div id="access-platform">
-                    <Button variant="contained" onClick={accessPlatform}>Accéder à la plateforme</Button>
+                    <Button variant="contained" color="primary" onClick={accessPlatform}>Accéder à la plateforme</Button>
                 </div>
             </header>
             <div className="landing-segment-container">
