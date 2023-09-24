@@ -181,6 +181,24 @@ function App() {
       },
     });
 
+  window.addEventListener('resize', function () {
+    arrangeNavBars();
+  });
+
+  window.addEventListener('load', function () {
+    arrangeNavBars();
+  });
+
+  const arrangeNavBars = () => {
+    const mainNavBar = document.querySelector('#nav-bar') as HTMLElement;
+    const mainContent = document.querySelector('#content') as HTMLElement;
+
+    if (mainNavBar && mainContent) {
+        const navbarHeight = mainNavBar.clientHeight;
+        mainContent.style.marginTop = `${navbarHeight}px`;
+    }
+  }
+
   return (
     <div>
         <ThemeProvider theme={theme}>

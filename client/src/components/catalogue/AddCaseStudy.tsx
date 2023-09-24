@@ -237,7 +237,7 @@ export default function AddCaseStudy() {
 
   return (
     <div>
-      <div style={{margin: '0px 200px'}}>
+      <div style={{margin: '5% 20%'}}>
         <DialogTitle>Ajouter une étude de cas</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -314,20 +314,6 @@ export default function AddCaseStudy() {
               fullWidth
               error={stateErrors.course.isError}
             />
-            {/* Seems like age is useless, TODO remove? */}
-            {/*<InputLabel
-                id="demo-simple-select-label"
-            >Age</InputLabel>
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Age"
-                onChange={undefined}
-            >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>*/}
             <InputLabel
                 id="demo-simple-select-label"
                 error={stateErrors.discipline.isError}
