@@ -58,7 +58,7 @@ const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
         window.location.pathname === "/" ||
         window.location.pathname === "/about"
       ) && (
-        <AppBar position="static" id="nav-bar" style={appBarStyles}>
+        <AppBar position="fixed" id="nav-bar" style={appBarStyles}>
           <Toolbar disableGutters id="toolbar">
             <img src={logo} alt="LAC logo" onClick={goToLandingPage} id="lac-logo"/>
             <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>

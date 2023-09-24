@@ -168,6 +168,29 @@ export default function Catalogue() {
     articlesRef.current.onSearch(e);
   };
 
+  window.addEventListener('resize', function () {
+    arrangeNavBars();
+  });
+
+  window.addEventListener('load', function () {
+    arrangeNavBars();
+  });
+
+  const arrangeNavBars = () => {
+    const mainNavBar = document.querySelector('#nav-bar') as HTMLElement;
+    const catalogueNavBar = document.querySelector('#rectangle') as HTMLElement;
+    const mainContent = document.querySelector('#rows') as HTMLElement;
+
+    if (mainNavBar && catalogueNavBar && mainContent) {
+        const navbar1Height = mainNavBar.clientHeight;
+        const navbar2Height = catalogueNavBar.clientHeight;
+
+        catalogueNavBar.style.top = `${navbar1Height - 2}px`;
+        mainContent.style.marginTop = `${navbar1Height + navbar2Height}px`;
+    }
+  }
+
+
   return (
     <div>
       <div
