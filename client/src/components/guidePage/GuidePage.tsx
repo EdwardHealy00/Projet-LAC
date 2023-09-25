@@ -5,6 +5,7 @@ import { Button, Typography } from "@mui/material";
 import { AppContext } from "../App";
 import { Download } from "@mui/icons-material";
 import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
+import Cookies from 'js-cookie';
 
 function GuidePage() {
   const appContext = useContext(AppContext);
