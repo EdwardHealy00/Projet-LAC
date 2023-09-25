@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { AppContext } from "../App";
+import Cookies from "js-cookie";
 
 export default function ResetPassword() {
   const { resetToken } = useParams();
@@ -48,7 +49,7 @@ export default function ResetPassword() {
       password: e.target.password.value,
     };
     sendNewPasswordForm(newPassword);
-    localStorage.remove("logged_in");
+    Cookies.remove("logged_in");
     navigate("/catalogue");
     if(appContext) appContext.openLogInPopup();
   };

@@ -6,6 +6,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Role } from "../../model/enum/Role";
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../App';
+import Cookies from 'js-cookie';
 
 export interface Props{}
 export interface LoginRef {
@@ -22,7 +23,7 @@ const Login = forwardRef<LoginRef, Props>(
 
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem('logged_in')));
+  const [loggedIn, setLoggedIn] = useState(Boolean(Cookies.get('logged_in')));
 
   const onLogout = () => {
     axios
