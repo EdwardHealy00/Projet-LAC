@@ -95,7 +95,9 @@ export class AuthController {
                         Date.now() + parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000
                     ),
                     maxAge: parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000,
-       //             httpOnly: true,
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'none',
                     domain: '.onrender.com',
                 };
 

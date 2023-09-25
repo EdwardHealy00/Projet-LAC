@@ -90,6 +90,7 @@ export class Application {
         }
         ));
         this.app.use(this.upload.any());
+        this.app.set("trust proxy", 1);
     }
 
     private errorHandling(): void {
