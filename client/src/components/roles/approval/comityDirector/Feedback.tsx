@@ -106,7 +106,7 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
           <b>
             L’auteur sera avisé par courriel du statut de suivi de son dossier.
           </b>
-          <br /> *si le cas est rejeté, vous pouvez suggérer de le publier en
+          <br /> *Si le cas est rejeté, vous pouvez suggérer de le publier en
           libre accès, le cas échéant.
         </Typography>
       </div>

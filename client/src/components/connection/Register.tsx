@@ -213,7 +213,7 @@ export default function Register() {
         <DialogTitle>S'inscrire</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Veuillez fournir les informations suivantes. Si le statut désiré n'est pas offert, contacter l'administrateur.
+            Veuillez fournir les informations indiquées peu après. Si le statut désiré n'est pas offert, contactez l'administrateur.
           </DialogContentText>
           <ul>
             {Object.entries(stateErrors).map(

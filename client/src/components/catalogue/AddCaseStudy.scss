@@ -1,0 +1,36 @@
+#add-case-study-form {
+    margin: 5% 8%;
+}
+
+#form-content {
+    margin: 3% 0%;
+}
+
+#no-docs-text {
+    margin: 0% 1%;
+}
+
+#select-options {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1%;
+    gap: 2%;
+}
+
+.select-option {
+    margin-bottom: 2%;
+    flex-grow: 1;
+    max-width: 50%;
+    width: 50%;
+}
+
+#verify-text {
+    margin-top: 2%;
+    margin-left: 2%;
+}
+
+#add-btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}

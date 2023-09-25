@@ -37,8 +37,8 @@ export default function AddToCatalogueFeedback(caseData: SingleCaseProp) {
             <Typography>
               <div>
                 <b>
-                  À noter que cette étape est irréversible; l'étude de cas sera disponible dans le catalogue
-                  après avoir confirmé. <br /> <br />
+                  À noter que cette étape est irréversible ; l'étude de cas sera disponible dans le catalogue
+                  après avoir été confirmé. <br /> <br />
                 </b>
               </div>
               {(newCase.isPaidCase &&

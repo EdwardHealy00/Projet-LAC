@@ -42,14 +42,16 @@ export class EmailService {
         this.sendEmail(mailOptions);
     }
 
-    sendNewUserEmail() {
-        const mailOptions = {
-            from: EMAIL_USERNAME,
-            to: "yanis.toubal@hotmail.com",
-            subject: "Un nouvel enseignant s'est enregistré",
-            text: "Un nouvel enseignant s'est enregistré, veuillez consultez votre compte pour évaluer celui-ci",
-        };
-        this.sendEmail(mailOptions);
+    sendNewUserEmail(deputies: Array<User>) {
+        for(var deputy of deputies) {
+            const mailOptions = {
+                from: EMAIL_USERNAME,
+                to: deputy.email,
+                subject: "Un nouvel enseignant s'est enregistré",
+                text: "Un nouvel enseignant s'est enregistré, veuillez consulter votre compte pour évaluer celui-ci.",
+            };
+            this.sendEmail(mailOptions);
+        }
     }
 
     sendResetPasswordEmail(userEmail: string, resetToken: string) {
@@ -57,7 +59,7 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: userEmail,
             subject: "Réinitialiser votre mot de passe",
-            text: `Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant: ${process.env.REACT_APP_BASE_API_URL}/reset-password/${resetToken}`,
+            text: `Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/reset-password/${resetToken}`,
         }
         this.sendEmail(mailOptions);
     }
@@ -67,7 +69,7 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: userEmail,
             subject: "Mot de passe réinitialisé",
-            text: "Votre mot de passe a été réinitialisé avec succès",
+            text: "Votre mot de passe a été réinitialisé avec succès.",
         }
         this.sendEmail(mailOptions);
     }
@@ -77,7 +79,7 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: userEmail,
             subject: "Votre preuve d'identité a été évaluée",
-            text: isApproved ? "Votre compte a été approuvée" : "Votre compte a été rejetée"
+            text: isApproved ? "Votre compte a été approuvé." : "Votre compte a été rejeté."
         }
         this.sendEmail(mailOptions);
     }
@@ -91,11 +93,11 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: email,
-            subject: `L'étude de cas nommée ${caseStudy.title}` + (isPreApproved ? `a été pré-approuvée` : `a été rejetée par l'adjoint administratif`), 
+            subject: `L'étude de cas nommée ${caseStudy.title}` + (isPreApproved ? ` a été préapprouvée` : ` a été rejetée par l'adjoint administratif`), 
             text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors}` + 
-                    (isPreApproved ? ` est maintenant prête à être évalué par le comité scientifique.`
-                                   : ` requiert des changements. Les critères suivants n'étaient pas respectés: \n\n` +`${criteriaText}`) +
-                    `\n\n Cliquez sur le lien suivant pour modifier celle-ci: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
+                    (isPreApproved ? ` est maintenant prête à être évaluée par le comité scientifique.`
+                                   : ` requiert des changements. Les critères suivants n'étaient pas respectés : \n\n` +`${criteriaText}`) +
+                    `\n\n Cliquez sur le lien suivant pour modifier celle-ci : ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
 
         }
         this.sendEmail(mailOptions);
@@ -116,7 +118,7 @@ export class EmailService {
             subject: `Votre étude de cas nommée ${caseStudy.title} a été revue`, 
             text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
                     `${decisionText} Consultez l'évaluation complète ci-dessous: \n\n${feedback}` + 
-                    `\n\n Cliquez-ci pour y consulter son statut: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
+                    `\n\n Cliquez ici pour y consulter son statut: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
         }
         this.sendEmail(mailOptions);
     }
@@ -126,7 +128,7 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été publiée`,
-            text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors} a été approuvée par la Presse Internationale de Polytechnique. \n\n Vous pouvez accédez à sa version publiée au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/catalogue`
+            text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors} a été approuvée par la Presse Internationale de Polytechnique. \n\n Vous pouvez accéder à sa version publiée au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/catalogue`
         }
         this.sendEmail(mailOptions);
     }
@@ -137,7 +139,7 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: deputy.email,
                 subject: isModifiedCaseStudy? `Une étude de cas modifiée requiert votre attention à nouveau`: `Une nouvelle étude de cas requiert votre attention`,
-                text: (isModifiedCaseStudy? `Une étude de cas modifiée`: `Une nouvelle étude de cas`) + `nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de pré-approbation. \n\n Vous pouvez y accéder au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
+                text: (isModifiedCaseStudy? `Une étude de cas modifiée`: `Une nouvelle étude de cas`) + `nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de préapprobation. \n\n Cliquez sur le lien suivant pour y accéder : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
@@ -148,8 +150,8 @@ export class EmailService {
             const mailOptions = {
                 from: EMAIL_USERNAME,
                 to: director.email,
-                subject: "Une étude de cas pré-approuvée requiert votre attention",
-                text: `Une étude de cas pré-approuvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de revue. \n\n Vous pouvez y accéder au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
+                subject: "Une étude de cas préapprouvée requiert votre attention",
+                text: `Une étude de cas préapprouvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de révision. \n\n Vous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
@@ -161,7 +163,7 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: deputy.email,
                 subject: "Une étude de cas revue requiert votre attention",
-                text: `Une étude de cas revue nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de confirmation finale. \n\n Vous pouvez y accéder au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
+                text: `Une étude de cas revue, nommée ${caseStudy.title} et écrite par ${caseStudy.authors}, est en attente de confirmation finale. \n\n Vous pouvez y accéder au lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
@@ -172,8 +174,8 @@ export class EmailService {
             const mailOptions = {
                 from: EMAIL_USERNAME,
                 to: director.email,
-                subject: `Une nouvelle revue a été complétée pour l'étude de cas ${caseStudy.title}`,
-                text: `Une nouvelle revue a été complétée par ${reviewAuthor} pour l\'étude de cas nommée ${caseStudy.title}. \n\n Vous pouvez y accéder au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
+                subject: `Une nouvelle révision a été complétée pour l'étude de cas ${caseStudy.title}`,
+                text: `Une nouvelle révision a été complétée par ${reviewAuthor} pour l\'étude de cas nommée ${caseStudy.title}. \n\n Vous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
             }
             this.sendEmail(mailOptions);
         }
@@ -184,8 +186,8 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été rejetée`,
-            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. De ce fait, celle-ci a été redirigée dans le processus d'approbation des études de cas gratuites. Consultez l'évaluation complète ci-dessous: \n\n${comments}` + 
-            `\n\n Cliquez-ci pour y consulter son statut: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
+            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été redirigée vers le processus d'approbation des études de cas gratuites. Consultez l'évaluation complète ci-dessous : \n\n${comments}` + 
+            `\n\n Cliquez ici pour y consulter son statut : ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
         }
         this.sendEmail(mailOptions);
     }
@@ -194,7 +196,7 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été rejetée`,
-            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. De ce fait, celle-ci a été retirée du processus d'approbation. Consultez l'évaluation complète ci-dessous: \n\n${comments}`
+            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été retirée du processus d'approbation. Consultez l'évaluation complète en cliquant sur le lien qui suit : \n\n${comments}`
         }
         this.sendEmail(mailOptions);
     }

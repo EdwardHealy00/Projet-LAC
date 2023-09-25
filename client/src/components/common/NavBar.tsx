@@ -1,12 +1,19 @@
-import { Button, ButtonGroup } from "@mui/material";
-import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from "react";
+import {
+  AppBar,
+  Box,
+  Button,
+  Toolbar,
+  alpha,
+  styled,
+  useTheme,
+} from "@mui/material";
+import React, { forwardRef, useImperativeHandle, useRef } from "react";
 import "./NavBar.scss";
 import Login, { LoginRef } from "../connection/Login";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { useNavigate } from "react-router-dom";
 import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
+import logo from "../../img/logo-lac-short.png";
+import { useNavigate } from "react-router-dom";
 
 interface Props {}
 
@@ -14,74 +21,75 @@ export interface NavBarRef {
   SetIsLoggedIn(value: boolean): void;
 }
 
-const NavBar = forwardRef<NavBarRef, Props>(
-  (_props, ref) => {
+const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
+  const navigate = useNavigate()
+
   useImperativeHandle(ref, () => ({
     SetIsLoggedIn(value: boolean) {
-      if(loginRef.current) {
+      if (loginRef.current) {
         loginRef.current.SetIsLoggedIn(value);
       }
     },
   }));
-  
+
   const loginRef = useRef<LoginRef | null>(null);
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const theme = useTheme();
+
+  const WhiteButton = styled(Button)({
+    color: theme.palette.primary.contrastText,
+
+    "&:hover": {
+      backgroundColor: alpha(theme.palette.common.white, 0.15), // Change to the desired hover color
+    },
+  });
+
+  const appBarStyles = {
+    backgroundColor: theme.palette.primary.main,
   };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const navigate = useNavigate();
-
-  const navigateSummary = useCallback(() => {
-    navigate("/summary");
-    handleClose();
-  }, [navigate]);
-
-  const navigateMission = useCallback(() => {
-    navigate("/mission");
-    handleClose();
-  }, [navigate]);
-
-  const navigateTeam = useCallback(() => {
-    navigate("/team");
-    handleClose();
-  }, [navigate]);
-
-  const navigateCreation = useCallback(() => {
-    navigate("/creation");
-    handleClose();
-  }, [navigate]);
 
   return (
-      <div>
-        {(!(window.location.pathname === '/' || window.location.pathname === '/about')) && (
-            <div id="navbar">
-              <div id="profile">
-                <Button className="navbutton" href="/catalogue">Catalogue</Button>
-                <UnlockAccess
-                    role={[Role.Deputy, Role.ComityDirector]}
-                    children={<Button href="/dashboard">Tableau de bord</Button>}
-                ></UnlockAccess>
-                <UnlockAccess
-                    role={[Role.Professor]}
-                    children={<Button className="navbutton" href="/my-pending-case-studies">Mes études de cas</Button>}
-                ></UnlockAccess>
-                <Button className="navbutton" href="/guide">Guides</Button>
-              </div>
-              <div id="loginStatus">
-                <Login ref={loginRef}/>
-              </div>
+    <div>
+      {!(
+        window.location.pathname === "/" ||
+        window.location.pathname === "/about"
+      ) && (
+        <AppBar position="fixed" id="nav-bar" style={appBarStyles}>
+          <Toolbar disableGutters id="toolbar">
+            <a href="/"><img src={logo} alt="LAC logo" id="lac-logo"/></a>
+            <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+              <WhiteButton className="navbutton" href="/catalogue">
+                Catalogue
+              </WhiteButton>
+              <UnlockAccess
+                role={[Role.Deputy, Role.ComityDirector]}
+                children={
+                  <WhiteButton href="/dashboard">Tableau de bord</WhiteButton>
+                }
+              ></UnlockAccess>
+              <UnlockAccess
+                role={[Role.Professor]}
+                children={
+                  <WhiteButton
+                    className="navbutton"
+                    href="/my-pending-case-studies"
+                  >
+                    Mes études de cas
+                  </WhiteButton>
+                }
+              ></UnlockAccess>
+              <WhiteButton className="navbutton" href="/guide">
+                Guides
+              </WhiteButton>
+            </Box>
+
+            <div id="loginStatus">
+              <Login ref={loginRef} />
             </div>
-        )
-
-        }
-      </div>
-
+          </Toolbar>
+        </AppBar>
+      )}
+    </div>
   );
 });
 

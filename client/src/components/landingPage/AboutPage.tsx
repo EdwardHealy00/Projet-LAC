@@ -14,13 +14,14 @@ import LIGHT from "../../img/icons/light.svg";
 import MEDIA from "../../img/icons/media.svg";
 import PENCIL from "../../img/icons/pencil.svg";
 import SPELL from "../../img/icons/spell.svg";
-import Login, {LoginRef} from "../connection/Login";
 import {TeamMember} from "../../model/Team";
-import {Accordion, AccordionDetails, AccordionSummary} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Button, Fab, SxProps, Tooltip, makeStyles} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Timeline from "../about/creation/Timeline";
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+
 export default function AboutPage() {
-    const loginRef = useRef<LoginRef | null>(null);
+
     const teamMembersManagement: TeamMember[] = [
         {
             id: 1,
@@ -131,12 +132,30 @@ export default function AboutPage() {
             picture: "./img/member2.jpg",
         },
     ];
+
+    const fabStyle = {
+        position: 'fixed',
+        bottom: 16,
+        right: 16,
+        width: "4vw",
+        height: "4vw"
+    };
+
+    const iconStyle = {
+        width: "2.5vw",
+        height: "2.5vw"
+      };
+
     return <div id="landingPage">
             <LandingNavBar></LandingNavBar>
+            <Tooltip title= "Accéder aux ressources pédagogiques" arrow>
+                <Fab sx={fabStyle as SxProps} id="guide-button" color="primary" size="large" href="/guide"><LightbulbIcon sx={iconStyle as SxProps} fontSize="large"/>
+                </Fab>
+            </Tooltip>
             <header className="student-banner">
                 <div></div>
                 <div id="access-platform">
-                    <Login ref={loginRef}/>
+                    <Button variant="contained" color="primary"  href="/catalogue">Accéder à la plateforme</Button>
                 </div>
             </header>
             <div className="landing-segment-container">

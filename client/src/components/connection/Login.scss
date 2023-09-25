@@ -3,5 +3,18 @@
 }
 
 #logoutButton {
-    background-color: red;
+    margin-left: 1%;
+}
+
+#login {
+    display: flex;
+    flex-direction: row;
+}
+
+#loginInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-grow: 1;
+    width: fit-content;
 }
