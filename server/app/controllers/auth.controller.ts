@@ -96,6 +96,7 @@ export class AuthController {
                     ),
                     maxAge: parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000,
        //             httpOnly: true,
+                    domain: '.onrender.com',
                 };
 
                 // Send Access Token in Cookie
