@@ -98,7 +98,6 @@ export class AuthController {
                     httpOnly: true,
                     secure: true,
                     sameSite: 'none',
-                    domain: '.onrender.com',
                 };
 
                 // Send Access Token in Cookie
