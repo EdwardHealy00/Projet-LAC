@@ -109,6 +109,8 @@ export class AuthController {
                     ),
                     maxAge: parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000,
                     httpOnly: false,
+                    secure: true,
+                    sameSite: 'none',
                 };
 
                 // Send Access Token in Cookie
