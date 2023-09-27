@@ -10,7 +10,6 @@ import axios from "axios";
 import { Role } from "../../model/enum/Role";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../App";
-import Cookies from "js-cookie";
 import { Typography, alpha, styled, useTheme } from "@mui/material";
 
 export interface Props {}
