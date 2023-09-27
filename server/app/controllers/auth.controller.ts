@@ -99,10 +99,18 @@ export class AuthController {
                     sameSite: 'none',
                 };
 
+                const loggedInCookieOptions: CookieOptions = {
+                    expires: new Date(
+                        Date.now() + parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000
+                    ),
+                    maxAge: parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000,
+                    httpOnly: false,
+                };
+
                 // Send Access Token in Cookie
                 res.cookie('accessToken', accessToken.access_token, accessTokenCookieOptions);
                 res.cookie('logged_in', true, {
-                    ...accessTokenCookieOptions,
+                    ...loggedInCookieOptions,
                 });
 
                 // Send Access Token
