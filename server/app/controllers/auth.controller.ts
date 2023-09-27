@@ -103,21 +103,8 @@ export class AuthController {
                     sameSite: 'none',
                 };
 
-                const loggedInCookieOptions: CookieOptions = {
-                    expires: new Date(
-                        Date.now() + parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000
-                    ),
-                    maxAge: parseInt(ACCESS_TOKEN_EXPIRES_IN) * 60 * 1000,
-                    httpOnly: false,
-                    secure: true,
-                    sameSite: 'none',
-                };
-
                 // Send Access Token in Cookie
                 res.cookie('accessToken', accessToken.access_token, accessTokenCookieOptions);
-                res.cookie('logged_in', true, {
-                    ...loggedInCookieOptions,
-                });
 
                 // Send Access Token
                 res.status(200).json({
@@ -136,7 +123,6 @@ export class AuthController {
         this.router.get('/logout', async (req: Request, res: Response, next: NextFunction) => {
             try {
                 res.clearCookie('accessToken');
-                res.clearCookie('logged_in');
                 res.status(200).json(
                     'Logout success'
                 );
@@ -160,7 +146,6 @@ export class AuthController {
                 res.cookie('accessToken', resetToken.reset_token, {
                     expires: new Date(Date.now() + 60 * 60 * 1000)
                 });
-                res.cookie('logged_in', false);
 
                 this.emailService.sendResetPasswordEmail(user!.email, resetToken.reset_token);
                 res.status(200).json(

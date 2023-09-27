@@ -26,7 +26,7 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
   }));
 
   const appContext = useContext(AppContext);
-  const [loggedIn, setLoggedIn] = useState(Boolean(Cookies.get("logged_in")));
+  const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("logged_in")));
 
   const onLogout = () => {
     axios
@@ -38,6 +38,7 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
           localStorage.removeItem("name");
           localStorage.removeItem("role");
           localStorage.removeItem("email");
+          localStorage.removeItem("logged_in");
           setLoggedIn(false);
           window.location.reload();
         }

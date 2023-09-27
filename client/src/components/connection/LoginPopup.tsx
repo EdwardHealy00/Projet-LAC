@@ -61,6 +61,7 @@ const LoginPopup = forwardRef<LoginPopupRef, Props>(
           localStorage.setItem("name", res.data.name);
           localStorage.setItem("role", res.data.role);
           localStorage.setItem("email", res.data.email);
+          localStorage.setItem("logged_in", "true");
           if(!hasExpired){
             window.location.reload(); // User logged in from landing page
           } else if(props.onLoggedIn){
