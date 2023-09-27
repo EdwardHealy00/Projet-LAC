@@ -62,7 +62,7 @@ const LoginPopup = forwardRef<LoginPopupRef, Props>(
           localStorage.setItem("role", res.data.role);
           localStorage.setItem("email", res.data.email);
           if(!hasExpired){
-            navigate("/catalogue") // User logged in from landing page
+            window.location.reload(); // User logged in from landing page
           } else if(props.onLoggedIn){
             props.onLoggedIn(); // Refresh only Login/Logout button to not lose changes
           } 

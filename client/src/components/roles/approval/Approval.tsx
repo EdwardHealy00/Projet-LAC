@@ -85,7 +85,7 @@ export default function Approval() {
   return (
     <div>
       <Button className="return" href="/dashboard">
-          &gt; Retour au dashboard
+          &gt; Retour au tableau de bord
         </Button>
       <Box sx={{ width: '100%', typography: 'body1' }}>
         <TabContext value={tabValue}>

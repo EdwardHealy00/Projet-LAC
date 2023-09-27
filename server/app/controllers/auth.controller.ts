@@ -56,7 +56,11 @@ export class AuthController {
                 }
 
                 this.emailService.sendWelcomeEmail(user!.email!, user!.firstName! + ' ' + user!.lastName!);
-                this.emailService.sendNewUserEmail();
+
+                if(user.role && userInfo.role == Role.ProfessorNotApproved) {
+                    const deputies = await this.userService.findUsers({ role: Role.Deputy });
+                    this.emailService.sendNewUserEmail(deputies);
+                }
 
                 res.status(201).json({
                     status: 'success',

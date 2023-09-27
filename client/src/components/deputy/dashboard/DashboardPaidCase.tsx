@@ -7,6 +7,7 @@ import { UnlockAccess } from "../../connection/UnlockAccess";
 import { Role } from "../../../model/enum/Role";
 import { useNavigate } from "react-router-dom";
 import ValidateTeacherList from "./ValidateTeacher";
+import { Divider, Typography } from "@mui/material";
 
 function DashboardPaidCase() {
 
@@ -19,7 +20,7 @@ function DashboardPaidCase() {
 
     <div id="dashboard">
       <div id="titleDashboard">
-        <h2>Tableau de bord - catalogue des cas payants</h2>
+        <Typography variant="h3">Tableau de bord</Typography>
       </div>
       <div id="casesBarChart">
         <div>
@@ -33,13 +34,17 @@ function DashboardPaidCase() {
         <UnlockAccess
           role={[Role.Deputy, Role.Comity, Role.ComityDirector]}
           children={
-            <Button variant="contained" onClick={() => onConsult()}>
+            <Button id="accessCaseStudyBtn" variant="contained" onClick={() => onConsult()}>
               Consulter les études de cas
             </Button>
           }
         ></UnlockAccess>
       </div>
-      <div>
+      <Divider></Divider>
+      <div id="approvalTeacher">
+        <div id="titleApprovalTeacher">
+          <Typography variant="h3">Professeur(e)s en attente d'approbation</Typography>
+        </div>
         <UnlockAccess
           role={[Role.Deputy]}
           children={<ValidateTeacherList />}

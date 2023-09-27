@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormControlLabel } from "@mui/material";
+import { FormControlLabel, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import "./PaidSwitch.scss";
@@ -21,7 +21,7 @@ interface Prop {
     ? "Étude de cas payante"
     : "Étude de cas gratuite";
   const infoText = isChecked
-    ? "En choisissant la formule payante, votre étude de cas sera soumise à un processus de révision approfondi, impliquant un adjoint administratif, le comité scientifique, ainsi que les Presses Internationales de Polytechnique. Suite à son approbation, les informations relatives à cette étude de cas seront publiées sur cette plateforme, toutefois, l'utilisateur sera dirigé vers les Presses Internationales de Polytechnique pour conclure la transaction."
+    ? "En choisissant la formule payante, votre étude de cas sera soumise à un processus de révision approfondi, impliquant un adjoint administratif, le comité scientifique  ainsi que les Presses Internationales de Polytechnique. À la suite de  son approbation, les informations relatives à cette étude de cas seront publiées sur cette plateforme  ; toutefois, l'utilisateur sera dirigé vers les Presses Internationales de Polytechnique pour conclure la transaction."
     : "En optant pour la formule gratuite, votre étude de cas bénéficiera d'une révision par un adjoint administratif et le comité scientifique. Une fois approuvée, celle-ci sera publiée et directement accessible sur cette plateforme.";
 
   const MaterialUISwitch = styled(Switch)(() => ({
@@ -78,12 +78,12 @@ interface Prop {
           <MaterialUISwitch
             checked={isChecked}
             onChange={handleSwitchChange}
-            sx={{ m: 1 }}
+            sx={{ m: 0.5 }}
           />
         }
         label={paidLabel}
       />
-      <span>{infoText}</span>
+      <Typography variant="body2">{infoText}</Typography>
     </div>
   );
 }

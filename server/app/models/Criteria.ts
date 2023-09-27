@@ -5,6 +5,6 @@ export enum Criteria {
     "Toutes les sections dans le gabarit sont dûment remplies.",
     "La matière semble pertinente au génie, aux sciences sociales ou à la technologie.",
     "La qualité rédactionnelle est satisfaisante.",
-    "Le formulaire de consentement est dûment rempli (signatures, dates, etc.)",
-    "Tous les fichiers pertinents à l’étude de cas sont présents (données, annexes, outils, etc.)",
+    "Le formulaire de consentement est dûment rempli (signatures, dates, etc .).",
+    "Tous les fichiers pertinents à l’étude de cas sont présents (données, annexes, outils, etc.).",
 }

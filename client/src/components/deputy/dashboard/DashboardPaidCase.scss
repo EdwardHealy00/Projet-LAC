@@ -2,16 +2,16 @@
     width: 100%;
 
     #titleDashboard {
-        background-color: rgba(30, 152, 215, 1);
-        color: white;
-        text-align: left;
-        padding: 10px;
+        text-align: center;
+        padding: 1%;
         width: 100%;
     }
 
     #casesBarChart {
         display: flex;
-        margin-top: 20px;
+        padding-top: 1%;
+        padding-left: 10%;
+        padding-right: 10%;
         div {
             width: 50%;
             border: 1px solid gray;
@@ -19,4 +19,22 @@
             margin: 10px;
         }
     }
+
+    #accessCaseStudyBtn {
+        width: 30%;
+        align-self: center;
+        margin: 1% 35% 2%;
+    }
+
+    #approvalTeacher {
+        padding: 0% 10%;
+
+        #titleApprovalTeacher {
+            text-align: center;
+            padding: 2%;
+            width: 100%;
+        }
+    }
+
+    
 }

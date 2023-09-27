@@ -1,28 +1,60 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { FormLabel, InputLabel, Select, Checkbox, ListItemText, Accordion, AccordionSummary, Typography, AccordionDetails, FormGroup, FormControlLabel } from "@mui/material";
+import {
+  FormLabel,
+  InputLabel,
+  Select,
+  Checkbox,
+  ListItemText,
+  Typography,
+  FormGroup,
+  FormControlLabel,
+  FormControl,
+  Card,
+  CardContent,
+  Dialog,
+} from "@mui/material";
 import { NewCaseStudy } from "../../model/CaseStudy";
 import axios from "axios";
 import MenuItem from "@mui/material/MenuItem";
 import { Disciplines, Subjects } from "./Catalogue";
-import NavBar from "../common/NavBar";
 import { useNavigate } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { checkList } from "../roles/approval/deputy/PreApproveFeedback";
 import { MAX_FILES_PER_CASE } from "../../utils/Constants";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import PaidSwitch from "./PaidSwitch";
+import "./AddCaseStudy.scss";
+import { forwardRef, useImperativeHandle } from "react";
 
+export interface Props {}
+export interface AddCaseStudyDialogRef {
+  setDialogOpen(): void;
+}
 
-export default function AddCaseStudy() {
-  
+const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
+  useImperativeHandle(ref, () => ({
+    setDialogOpen() {
+      openCaseStudyDialog();
+    },
+  }));
 
   const navigate = useNavigate();
 
-  const [checkedState, setCheckedState] = React.useState<boolean[]>(new Array(checkList.length).fill(false));
+  const [addCaseStudyDialogOpen, setAddCaseStudyDialogOpen] = React.useState(
+    false
+  );
+  const openCaseStudyDialog = () => {
+    setAddCaseStudyDialogOpen(true);
+  };
+  const handleCaseStudyDialogClose = () => {
+    setAddCaseStudyDialogOpen(false);
+  };
+
+  const [checkedState, setCheckedState] = React.useState<boolean[]>(
+    new Array(checkList.length).fill(false)
+  );
   const [isVerified, setVerified] = React.useState(false);
   const [isPaid, setIsPaid] = React.useState(false);
 
@@ -55,11 +87,11 @@ export default function AddCaseStudy() {
   const initialStateErrors = {
     caseStudyFile: { isError: false, message: "" },
     title: { isError: false, message: "" },
-    desc: { isError: false, message: ""},
+    desc: { isError: false, message: "" },
     author: { isError: false, message: "" },
     course: { isError: false, message: "" },
-    discipline: { isError: false, message: ""},
-    subject: { isError: false, message: ""},
+    discipline: { isError: false, message: "" },
+    subject: { isError: false, message: "" },
   };
 
   const [stateErrors, setStateErrors] = React.useState(initialStateErrors);
@@ -82,7 +114,7 @@ export default function AddCaseStudy() {
 
     setStateErrors(!isValid ? stateErrorsCopy : initialStateErrors);
     return isValid;
-  }
+  };
 
   const onValidation = (e: any) => {
     let isValid = true;
@@ -167,7 +199,7 @@ export default function AddCaseStudy() {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      onUploadValidation(e.target.files)
+      onUploadValidation(e.target.files);
       let fileNames = e.target.files[0].name;
       for (let i = 1; i < e.target.files.length; i++) {
         fileNames += ", " + e.target.files[i].name;
@@ -178,16 +210,16 @@ export default function AddCaseStudy() {
 
   const handleVerifyCheck = (index: number) => {
     const updatedCheckedState = checkedState.map((item: boolean, i) => {
-      return index === i ? !item : item
+      return index === i ? !item : item;
     });
     setCheckedState(updatedCheckedState);
 
     let result = true;
     updatedCheckedState.forEach((item) => {
       result = result && item;
-    })
+    });
     setVerified(result);
-  }
+  };
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -203,7 +235,7 @@ export default function AddCaseStudy() {
       submitter: localStorage.getItem("email"),
       classId: e.target.elements.course.value,
       files: Array.from(e.target.elements.caseStudyFile.files),
-      discipline : e.target.elements.discipline.value,
+      discipline: e.target.elements.discipline.value,
       isPaidCase: isPaid,
     } as NewCaseStudy;
 
@@ -213,9 +245,22 @@ export default function AddCaseStudy() {
       formData.append(key, caseStudy[key]);
     }
 
-    selectedSubjects.forEach(subject => formData.append('subjects[]', subject));
-    Array.from(e.target.elements.caseStudyFile.files).forEach(file => formData.append('files[]', (file as Blob)));
-    
+    selectedSubjects.forEach((subject) =>
+      formData.append("subjects[]", subject)
+    );
+    Array.from(e.target.elements.caseStudyFile.files).forEach((file) =>
+      formData.append("files[]", file as Blob)
+    );
+
+    setCaseStudyFileName("Aucun document n'a été téléversé");
+    setSelectedDiscipline("");
+    setSelectedSubject([]);
+    for(const index in checkList) {
+      checkedState[index] = false;
+    }
+    setStateErrors(initialStateErrors);
+    setVerified(false);
+
     sendAddCaseStudy(formData);
   };
 
@@ -226,7 +271,7 @@ export default function AddCaseStudy() {
         caseStudy,
         {
           withCredentials: true,
-        },
+        }
       )
       .then((res) => {
         if (res.status === 201) {
@@ -236,13 +281,17 @@ export default function AddCaseStudy() {
   };
 
   return (
-    <div>
-      <div style={{margin: '0px 200px'}}>
-        <DialogTitle>Ajouter une étude de cas</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+    <Dialog
+      open={addCaseStudyDialogOpen}
+      onClose={handleCaseStudyDialogClose}
+      maxWidth="md"
+    >
+      <div id="add-case-study-form">
+        <Typography variant="h3">Ajouter une étude de cas</Typography>
+        <div id="form-content">
+          <Typography variant="body1">
             Entrez les informations de l'étude de cas.
-          </DialogContentText>
+          </Typography>
           <ul>
             {Object.entries(stateErrors).map(
               ([field, error]) =>
@@ -258,9 +307,10 @@ export default function AddCaseStudy() {
             id="caseStudyForm"
             encType="multipart/form-data"
           >
-            <PaidSwitch onChange={handlePaidSwitchChange}/>
+            <PaidSwitch onChange={handlePaidSwitchChange} />
             <div>
               <Button variant="contained" component="label">
+                <FileUploadIcon />
                 Téléverser des documents Word
                 <input
                   hidden
@@ -272,7 +322,11 @@ export default function AddCaseStudy() {
                 />
               </Button>
               <FormLabel error={stateErrors.caseStudyFile.isError}>
-                {caseStudyFileName && <span>{caseStudyFileName}</span>}
+                {caseStudyFileName && (
+                  <Typography variant="caption" id="no-docs-text">
+                    {caseStudyFileName}
+                  </Typography>
+                )}
               </FormLabel>
             </div>
             <TextField
@@ -284,7 +338,7 @@ export default function AddCaseStudy() {
               fullWidth
               error={stateErrors.title.isError}
             />
-            <TextField 
+            <TextField
               multiline
               rows={3}
               margin="dense"
@@ -314,71 +368,57 @@ export default function AddCaseStudy() {
               fullWidth
               error={stateErrors.course.isError}
             />
-            {/* Seems like age is useless, TODO remove? */}
-            {/*<InputLabel
-                id="demo-simple-select-label"
-            >Age</InputLabel>
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Age"
-                onChange={undefined}
-            >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>*/}
-            <InputLabel
-                id="demo-simple-select-label"
-                error={stateErrors.discipline.isError}
-            >Discipline</InputLabel>
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Discipline"
-                name="discipline"
-                value={selectedDiscipline}
-                onChange={onDisciplineChanged}
-                error={stateErrors.discipline.isError}
-                style={{width: '250px'}}
-            >
-              {Disciplines.map((discipline) => (
-                <MenuItem value={discipline}>{discipline}</MenuItem>
-              ))}
-            </Select>
-            <InputLabel
-                id="demo-simple-select-label"
-                error={stateErrors.subject.isError}
-            >Sujet</InputLabel>
-            <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                multiple
-                label="Sujet"
-                name="subject"
-                value={selectedSubjects}
-                onChange={onSubjectChanged}
-                error={stateErrors.subject.isError}
-                renderValue={(selected) => selected.join(', ')}
-                style={{width: '250px'}}
-            >
-              {Subjects.map((subject) => (
-                <MenuItem value={subject}>
-                  <Checkbox checked={selectedSubjects.indexOf(subject) > -1} />
-                  <ListItemText primary={subject} />
-                </MenuItem>
-              ))}
-            </Select>
+            <div id="select-options">
+              <div className="select-option">
+                <FormControl fullWidth>
+                  <InputLabel>Discipline</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Discipline"
+                    name="discipline"
+                    value={selectedDiscipline}
+                    onChange={onDisciplineChanged}
+                    error={stateErrors.discipline.isError}
+                  >
+                    {Disciplines.map((discipline) => (
+                      <MenuItem value={discipline}>{discipline}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="select-option">
+                <FormControl fullWidth>
+                  <InputLabel>Sujet(s)</InputLabel>
+                  <Select
+                    labelId="demo-multiple-checkbox-label"
+                    id="demo-multiple-checkbox"
+                    multiple
+                    label="Sujet(s)"
+                    name="subject"
+                    value={selectedSubjects}
+                    onChange={onSubjectChanged}
+                    error={stateErrors.subject.isError}
+                    renderValue={(selected) => selected.join(", ")}
+                  >
+                    {Subjects.map((subject) => (
+                      <MenuItem value={subject}>
+                        <Checkbox
+                          checked={selectedSubjects.indexOf(subject) > -1}
+                        />
+                        <ListItemText primary={subject} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
           </form>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel2a-content"
-              id="panel2a-header"
-            >
-              <Typography>Vérifier le cas</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
+          <Card>
+            <Typography id="verify-text" variant="h4">
+              Vérifiez que votre étude de cas respecte les critères suivants:
+            </Typography>
+            <CardContent>
               <Typography>
                 <FormGroup>
                   {checkList.map((criteria, index) => (
@@ -392,15 +432,24 @@ export default function AddCaseStudy() {
                   ))}
                 </FormGroup>
               </Typography>
-            </AccordionDetails>
-          </Accordion>
-        </DialogContent>
-        <div style={{marginLeft: '24px'}}>
-          <Button disabled={!isVerified} variant="contained" type="submit" form="caseStudyForm">
+            </CardContent>
+          </Card>
+        </div>
+        <div id="add-btn">
+          <Button
+            style={{ width: "40%" }}
+            disabled={!isVerified}
+            variant="contained"
+            type="submit"
+            form="caseStudyForm"
+            onClick={handleCaseStudyDialogClose}
+          >
             Ajouter
           </Button>
         </div>
       </div>
-    </div>
+    </Dialog>
   );
-}
+});
+
+export default AddCaseStudy;
