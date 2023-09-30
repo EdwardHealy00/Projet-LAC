@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import "./Catalogue.scss";
 import SearchBar from "./SearchBar";
 import {
@@ -180,9 +180,9 @@ export default function Catalogue() {
     arrangeNavBars();
   });
 
-  window.addEventListener('load', function () {
+  useEffect(() => {
     arrangeNavBars();
-  });
+  }, []);
 
   const arrangeNavBars = () => {
     const mainNavBar = document.querySelector('#nav-bar') as HTMLElement;

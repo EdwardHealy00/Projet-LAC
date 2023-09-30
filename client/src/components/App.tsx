@@ -1,4 +1,4 @@
-import React, { createContext, useRef } from "react";
+import React, { createContext, useEffect, useRef } from "react";
 import Catalogue from "./catalogue/Catalogue";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import CaseStudyWconnection from "./caseStudy/CaseStudyWconnection";
@@ -181,13 +181,13 @@ function App() {
       },
     });
 
-  window.addEventListener('resize', function () {
-    arrangeNavBars();
-  });
-
-  window.addEventListener('load', function () {
-    arrangeNavBars();
-  });
+    window.addEventListener('resize', function () {
+      arrangeNavBars();
+    });
+  
+    useEffect(() => {
+      arrangeNavBars();
+    }, []);
 
   const arrangeNavBars = () => {
     const mainNavBar = document.querySelector('#nav-bar') as HTMLElement;
@@ -255,8 +255,8 @@ function App() {
       <LoginPopup onLoggedIn={onLoggedIn} ref={loginPopupRef}/>
   </AppContext.Provider>
   </div>
-        </ThemeProvider>
-    </div>
+  </ThemeProvider>
+</div>
    
       
   );
