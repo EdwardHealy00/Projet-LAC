@@ -36,7 +36,7 @@ interface ReviewCardProps {
         ))}
         <div className="download-option">
           <Typography>
-            Documents annotés déposés <b>({review.annotatedFiles.length}):</b>
+           <b>Documents annotés déposés ({review.annotatedFiles.length}):</b>
           </Typography>
           {review.annotatedFiles.length > 0 && (
             <Button
@@ -51,7 +51,7 @@ interface ReviewCardProps {
           )}
         </div>
         <div className="approval-decision">
-          <Typography variant="h4" color={getDecisionColor(review.decision)}>
+          <Typography variant="h5" color={getDecisionColor(review.decision)}>
             <b>{getApprovalDecision(review.decision)}</b>
           </Typography>
         </div>
