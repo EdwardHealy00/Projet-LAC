@@ -43,14 +43,14 @@ function GuidePage() {
   return (
     <>
       <div className="guide-page">
-        <h1>Ressources pédagogiques</h1>
+        <Typography className="guide-title" variant="h1">Ressources pédagogiques</Typography>
         <div id="template-download">
         <Button variant="contained" className="download-button" onClick={() => downloadCaseStudyTemplate()}> Télécharger les gabarits
         <Download></Download>
       </Button>
         </div>
         
-        <h2>Comment rédiger et animer une étude de cas ?</h2>
+        <Typography className="guide-title" variant="h3">Comment rédiger et animer une étude de cas ?</Typography>
         <div className="accordions-container">
           {unrestrictedPdfFiles.map((pdfFile, index) => (
             <PdfAccordion
