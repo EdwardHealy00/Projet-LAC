@@ -1,16 +1,20 @@
 #newCase {
-    width: 100%;
+    width: 60%;
+    margin: 0% 20%;
+    padding-top: 3%;
 }
 
 #generalCaseInfo {
     display: flex;
     flex-direction: column;
+}
 
-    div {
-        font-size: 20px;
-        font-weight: bold;
-        margin: 10px 0;
-    }
+#documents {
+    padding-top: 2%;
+}
+
+#feedback {
+    padding-top: 2%;
 }
 
 #caseLastRow {
@@ -30,56 +34,6 @@
     gap: 1%;
 }
 
-.review-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: auto;
-}
-
-.criteria-box {
-    display: flex;
-    flex-direction: row;
-}
-
-.radio-form-control {
-    margin-left: 1% !important;
-    width: 50%;
-}
-
-.decision-actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-end;
-    gap: 1%;
-}
-
-.submit-info {
-    margin: 1%;
-}
-
-.criteria-summary {
-    margin: 1%;
-}
-
-.review-title {
-    margin: 1%;
-    padding: 1%;
-}
-
-.director-comments {
-    margin: 1%;
-    padding: 1%;
-}
-
-.director-title {
-    margin-bottom: 1%;
-}
-
-#current-version {
-    margin: 1%;
-    padding: 1%;
-}
 
 .error-outline {
     outline: 1px solid red;

@@ -1,0 +1,26 @@
+#review-card {
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+}
+
+.criteria-summary {
+    margin: 1%;
+}
+
+.approval-decision {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin: 1%;
+}
+
+.download-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 1%;
+    padding-top: 1%;
+    gap: 1%;
+}

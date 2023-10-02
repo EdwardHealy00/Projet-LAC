@@ -1,7 +1,3 @@
-#pendingCase {
-    width: 100%;
-}
-
 #generalCaseInfo {
     display: flex;
     flex-direction: column;
@@ -13,10 +9,32 @@
     }
 }
 
-#folderTitle {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 10px 10px;
+#pending-case {
+    width: 60%;
+    margin: 0% 20%;
+    padding-top: 3%;
+}
+
+#version-accordion {
+    margin-bottom: 0.25%;
+}
+
+#feedback {
+    padding-top: 2%;
+}
+
+#documents {
+    padding-top: 2%;
+}
+
+#user-actions {
+    display: flex;
+    flex-direction: row;
+    padding: 1%;
+}
+
+#uploadNewFiles  {
+    flex-grow: 1;
 }
 
 #decision-actions {

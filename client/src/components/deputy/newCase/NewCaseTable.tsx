@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import { Document } from "../../../model/Document";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import axios from "axios";
+import { handleDownloadAll } from "../../../utils/FileDownloadUtil";
 
 interface CaseProp {
     documents: Document[];
@@ -42,12 +43,26 @@ export default function NewCaseTable(rows: CaseProp) {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Document</TableCell>
-            <TableCell align="right">Titre</TableCell>
-            <TableCell align="right">Type</TableCell>
-            <TableCell align="right">Format</TableCell>
-            <TableCell align="right">Ajouté le</TableCell>
-            <TableCell align="right"></TableCell>
+            <TableCell><b>Document</b></TableCell>
+            <TableCell align="left"><b>Titre</b></TableCell>
+            <TableCell align="center"><b>Type</b></TableCell>
+            <TableCell align="center"><b>Format</b></TableCell>
+            <TableCell align="center"><b>Ajouté le</b></TableCell>
+            <TableCell align="right"> 
+              { rows!!.documents.length > 1 &&
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    const files = rows!!.documents.map((document) => document.file); // TODO rename casestudy.files to documents, this is way too confusing...
+                    handleDownloadAll(files)}
+                  }
+                >
+                  <FileDownloadIcon /> 
+                  TOUT TÉLÉCHARGER
+                </Button>
+              }
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -59,10 +74,10 @@ export default function NewCaseTable(rows: CaseProp) {
               <TableCell component="th" scope="row">
                 {row.documentType}
               </TableCell>
-              <TableCell align="right">{row.title}</TableCell>
-              <TableCell align="right">{row.type}</TableCell>
-              <TableCell align="right">{row.format}</TableCell>
-              <TableCell align="right">{row.addedOn}</TableCell>
+              <TableCell align="left">{row.title}</TableCell>
+              <TableCell align="center">{row.type}</TableCell>
+              <TableCell align="center">{row.format}</TableCell>
+              <TableCell align="center">{new Date(row.addedOn).toLocaleDateString('fr-CA')}</TableCell>
               <TableCell align="right">
                 <Button variant="outlined" onClick={() => handleFileDownload(row.file)}>
                   <FileDownloadIcon /> Télécharger

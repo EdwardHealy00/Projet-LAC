@@ -168,16 +168,16 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
     };
 
     return (
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Document</TableCell>
-              <TableCell align="right">Titre</TableCell>
-              <TableCell align="right">Type</TableCell>
-              <TableCell align="right">Format</TableCell>
-              <TableCell align="right">Ajouté le</TableCell>
-              <TableCell align="right"></TableCell>
+            <TableCell><b>Document</b></TableCell>
+            <TableCell align="left"><b>Titre</b></TableCell>
+            <TableCell align="center"><b>Type</b></TableCell>
+            <TableCell align="center"><b>Format</b></TableCell>
+            <TableCell align="center"><b>Ajouté le</b></TableCell>
+            <TableCell align="right"></TableCell> 
             </TableRow>
           </TableHead>
           <TableBody>
@@ -189,10 +189,10 @@ const PendingCaseEditTable = forwardRef<PendingCaseEditTableRef, CaseProp>(
                 <TableCell component="th" scope="row">
                   {row.documentType}
                 </TableCell>
-                <TableCell align="right">{row.title}</TableCell>
-                <TableCell align="right">{row.type}</TableCell>
-                <TableCell align="right">{row.format}</TableCell>
-                <TableCell align="right">{row.addedOn}</TableCell>
+                <TableCell align="left">{row.title}</TableCell>
+                <TableCell align="center">{row.type}</TableCell>
+                <TableCell align="center">{row.format}</TableCell>
+                <TableCell align="center">{new Date(row.addedOn).toLocaleDateString('fr-CA')}</TableCell>
                 <TableCell align="right">
                   {!row.isPending && (
                     <Button

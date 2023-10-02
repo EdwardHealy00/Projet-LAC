@@ -7,6 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
+import { Typography } from "@mui/material";
 
 export default function ForgotPassword() {
   const [open, setOpen] = React.useState(false);
@@ -46,19 +47,19 @@ export default function ForgotPassword() {
   return (
     <div>
       <a href="#" onClick={handleClickOpen}>
-        Mot de passe oublié?
+        <Typography>Mot de passe oublié?</Typography>
       </a>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Mot de passe oublié</DialogTitle>
+        <DialogTitle><Typography variant="h4">Mot de passe oublié</Typography></DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Entrez votre adresse e-mail pour réinitialiser votre mot de passe.
+            Entrez votre adresse courriel pour réinitialiser votre mot de passe.
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="email"
-            label="Email Address"
+            label="Adresse courriel"
             type="email"
             fullWidth
             variant="standard"

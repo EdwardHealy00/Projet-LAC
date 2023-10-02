@@ -1,6 +1,6 @@
 #approvalPage {
-    width: 90%;
-    margin: 0% 5%;
+    width: 80%;
+    margin: 0% 10%;
 
     #filterStatus {
         width: 100%;
@@ -18,3 +18,10 @@
     top: 0;
 }
 
+.title-field {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

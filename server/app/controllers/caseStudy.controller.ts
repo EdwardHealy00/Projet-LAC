@@ -276,11 +276,14 @@ export class CaseStudyController {
                 
                 let totalNbPages = 0;
                 for (let i = 0; i < caseStudy.files.length; i++) {
-                    totalNbPages += caseStudy.files[i].pages;
+                    if(caseStudy.files[i].pages) {
+                        totalNbPages += caseStudy.files[i].pages;
+                    }
                 }
-                caseStudy.page = totalNbPages;
 
+                caseStudy.page = totalNbPages;
                 caseStudy.approvalDecision = ApprovalDecision.PENDING;
+
                 if (caseStudy.status == CaseStep.WaitingComity) {
                     caseStudy.status = CaseStep.WaitingPreApproval;
                 }

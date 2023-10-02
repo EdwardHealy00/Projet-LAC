@@ -1,0 +1,43 @@
+#review-card {
+    padding: 1%;
+}
+
+.radio-form-control {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    width: 80% !important;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.criteria-eval {
+    width: 100%;
+}
+
+.criteria-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: center;
+}
+
+.decision-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: fit-content;
+    justify-content: space-between;
+    gap: 1%;
+}
+
+.error-outline {
+    outline: 1px solid red;
+}
+
