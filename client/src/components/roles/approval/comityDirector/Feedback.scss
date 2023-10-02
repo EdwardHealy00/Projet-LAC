@@ -1,0 +1,53 @@
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: auto;
+}
+
+.submit-info {
+    margin: 1%;
+}
+
+.review-title {
+    margin: 1%;
+    padding: 1%;
+}
+
+.director-comments {
+    margin: 1%;
+    padding: 1%;
+}
+
+.director-title {
+    margin-bottom: 1%;
+}
+
+#current-version {
+    margin: 1%;
+    padding: 1%;
+}
+
+#version-accordion {
+    margin-bottom: 0.25%;
+}
+
+.director-footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#final-feedback {
+    margin-top: 3%;
+}
+
+#final-feedback-card {
+    padding: 1%;
+}
+
+.empty-section {
+    width: 100%;
+    text-align: center;
+    padding: 5%;
+}
+

@@ -1,14 +1,12 @@
 import {
-  Accordion,
-  AccordionSummary,
   Typography,
-  AccordionDetails,
+  Card,
+  styled,
+  useTheme,
   Button,
 } from "@mui/material";
 import React from "react";
 import "./NewCase.scss";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { Case } from "../../../model/CaseStudy";
 import { useLocation } from "react-router-dom";
 import NewCaseTable from "./NewCaseTable";
@@ -21,7 +19,6 @@ import { createCaseFromData } from "../../../utils/ConvertUtils";
 import { Role } from "../../../model/enum/Role";
 import ComityDirectorFeedback from "../../roles/approval/comityDirector/Feedback";
 import { UnlockAccess } from "../../connection/UnlockAccess";
-import { handleDownloadAll } from "../../../utils/FileDownloadUtil";
 
 function NewCase() {
   const location = useLocation();
@@ -69,44 +66,67 @@ function NewCase() {
       });
   };
 
+  const theme = useTheme();
+  const ColoredTypography = styled(Typography)({
+    color: theme.palette.primary.main, // Apply your custom styles here
+  });
+
   return (
     <div>
+      <UnlockAccess
+        role={[Role.Deputy, Role.ComityDirector]}
+        children={
+          <Button href="/approval">
+            &gt; Retour au tableau de cas
+          </Button>
+        }></UnlockAccess>
       {caseStudy && (
         <div id="newCase">
-          <div id="generalCaseInfo">
-            <div>Cas: {caseStudy.id_}</div>
-            <div>Titre: {caseStudy.title}</div>
-            <div id="caseLastRow">
-              <div>Auteur: {caseStudy.authors} </div>
-              <div>Reçu le: {caseStudy.date} </div>
-            </div>
-          </div>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              const files = caseStudy!!.files.map((document) => document.file); // TODO rename casestudy.files to documents, this is way too confusing...
-              handleDownloadAll(files)}
-            }
-          >
-            <FileDownloadIcon /> TOUT TÉLÉCHARGER
-          </Button>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>Documents soumis par l'auteur</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                <NewCaseTable documents={caseStudy.files} />
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <br />
+          <Typography variant="h4">Informations sur le cas</Typography>
+          <Card id="generalCaseInfo">
+            <div>
+                  <Typography>
+                    {caseStudy.date.substring(0, 10)}
+                  </Typography>
+                    <ColoredTypography variant="h3">
+                      {caseStudy.title}
+                    </ColoredTypography>
+                  <Typography variant="h5">Par {caseStudy.authors}</Typography>
+              </div>
+              <div>
+                <Typography variant="body1">
+                  {" "}
+                  <b>Description : </b> {caseStudy.desc}
+                </Typography>
+                <Typography variant="body1">
+                  {" "}
+                  <b>Discipline : </b>
+                  {caseStudy.discipline}
+                </Typography>
+                <Typography variant="body1">
+                  {" "}
+                  <b>Cours : </b>
+                  {caseStudy.classId}
+                </Typography>
+                <Typography variant="body1">
+                  {" "}
+                  <b>Sujet(s) : </b>
+                  {caseStudy.subjects.join(", ")}
+                </Typography>
+                <Typography variant="body1">
+                  {" "}
+                  <b>Nombre de pages : </b>
+                  {caseStudy.page}
+                </Typography>
+              </div>
+          </Card>
 
+          <div id="documents">
+            <Typography variant="h4">Documents soumis par l'auteur</Typography>
+            <NewCaseTable documents={caseStudy.files} />
+          </div>
+
+          <div id="feedback">
           {/* PREAPPROVAL */}
           <UnlockAccess
             role={[Role.Deputy]}
@@ -148,6 +168,7 @@ function NewCase() {
               )
             }
           ></UnlockAccess>
+          </div>
         </div>
       )}
     </div>
