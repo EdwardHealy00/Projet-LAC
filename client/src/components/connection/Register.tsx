@@ -16,6 +16,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Typography,
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import { UserRegister } from "../../model/User";
@@ -207,10 +208,10 @@ export default function Register() {
   return (
     <div>
       <a href="#" onClick={handleClickOpen}>
-        Vous n'avez pas de compte?
+        <Typography>Vous n'avez pas de compte?</Typography>
       </a>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>S'inscrire</DialogTitle>
+        <DialogTitle><Typography variant="h4">S'inscrire</Typography></DialogTitle>
         <DialogContent>
           <DialogContentText>
             Veuillez fournir les informations indiquées peu après. Si le statut désiré n'est pas offert, contactez l'administrateur.
