@@ -42,7 +42,7 @@ export default function AboutPage() {
             id: 3,
             name: "Olivier Gendreau",
             title: "Ph.D",
-            role: "Gestion du volet technologique",
+            role: "Directeur technologique",
             occupation: "Maître d'enseignement, génie logiciel",
             picture: "./img/member3.jpg",
         },
@@ -60,14 +60,14 @@ export default function AboutPage() {
             id: 4,
             name: "Samira Keivanpour",
             title: "Ph.D",
-            occupation: "Professeure adjointe, sujet",
+            occupation: "Professeure adjointe, production durable",
             picture: "./img/member4.jpg",
         },
         {
             id: 5,
             name: "Fabiano Armellini",
             title: "Ph.D",
-            occupation: "Professeur agrégé, entrepreunariat technologique",
+            occupation: "Professeur titulaire, entrepreunariat technologique",
             picture: "./img/member5.jpg",
         },
     ];
@@ -124,12 +124,12 @@ export default function AboutPage() {
         {
             id: 10,
             name: "Charles Poulin",
-            picture: "./img/member2.jpg",
+            picture: "./img/member6.jpg",
         },
         {
             id: 11,
             name: "Edward Healy",
-            picture: "./img/member2.jpg",
+            picture: "./img/member6.jpg",
         },
     ];
 
@@ -327,7 +327,7 @@ export default function AboutPage() {
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Étudiants PRISME 2021-2022
+                            Étudiants en génie industriel (2021-2022)
                         </AccordionSummary>
                         <AccordionDetails>
                             <p>
@@ -373,7 +373,7 @@ export default function AboutPage() {
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Étudiants en génie logiciel (développement)
+                            Étudiants en génie logiciel (2022-2023)
                         </AccordionSummary>
                         <AccordionDetails>
                             <p>

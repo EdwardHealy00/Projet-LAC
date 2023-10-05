@@ -57,6 +57,7 @@ export const Subjects = [
   "Recherche opérationnelle",
   "Économie circulaire",
   "Développement durable",
+  "Innovation",
 ];
 
 export default function Catalogue() {
