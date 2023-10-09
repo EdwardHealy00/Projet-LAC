@@ -33,18 +33,18 @@ export default function AboutPage() {
         },
         {
             id: 2,
-            name: "Grégoire Banse",
-            role: "Adjoint à la direction",
-            occupation: "Étudiant, génie industriel",
-            picture: "./img/member2.jpg",
-        },
-        {
-            id: 3,
             name: "Olivier Gendreau",
             title: "Ph.D",
             role: "Directeur technologique",
             occupation: "Maître d'enseignement, génie logiciel",
             picture: "./img/member3.jpg",
+        },
+        {
+            id: 3,
+            name: "Grégoire Banse",
+            role: "Responsable des communications",
+            occupation: "Étudiant, génie industriel",
+            picture: "./img/member2.jpg",
         },
     ];
 
