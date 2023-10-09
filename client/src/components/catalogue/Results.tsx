@@ -75,7 +75,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
                 {caseData.date.substring(0, 10)}
               </Typography>
               <div className="title-and-icon">
-                <ColoredTypography variant="h3" className="field">
+                <ColoredTypography variant="h4" className="field">
                   {caseData.title}
                 </ColoredTypography>
                 {caseData.isPaidCase && <AttachMoney className="dollar-icon" />}
@@ -83,7 +83,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
               <Typography variant="h5">Par {caseData.authors}</Typography>
             </div>
             <div className="rightside-info">
-              <Rating value={caseData.ratings} readOnly></Rating>
+              <Rating value={caseData.ratings} readOnly size="small"></Rating>
               <Typography variant="caption">
                 ({caseData.votes} votes)
               </Typography>
