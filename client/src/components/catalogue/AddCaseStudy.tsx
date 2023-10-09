@@ -381,8 +381,8 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
                     onChange={onDisciplineChanged}
                     error={stateErrors.discipline.isError}
                   >
-                    {Disciplines.map((discipline) => (
-                      <MenuItem value={discipline}>{discipline}</MenuItem>
+                    {Disciplines.map((discipline, index) => (
+                      <MenuItem key={index} value={discipline}>{discipline}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -401,8 +401,8 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
                     error={stateErrors.subject.isError}
                     renderValue={(selected) => selected.join(", ")}
                   >
-                    {Subjects.map((subject) => (
-                      <MenuItem value={subject}>
+                    {Subjects.map((subject, index) => (
+                      <MenuItem key={index} value={subject}>
                         <Checkbox
                           checked={selectedSubjects.indexOf(subject) > -1}
                         />

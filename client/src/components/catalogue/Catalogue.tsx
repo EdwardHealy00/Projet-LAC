@@ -256,8 +256,8 @@ export default function Catalogue() {
                 }
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                    {selected.map((value, index) => (
+                      <Chip key={index} label={value} />
                     ))}
                   </Box>
                 )}
@@ -285,14 +285,14 @@ export default function Catalogue() {
                 }
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                    {selected.map((value, index) => (
+                      <Chip key={index} label={value} />
                     ))}
                   </Box>
                 )}
               >
-                {Disciplines.map((name) => (
-                  <MenuItem key={name} value={name}>
+                {Disciplines.map((name, index) => (
+                  <MenuItem key={index} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -313,14 +313,14 @@ export default function Catalogue() {
                 }
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                    {selected.map((value, index) => (
+                      <Chip key={index} label={value} />
                     ))}
                   </Box>
                 )}
               >
-                {Subjects.map((name) => (
-                  <MenuItem key={name} value={name}>
+                {Subjects.map((name, index) => (
+                  <MenuItem key={index} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -344,14 +344,14 @@ export default function Catalogue() {
                 }
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                    {selected.map((value, index) => (
+                      <Chip key={index} label={value} />
                     ))}
                   </Box>
                 )}
               >
-                {dates.map((name) => (
-                  <MenuItem key={name} value={name}>
+                {dates.map((name, index) => (
+                  <MenuItem key={index} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -375,14 +375,14 @@ export default function Catalogue() {
                 }
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                    {selected.map((value, index) => (
+                      <Chip key={index} label={value} />
                     ))}
                   </Box>
                 )}
               >
-                {numberPages.map((name) => (
-                  <MenuItem key={name} value={name}>
+                {numberPages.map((name, index) => (
+                  <MenuItem key={index} value={name}>
                     {name}
                   </MenuItem>
                 ))}
@@ -403,14 +403,14 @@ export default function Catalogue() {
                 }
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                    {selected.map((value, index) => (
+                      <Chip key={index} label={value} />
                     ))}
                   </Box>
                 )}
               >
-                {caseStudyAuthors.map((name) => (
-                  <MenuItem key={name} value={name}>
+                {caseStudyAuthors.map((name, index) => (
+                  <MenuItem key={index} value={name}>
                     {name}
                   </MenuItem>
                 ))}

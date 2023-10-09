@@ -52,7 +52,8 @@ const Results: React.FC<Props> = ({ caseData }) => {
     }
   };
 
-  const onActionClick = () => {
+  const onActionClick = (event: any) => {
+    event.stopPropagation();
     if (caseData.isPaidCase) {
       window.open(caseData.url as string, "_blank");
     } else {
@@ -139,8 +140,8 @@ const Results: React.FC<Props> = ({ caseData }) => {
         <DialogTitle>Consulter les fichiers</DialogTitle>
 
         <DialogContent>
-          {caseData.files.map((file: { originalname: string }) => (
-            <div className="file-row">
+          {caseData.files.map((file: { originalname: string }, index: number) => (
+            <div key={index} className="file-row">
               <div>{file.originalname}</div>
               <Button onClick={() => handleFileDownload(file)}>
                 <Download />
@@ -212,8 +213,8 @@ const Results: React.FC<Props> = ({ caseData }) => {
             <div>
 
               {!caseData.isPaidCase &&
-                caseData.files.map((file: { originalname: string }) => (
-                  <div className="file-row">
+                caseData.files.map((file: { originalname: string }, index: number) => (
+                  <div key={index} className="file-row">
                     <div>{file.originalname}</div>
                     <Button onClick={() => handleFileDownload(file)}>
                       <Download />
