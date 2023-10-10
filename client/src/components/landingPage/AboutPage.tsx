@@ -70,6 +70,13 @@ export default function AboutPage() {
             occupation: "Professeur titulaire, entrepreunariat technologique",
             picture: "./img/member5.jpg",
         },
+        {
+            id: 6,
+            name: "Éric Germain",
+            title: "B.Ing., M.Sc.A. (Poly), M.Sc. (HEC)",
+            occupation: "Maître d'enseignement",
+            picture: "./img/member7.jpg",
+        },
     ];
     const studentsPrisme: TeamMember[] = [
         {
