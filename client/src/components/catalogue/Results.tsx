@@ -52,7 +52,8 @@ const Results: React.FC<Props> = ({ caseData }) => {
     }
   };
 
-  const onActionClick = () => {
+  const onActionClick = (event: any) => {
+    event.stopPropagation();
     if (caseData.isPaidCase) {
       window.open(caseData.url as string, "_blank");
     } else {
@@ -75,7 +76,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
                 {caseData.date.substring(0, 10)}
               </Typography>
               <div className="title-and-icon">
-                <ColoredTypography variant="h3" className="field">
+                <ColoredTypography variant="h4" className="field">
                   {caseData.title}
                 </ColoredTypography>
                 {caseData.isPaidCase && <AttachMoney className="dollar-icon" />}
@@ -83,7 +84,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
               <Typography variant="h5">Par {caseData.authors}</Typography>
             </div>
             <div className="rightside-info">
-              <Rating value={caseData.ratings} readOnly></Rating>
+              <Rating value={caseData.ratings} readOnly size="small"></Rating>
               <Typography variant="caption">
                 ({caseData.votes} votes)
               </Typography>
@@ -139,8 +140,8 @@ const Results: React.FC<Props> = ({ caseData }) => {
         <DialogTitle>Consulter les fichiers</DialogTitle>
 
         <DialogContent>
-          {caseData.files.map((file: { originalname: string }) => (
-            <div className="file-row">
+          {caseData.files.map((file: { originalname: string }, index: number) => (
+            <div key={index} className="file-row">
               <div>{file.originalname}</div>
               <Button onClick={() => handleFileDownload(file)}>
                 <Download />
@@ -212,8 +213,8 @@ const Results: React.FC<Props> = ({ caseData }) => {
             <div>
 
               {!caseData.isPaidCase &&
-                caseData.files.map((file: { originalname: string }) => (
-                  <div className="file-row">
+                caseData.files.map((file: { originalname: string }, index: number) => (
+                  <div key={index} className="file-row">
                     <div>{file.originalname}</div>
                     <Button onClick={() => handleFileDownload(file)}>
                       <Download />

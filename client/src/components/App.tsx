@@ -139,43 +139,43 @@ function App() {
     typography: {
         fontFamily: `-apple-system, BlinkMacSystemFont, 'Yaldevi', 'Gotu', sans-serif`,
         h1: {
-            fontSize: '2.5rem',
+            fontSize: `calc(1.15rem + 1.15vw)`,
             fontWeight: 'bold',
           },
           h2: {
-            fontSize: '2rem',
+            fontSize: `calc(0.9rem + 0.9vw)`,
             fontWeight: 'bold',
           },
           h3: {
-            fontSize: '1.5rem',
+            fontSize: `calc(0.65rem + 0.65vw)`,
             fontWeight: 'bold',
           },
           h4: {
-            fontSize: '1.2rem',
+            fontSize: `calc(0.5rem + 0.5vw)`,
             fontWeight: 'bold',
           },
           h5: {
-            fontSize: '1rem',
+            fontSize: `calc(0.4rem + 0.4vw)`,
             fontWeight: 'bold',
           },
           h6: {
-            fontSize: '0.8rem',
+            fontSize: `calc(0.3rem + 0.3vw)`,
             fontWeight: 'bold',
           },
           subtitle1: {
-            fontSize: '1.1rem',
+            fontSize: `calc(0.45rem + 0.45vw)`,
             lineHeight: 1.5,
           },
           body1: {
-            fontSize: '1rem',
+            fontSize: `calc(0.4rem + 0.4vw)`,
             lineHeight: 1.5,
           },
           body2: {
-            fontSize: '0.9rem',
+            fontSize: `calc(0.35rem + 0.35vw)`,
             lineHeight: 1.4,
           },
           caption: {
-            fontSize: '0.8rem',
+            fontSize: `calc(0.3rem + 0.3vw)`,
             lineHeight: 1.2,
           },
       },

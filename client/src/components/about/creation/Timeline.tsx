@@ -1,12 +1,13 @@
-import * as React from 'react';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import Typography from '@mui/material/Typography';
+import * as React from "react";
+import Timeline from "@mui/lab/Timeline";
+import TimelineItem from "@mui/lab/TimelineItem";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import TimelineConnector from "@mui/lab/TimelineConnector";
+import TimelineContent from "@mui/lab/TimelineContent";
+import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
+import TimelineDot from "@mui/lab/TimelineDot";
+import Typography from "@mui/material/Typography";
+import { downloadCaseStudyTemplate } from "../../../utils/FileDownloadUtil";
 import "./Timeline.scss";
 
 export default function CustomizedTimeline() {
@@ -32,7 +33,7 @@ export default function CustomizedTimeline() {
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent>
-          <b>Septembre 2021</b>
+          <b>Automne 2021</b>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
@@ -49,9 +50,6 @@ export default function CustomizedTimeline() {
       </TimelineItem>
 
       <TimelineItem>
-        <TimelineOppositeContent>
-          <b>Octobre 2021</b>
-        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -65,9 +63,6 @@ export default function CustomizedTimeline() {
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
-        <TimelineOppositeContent>
-          <b>Novembre 2021</b>
-        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -76,12 +71,18 @@ export default function CustomizedTimeline() {
           <div className="eventsList">
             <ul>
               <li>
-                <a href={`${process.env.REACT_APP_BASE_API_URL}/api/images/revue-de-litterature.png`} target="_blank">
+                <a
+                  href={`${process.env.REACT_APP_BASE_API_URL}/api/images/revue-de-litterature.png`}
+                  target="_blank"
+                >
                   Revue de la littérature
                 </a>
               </li>
               <li>
-                <a href={`${process.env.REACT_APP_BASE_API_URL}/api/images/sondage-et-entrevues.png`} target="_blank">
+                <a
+                  href={`${process.env.REACT_APP_BASE_API_URL}/api/images/sondage-et-entrevues.png`}
+                  target="_blank"
+                >
                   Sondages et entrevues avec les parties prenantes
                 </a>
               </li>
@@ -93,9 +94,6 @@ export default function CustomizedTimeline() {
       </TimelineItem>
 
       <TimelineItem>
-        <TimelineOppositeContent>
-          <b>Décembre 2021</b>
-        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -118,7 +116,7 @@ export default function CustomizedTimeline() {
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent>
-          <b>Janvier 2022</b>
+          <b>Hiver 2022</b>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
@@ -129,7 +127,7 @@ export default function CustomizedTimeline() {
             <ul>
               <li>
                 <a
-                  href={`${process.env.REACT_APP_BASE_API_URL}/api/images/processus.png/`}
+                  href={`${process.env.REACT_APP_BASE_API_URL}/api/images/processus.png`}
                   target="_blank"
                 >
                   Cartographies des processus
@@ -141,9 +139,6 @@ export default function CustomizedTimeline() {
       </TimelineItem>
 
       <TimelineItem>
-        <TimelineOppositeContent>
-          <b>Février 2022</b>
-        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -157,9 +152,6 @@ export default function CustomizedTimeline() {
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
-        <TimelineOppositeContent>
-          <b>Mars 2022</b>
-        </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
@@ -186,8 +178,6 @@ export default function CustomizedTimeline() {
           <Typography>
             <ul>
               <li>Développement de la plateforme numérique (site web)</li>
-              <li>Création des gabarit pour les cas</li>
-              <li>Création du comité scientifique</li>
             </ul>
           </Typography>
         </TimelineContent>
@@ -203,8 +193,71 @@ export default function CustomizedTimeline() {
         <TimelineContent sx={{ py: "12px", px: 2 }}>
           <div className="eventsList">
             <ul>
+              <li>
+                Création des{" "}
+                <a onClick={() => downloadCaseStudyTemplate()} style={{ textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}>
+                  gabarits
+                </a>{" "}
+                pour les cas
+              </li>
+              <li>Création du comité scientifique</li>
+            </ul>
+          </div>
+        </TimelineContent>
+      </TimelineItem>
+      <TimelineItem>
+        <TimelineOppositeContent>
+          <b>Hiver 2023</b>
+        </TimelineOppositeContent>
+        <TimelineSeparator>
+          <TimelineDot />
+          <TimelineConnector />
+        </TimelineSeparator>
+        <TimelineContent sx={{ py: "12px", px: 2 }}>
+          <div className="eventsList">
+            <ul>
               <li>Édition des premiers cas</li>
-              <li>Lancement de la plateforme à l’interne (phase 1)</li>
+            </ul>
+          </div>
+        </TimelineContent>
+      </TimelineItem>
+      <TimelineItem>
+        <TimelineOppositeContent>
+          <b>Été et automne 2023</b>
+        </TimelineOppositeContent>
+        <TimelineSeparator>
+          <TimelineDot />
+          <TimelineConnector />
+        </TimelineSeparator>
+        <TimelineContent sx={{ py: "12px", px: 2 }}>
+          <div className="eventsList">
+            <ul>
+              <li>
+                Poursuite du développement de la plateforme (prétest et mise à
+                jour)
+              </li>
+              <li>
+                Création de{" "}
+                <a href="/guide" target="_blank">
+                  guides pédagogiques
+                </a>{" "}
+              </li>
+            </ul>
+          </div>
+        </TimelineContent>
+      </TimelineItem>
+      <TimelineItem>
+        <TimelineOppositeContent>
+          <b>Hiver 2024</b>
+        </TimelineOppositeContent>
+        <TimelineSeparator>
+          <TimelineDot />
+          <TimelineConnector />
+        </TimelineSeparator>
+        <TimelineContent sx={{ py: "12px", px: 2 }}>
+          <div className="eventsList">
+            <ul>
+              <li>Lancement de la plateforme à l’interne</li>
             </ul>
           </div>
         </TimelineContent>

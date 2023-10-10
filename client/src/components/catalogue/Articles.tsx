@@ -242,8 +242,8 @@ const Articles = forwardRef<ArticlesRef, ArticlesProps>((props, ref) => {
     <div id="articles">
       <Typography id="results-text"> {showCaseStudies.length} résultats</Typography>
       <div id="articles-results">
-        {showCaseStudies.map((caseStudy) => (
-          <Results key={caseStudy.id_} caseData={caseStudy} />
+        {showCaseStudies.map((caseStudy, index) => (
+          <Results key={index} caseData={caseStudy} />
         ))}
       </div>
     </div>

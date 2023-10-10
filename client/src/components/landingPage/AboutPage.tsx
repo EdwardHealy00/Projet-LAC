@@ -33,18 +33,18 @@ export default function AboutPage() {
         },
         {
             id: 2,
-            name: "Grégoire Banse",
-            role: "Adjoint à la direction",
-            occupation: "Étudiant, génie industriel",
-            picture: "./img/member2.jpg",
+            name: "Olivier Gendreau",
+            title: "Ph.D",
+            role: "Directeur technologique",
+            occupation: "Maître d'enseignement, génie logiciel",
+            picture: "./img/member3.jpg",
         },
         {
             id: 3,
-            name: "Olivier Gendreau",
-            title: "Ph.D",
-            role: "Gestion du volet technologique",
-            occupation: "Maître d'enseignement, génie logiciel",
-            picture: "./img/member3.jpg",
+            name: "Grégoire Banse",
+            role: "Responsable des communications",
+            occupation: "Étudiant, génie industriel",
+            picture: "./img/member2.jpg",
         },
     ];
 
@@ -60,15 +60,22 @@ export default function AboutPage() {
             id: 4,
             name: "Samira Keivanpour",
             title: "Ph.D",
-            occupation: "Professeure adjointe, sujet",
+            occupation: "Professeure adjointe, production durable",
             picture: "./img/member4.jpg",
         },
         {
             id: 5,
             name: "Fabiano Armellini",
             title: "Ph.D",
-            occupation: "Professeur agrégé, entrepreunariat technologique",
+            occupation: "Professeur titulaire, entrepreunariat technologique",
             picture: "./img/member5.jpg",
+        },
+        {
+            id: 6,
+            name: "Éric Germain",
+            title: "B.Ing., M.Sc.A. (Poly), M.Sc. (HEC)",
+            occupation: "Maître d'enseignement",
+            picture: "./img/member7.jpg",
         },
     ];
     const studentsPrisme: TeamMember[] = [
@@ -124,12 +131,12 @@ export default function AboutPage() {
         {
             id: 10,
             name: "Charles Poulin",
-            picture: "./img/member2.jpg",
+            picture: "./img/member6.jpg",
         },
         {
             id: 11,
             name: "Edward Healy",
-            picture: "./img/member2.jpg",
+            picture: "./img/member6.jpg",
         },
     ];
 
@@ -327,7 +334,7 @@ export default function AboutPage() {
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Étudiants PRISME 2021-2022
+                            Étudiants en génie industriel (2021-2022)
                         </AccordionSummary>
                         <AccordionDetails>
                             <p>
@@ -373,7 +380,7 @@ export default function AboutPage() {
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Étudiants en génie logiciel (développement)
+                            Étudiants en génie logiciel (2022-2023)
                         </AccordionSummary>
                         <AccordionDetails>
                             <p>

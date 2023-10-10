@@ -196,7 +196,7 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été rejetée`,
-            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été retirée du processus d'approbation. Consultez l'évaluation complète en cliquant sur le lien qui suit : \n\n${comments}`
+            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été retirée du processus d'approbation. Consultez l'évaluation complète ci-dessous : \n\n${comments}`
         }
         this.sendEmail(mailOptions);
     }
