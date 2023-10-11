@@ -131,12 +131,12 @@ export default function AboutPage() {
         {
             id: 10,
             name: "Charles Poulin",
-            picture: "./img/member6.jpg",
+            picture: "./img/student10.jpg",
         },
         {
             id: 11,
             name: "Edward Healy",
-            picture: "./img/member6.jpg",
+            picture: "./img/student11.jpg",
         },
     ];
 
