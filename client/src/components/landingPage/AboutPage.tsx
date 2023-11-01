@@ -73,9 +73,23 @@ export default function AboutPage() {
         {
             id: 6,
             name: "Éric Germain",
-            title: "B.Ing., M.Sc.A. (Poly), M.Sc. (HEC)",
-            occupation: "Maître d'enseignement",
+            title: "B.Ing., M.Sc.A.",
+            occupation: "Maître d'enseignement, génie logiciel",
             picture: "./img/member7.jpg",
+        },
+        {
+            id: 7,
+            name: "Camélia Dadouchi",
+            title: "Ph.D.",
+            occupation: "Professeure adjointe, génie industriel",
+            picture: "./img/member8.jpg",
+        },
+        {
+            id: 8,
+            name: "Octave Niamié",
+            title: "Ph.D.",
+            occupation: "Professeur adjoint, entrepreneuriat technologique",
+            picture: "./img/member9.jpg",
         },
     ];
     const studentsPrisme: TeamMember[] = [
