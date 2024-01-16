@@ -134,7 +134,7 @@ export class UserController {
                 access_token = req.headers.authorization.split(' ')[1];
             } else if (req.cookies.accessToken) {
                 access_token = req.cookies.accessToken;
-                console.log(access_token);
+                //console.log(access_token);
             }
 
             if (!access_token) {
