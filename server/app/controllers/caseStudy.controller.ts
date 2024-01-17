@@ -404,6 +404,12 @@ export class CaseStudyController {
                     return;
                 }
 
+                if(caseStudy.status == CaseStep.WaitingComity) {
+                    logError(res.locals.user, "401", "Case study has already been preapproved")
+                    res.status(401).json('L\'étude de cas a déjà été préapprouvée');
+                    return;
+                }
+
                 if(caseStudy.status == CaseStep.WaitingPreApproval) {
                     let writtenCriterias: string[] = [];
                     for(var criteriaIndex of failedCriterias) {
