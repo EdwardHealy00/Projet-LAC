@@ -1,13 +1,81 @@
+#registerForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1%;
+}
+
 #registerRole, #registerCountry {
-    width: 40%;
+    width: 45%;
   }
 
 .formControl {
-    margin: 8px !important; 
+  margin: 1% 1% !important;
+}
+
+#user-fullname {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  width: 100%;
+}
+
+#user-status{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+#user-credentials {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  width: 100%;
+}
+
+#user-password {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  width: 100%;
+}
+
+#user-school {
+  width: 100%;
+  margin: 1% !important;
+}
+
+#user-school-form {
+  width: 92%;
+}
+
+#user-location {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  width: 100%;
+}
+
+.smallTextField {
+  width: 45%;
+  margin: 1% !important;
+}
+
+.largeTextField {
+  width: 92%;
+  margin: 1% !important;
 }
 
 #uploadProof {
-  vertical-align: sub;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+#uploadProofButton {
+  margin: 1% 1% !important;
+  width: 45%;
 }
 
 .fieldError {
