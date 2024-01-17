@@ -55,7 +55,7 @@ export class AuthController {
                     return;
                 }
 
-                this.emailService.sendWelcomeEmail(user!.email!, user!.firstName! + ' ' + user!.lastName!);
+                this.emailService.sendWelcomeEmail(user!.email!, user!.firstName! + ' ' + user!.lastName!, user!.role!);
 
                 if(user.role && userInfo.role == Role.ProfessorNotApproved) {
                     const deputies = await this.userService.findUsers({ role: Role.Deputy });

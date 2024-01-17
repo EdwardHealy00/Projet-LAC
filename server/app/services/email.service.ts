@@ -4,6 +4,7 @@ import { EMAIL_USERNAME, EMAIL_PASSWORD } from '@app/constant/constant';
 import { CaseStudy } from '@app/models/caseStudy.model';
 import { User } from '@app/models/user.model';
 import { ApprovalDecision } from '@app/models/ApprovalDecision';
+import { Role } from '@app/models/Role';
 
 @Service()
 export class EmailService {
@@ -31,14 +32,48 @@ export class EmailService {
         );
     }
 
-    sendWelcomeEmail(userEmail: string, userName: string) {
-        const mailOptions = {
-            from: EMAIL_USERNAME,
-            to: userEmail,
-            subject: "Bienvenue",
-            text: "Bienvenue sur la plateforme LAC " + userName,
+    sendWelcomeEmail(userEmail: string, userName: string, userRole: string) {
+        if(userRole == Role.ProfessorNotApproved) {
+            const mailOptions = {
+                from: EMAIL_USERNAME, 
+                to: userEmail,
+                subject: 'Bienvenue au Laboratoire d\'Apprentissage par les Cas (LAC) !',
+                html: `
+                    <p>Cher(e) ${userName},</p>
+                    <br>
+                    <p>Nous sommes ravis de vous accueillir au sein du Laboratoire d'Apprentissage par les Cas (LAC) en tant que professeur(e)! 🚀 </p>
+                    <br>   
+                    <p>Notre adjoint administratif ne devrait pas tarder à réviser votre preuve de statut! En attendant, nous vous recommandons fortement de jeter un coup d'oeil à nos <a href="${process.env.REACT_APP_BASE_API_URL}/guide}" target="_blank">guide pédagogiques</a>.</p>
+                    <p>Ceux-ci ont été soigneusement élaborés pour vous accompagner dans la rédaction et l'animation d'étude de cas</p>
+                    <br>
+                    <p>Vous pouvez sans plus tarder consulter l'entiereté de nos études de cas à l'adresse suivante:  ${process.env.REACT_APP_BASE_API_URL}/catalogue</p>
+                    <br>
+                    <p>Bienvenue au Laboratoire d'Apprentissage par les Cas !
+                    <br>
+                    <p>Cordialement,<br>L'Équipe du LAC</p>
+                `,
+            };
+            this.sendEmail(mailOptions);
         }
-        this.sendEmail(mailOptions);
+        else {
+            const mailOptions = {
+                from: EMAIL_USERNAME, 
+                to: userEmail,
+                subject: 'Bienvenue au Laboratoire d\'Apprentissage par les Cas (LAC) !',
+                html: `
+                    <p>Cher(e) ${userName},</p>
+                    <br>
+                    <p>Nous sommes ravis de vous accueillir au sein du Laboratoire d'Apprentissage par les Cas (LAC) en tant qu'étudiant! 🚀</p>
+                    <br>
+                    <p>Vous pouvez sans plus tarder consulter l'entiereté de nos études de cas à l'adresse suivante:  ${process.env.REACT_APP_BASE_API_URL}/catalogue</p>
+                    <br>
+                    <p>Bienvenue au Laboratoire d'Apprentissage par les Cas !
+                    <br>
+                    <p>Cordialement,<br>L'Équipe du LAC</p>
+                `,
+            };
+            this.sendEmail(mailOptions);
+        }
     }
 
     sendNewUserEmail(deputies: Array<User>) {
