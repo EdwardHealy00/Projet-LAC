@@ -26,6 +26,7 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
 
   const appContext = useContext(AppContext);
   const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("logged_in")));
+  const navigate = useNavigate();
 
   const onLogout = () => {
     axios
@@ -39,7 +40,7 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
           localStorage.removeItem("email");
           localStorage.removeItem("logged_in");
           setLoggedIn(false);
-          window.location.reload();
+          navigate("/catalogue")
         }
       });
   };
