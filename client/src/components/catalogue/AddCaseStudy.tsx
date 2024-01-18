@@ -262,6 +262,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
     setVerified(false);
 
     sendAddCaseStudy(formData);
+    setAddCaseStudyDialogOpen(false);
   };
 
   const sendAddCaseStudy = (caseStudy: FormData) => {
@@ -442,7 +443,6 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
             variant="contained"
             type="submit"
             form="caseStudyForm"
-            onClick={handleCaseStudyDialogClose}
           >
             Ajouter
           </Button>
