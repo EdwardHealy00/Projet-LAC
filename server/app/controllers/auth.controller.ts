@@ -44,14 +44,14 @@ export class AuthController {
 
                 if (userInfo.role != Role.Student && userInfo.role != Role.ProfessorNotApproved) {
                     res.status(422).json({
-                        status: 'It is not possible to create this type of account from the signup form. This will be reported.'
+                        status: "Il est impossible de créer ce type d'identifiants à partir de ce formulaire. Cet incident sera reporté."
                     });
                     return;
                 }
 
                 const user = await this.userService.createUser(userInfo);
                 if (!user) {
-                    res.status(500).json('Error creating user');
+                    res.status(500).json("Une erreur est survenue en créant l'utilisateur");
                     return;
                 }
 
@@ -70,12 +70,9 @@ export class AuthController {
                 });
             } catch (err: any) {
                 console.log(err);
-                //if (err.code === 11000) {
-                    res.status(409).json(
-                        'Email already exists'
-                    );
-                //}
-                //next(err);
+                res.status(409).json(
+                    "Un compte est déjà associé à cette adresse courriel"
+                );
             }
         });
 
@@ -88,7 +85,7 @@ export class AuthController {
                     !user ||
                     !(await user.comparePasswords(user.password, req.body.password))
                 ) {
-                    res.status(401).json('Invalid email or password');
+                    res.status(401).json('Les identifiants fournis sont incorrects');
                     return;
                 }
                 // Create an Access Token
@@ -116,7 +113,7 @@ export class AuthController {
             } catch (err: any) {
                 console.log(err);
                 res.status(400).json(
-                    'Email already exist');
+                    'Une erreur est survenue');
             }
         });
 
@@ -124,12 +121,12 @@ export class AuthController {
             try {
                 res.clearCookie('accessToken');
                 res.status(200).json(
-                    'Logout success'
+                    'Déconnexion'
                 );
             } catch (err: any) {
                 console.log(err);
                 res.status(400).json(
-                    'Logout fail');
+                    'Déconnexion échouée');
             }
         });
 
@@ -138,7 +135,7 @@ export class AuthController {
                 const user = await this.userService.findUser({ email: req.body.email });
                 if (!user) {
                     res.status(400).json(
-                        'User not found',
+                        'Utilisateur introuvable',
                     );
                 }
                 const resetToken = await this.userService.createResetToken(user!);
@@ -149,12 +146,12 @@ export class AuthController {
 
                 this.emailService.sendResetPasswordEmail(user!.email, resetToken.reset_token);
                 res.status(200).json(
-                    'Email sent'
+                    'Courriel envoyé avec succès'
                 );
             } catch (err: any) {
                 console.log(err);
                 res.status(400).json(
-                    'Email not sent'
+                    "Une erreur est survenue dans l'envoi du courriel"
                 );
             }
 
@@ -165,24 +162,24 @@ export class AuthController {
                 const decoded = verifyJwt<{ sub: string }>(req.body.reset_token);
 
                 if (!decoded) {
-                    res.status(401).json('Invalid token');
+                    res.status(401).json('La demande de réinitalisation a expiré');
                     return;
                 }
 
                 const user = await this.userService.findUser({ _id: decoded!.sub });
                 if (!user) {
-                    res.status(401).json('User not found');
+                    res.status(401).json('Utilisateur introuvable');
                     return;
                 }
 
                 await this.userService.updatePassword(user!, req.body.password);
                 this.emailService.sendConfirmPasswordReset(user!.email);
-                res.status(200).json('Password reset',
+                res.status(200).json('Mot de passe réinitialisé avec succès',
                 );
             } catch (err: any) {
                 console.log(err);
                 res.status(400).json(
-                    'Password not reset',
+                    'Une erreur est survenue',
                 );
             }
         });
@@ -196,14 +193,12 @@ export class AuthController {
                     query: req.query,
                     body: req.body,
                 });
-
                 return next();
             } catch (err: any) {
-                console.log(err);
-                if (err instanceof ZodError) {
-                    return res.status(400).json("Il y a une erreur dans le formulaire");
-                }
-                return next(err);
+                if (err instanceof ZodError && err.errors[0]) {
+                    return res.status(401).json(err.errors[0].message); 
+                } 
+                return res.status(401).json("Une erreur est survenue: " + err);
             }
         };
     }

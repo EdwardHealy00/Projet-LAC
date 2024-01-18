@@ -32,21 +32,17 @@ export const createUserSchema = object({
 
 export const loginUserSchema = object({
     body: object({
-        email: string({ required_error: 'Email is required' }).email(
-            'Invalid email or password'
-        ),
-        password: string({ required_error: 'Password is required' })
-        .min(8, 'Invalid email or password')
-        .max(32, 'Invalid email or password'),
+        email: z.string().min(1, 'Adresse courriel requise').email("Format d'adresse courriel invalide"),
+        password: z.string().min(1, 'Mot de passe requis'),
     }),
 });
 
 export const updatePasswordSchema = object({
     body: object({
-        password: string({ required_error: 'Password is required' })
-            .min(8, 'Password must be more than 8 characters')
-            .max(32, 'Password must be less than 32 characters'),
-        reset_token: string({ required_error: 'Reset token is required' }),
+        password: string({ required_error: 'Veuillez entrez un mot de passe' })
+            .min(8, 'Le mot de passe doit avoir au minimum 8 caractères')
+            .max(32, 'Le mot de passe doit avoir au maximum 32 caractères'),
+        reset_token: string({ required_error: 'La demande de réinitialisation du mot de passe a expiré' }),
     }),
 
 });
