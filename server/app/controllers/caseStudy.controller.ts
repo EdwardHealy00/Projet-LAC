@@ -10,6 +10,7 @@ import { CaseStep } from '@app/models/CaseStatus';
 import { MAX_FILES_PER_CASE } from '@app/constant/constant';
 import { ComityMemberReview } from '@app/models/ComityMemberReview';
 import { ApprovalDecision } from '@app/models/ApprovalDecision';
+import { logError, logInfo } from '@app/utils/logs';
 
 export const excludedFields = ['_id', 'file', 'fieldName', 'encoding', 'mimetype', 'destination', 'filename', 'path', ];
 
@@ -30,8 +31,10 @@ export class CaseStudyController {
             try {
                 const caseStudies = await this.caseStudyService.findAllCaseStudys();
 
+                logInfo(res.locals.user, "Get all case studies")
                 res.json(caseStudies);
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error getting all case studies")
                 console.log(err);
             }
 
@@ -41,8 +44,10 @@ export class CaseStudyController {
             try {
                 const caseStudies = await this.caseStudyService.findRestrictedCaseStudys();
 
+                logInfo(res.locals.user, "Get the entire catalogue")
                 res.json(caseStudies);
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error getting the catalogue")
                 console.log(err);
             }
 
@@ -51,9 +56,11 @@ export class CaseStudyController {
         this.router.get('/paid', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.Comity, Role.ComityDirector), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const caseStudies = await this.caseStudyService.getAllPaidCaseStudies();
-
+                
+                logInfo(res.locals.user, "Get all paid study cases")
                 res.json(caseStudies);
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error getting all paid study cases")
                 next(err);
             }
 
@@ -63,8 +70,10 @@ export class CaseStudyController {
             try {
                 const caseStudies = await this.caseStudyService.getRestrictedPaidCaseStudies();
 
+                logInfo(res.locals.user, "Get all paid cases from catalogue")
                 res.json(caseStudies);
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error getting all paid cases from catalogue")
                 console.log(err);
             }
 
@@ -73,8 +82,11 @@ export class CaseStudyController {
         this.router.get('/authors', async (req: Request, res: Response) => {
             try {
                 const caseStudyAuthors = await this.caseStudyService.findAllCaseStudyAuthors();
+
+                logInfo(res.locals.user, "Get all authors")
                 res.json(caseStudyAuthors);
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error getting all authors")
                 console.log(err);
             }
         });
@@ -84,10 +96,12 @@ export class CaseStudyController {
                 const caseStudy = await this.caseStudyService.findCaseStudyById(req.params.id);
 
                 if (!caseStudy) {
+                    logError(res.locals.user, "404", "Couldn't find case study")
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
                 if(!res.locals.user && caseStudy.status != CaseStep.Posted) {
+                    logError(res.locals.user, "401", "Authentification error")
                     res.status(401).json("Authentication error");
                     return;
                 }
@@ -95,12 +109,15 @@ export class CaseStudyController {
                 const role = res.locals.user.role;
                 const isNotPrivileged = role === Role.Professor || role === Role.ProfessorNotApproved || role === Role.Student;
                 if(isNotPrivileged && caseStudy.status != CaseStep.Posted && res.locals.user.email !== caseStudy.submitter) {
+                    logError(res.locals.user, "403", "Forbidden to view a case study submitted by other user")
                     res.status(403).json('Il est interdit de consulter une étude de cas en cours d\'évaluation déposée par un autre utilisateur');
                     return;
                 }
 
+                logInfo(res.locals.user, "Get case study named: " + caseStudy.title)
                 res.json(caseStudy);
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error getting case study with id: " + req.params.id)
                 console.log(err);
             }
         });
@@ -109,8 +126,10 @@ export class CaseStudyController {
             try {
                 const caseStudies = await this.caseStudyService.findAllMyCaseStudies(req.params.email);
 
+                logInfo(res.locals.user, "Get all user case studies")
                 res.json(caseStudies);
             } catch (err: any) {
+                logError(res.locals.user, "403", "Error getting user case studies")
                 console.log(err);
             }
 
@@ -120,12 +139,15 @@ export class CaseStudyController {
             try {
                 const caseStudyStream = await this.caseStudyService.getCaseStudyFile(req.params.filename);
                 if (!caseStudyStream) {
+                    logError(res.locals.user, "404", "Couldn't find file")
                     res.status(404).json('Le fichier n\'a pas été trouvé');
                     return;
                 }
-
+                logInfo(res.locals.user, "Downloaded file: " + req.params.filename)
                 caseStudyStream.pipe(res);
             } catch (err: any) {
+
+                logError(res.locals.user, err.name, "Error downloading file")
                 console.log(err);
             }
         });
@@ -134,18 +156,22 @@ export class CaseStudyController {
             try {
                 var isSuccessful = await this.caseStudyService.deleteCaseStudyFile(req.params.filename);
                 if (!isSuccessful) {
+                    logError(res.locals.user, "404", "File " + req.params.filename + "couldn't be deleted")
                     res.status(404).json('Le fichier ' + req.params.filename+  ' n\'a pas pu être supprimé');
                     return;
                 }
                 if(req.body.caseStudy.approvalDecision == ApprovalDecision.PENDING) {
+                    logError(res.locals.user, "405", "Deleting a file from a pending case study is forbidden")
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
                 if(res.locals.user.email !== req.body.caseStudy.submitter) {
+                    logError(res.locals.user, "405", "Deleting a file from someone else's case study is forbidden")
                     res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
                     return;
                 }
                 
+                logInfo(res.locals.user, "File " + req.params.filename + "was deleted successfully")
                 res.status(200).json({
                     status: 'success',
                 });
@@ -160,14 +186,17 @@ export class CaseStudyController {
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
 
                 if (!caseStudy) {
+                    logError(res.locals.user, "404", "Case study was not found")
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
                 if (caseStudy.approvalDecision == ApprovalDecision.PENDING) {
+                    logError(res.locals.user, "405", "Editing a pending case study is forbidden")
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
                 if(res.locals.user.email !== caseStudy.submitter) {
+                    logError(res.locals.user, "405", "Editing someone else's case study is forbidden")
                     res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
                     return;
                 }
@@ -175,10 +204,13 @@ export class CaseStudyController {
                 caseStudy.files = req.body.files;
 
                 await this.caseStudyService.updateCaseStudy(caseStudy);
+
+                logInfo(res.locals.user, "References from deleted files were successfully removed from case study: " + caseStudy.title)
                 res.status(200).json({
                     status: 'success',
                 });
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while removing file references from " + req.params.id)
                 console.log(err);
             }
         });
@@ -189,14 +221,17 @@ export class CaseStudyController {
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
 
                 if (!caseStudy) {
+                    logError(res.locals.user, "404", "Case study was not found")
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
                 if (caseStudy.approvalDecision == ApprovalDecision.PENDING) {
+                    logError(res.locals.user, "405", "Editing a pending case study is forbidden")
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
                 if(res.locals.user.email !== caseStudy.submitter) {
+                    logError(res.locals.user, "405", "Editing someone else's case study is forbidden")
                     res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
                     return;
                 }
@@ -223,10 +258,12 @@ export class CaseStudyController {
 
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 
+                logInfo(res.locals.user, "References from added files were successfully added to case study: " + caseStudy.title)
                 res.status(200).json({
                     status: 'success',
                 });
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while adding file references to " + req.params.id)
                 console.log(err);
             }
         });
@@ -237,14 +274,17 @@ export class CaseStudyController {
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
 
                 if (!caseStudy) {
+                    logError(res.locals.user, "404", "Case study was not found")
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
                 if (caseStudy.approvalDecision == ApprovalDecision.PENDING) {
+                    logError(res.locals.user, "405", "Editing a pending case study is forbidden")
                     res.status(405).json('Il est interdit de modifier une étude de cas en cours d\'évaluation');
                     return;
                 }
                 if(res.locals.user.email !== caseStudy.submitter) {
+                    logError(res.locals.user, "405", "Editing someone else's case study is forbidden")
                     res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
                     return;
                 }
@@ -252,10 +292,12 @@ export class CaseStudyController {
                 caseStudy.isPaidCase = false;
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 
+                logInfo(res.locals.user, "Successfully converted case study to free: " + caseStudy.title)
                 res.status(200).json({
                     status: 'success',
                 });
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while converting to free for id: " + req.params.id)
                 console.log(err);
             }
         });
@@ -266,10 +308,12 @@ export class CaseStudyController {
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
 
                 if (!caseStudy) {
+                    logError(res.locals.user, "404", "Case study was not found")
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
                 if(res.locals.user.email !== caseStudy.submitter) {
+                    logError(res.locals.user, "405", "Editing someone else's case study is forbidden")
                     res.status(405).json('Il est interdit de modifier une étude de cas déposée par un autre utilisateur');
                     return;
                 }
@@ -293,10 +337,12 @@ export class CaseStudyController {
                 const deputies = await this.userService.findUsers({ role: Role.Deputy });
                 this.emailService.sendPreApprovalNeededToDeputies(deputies, caseStudy, true);
 
+                logInfo(res.locals.user, "Successfully resubmited case study: " + caseStudy.title)
                 res.status(200).json({
                     status: 'success',
                 });
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while resubmiting case study id: " + req.params.id)
                 console.log(err);
             }
         });
@@ -308,6 +354,7 @@ export class CaseStudyController {
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
                 if (req.files) {
                     if(req.files.length > MAX_FILES_PER_CASE) {
+                        logError(res.locals.user, "415", "Case study must have at maximum 3 documents")
                         res.status(415).json('L\'étude de cas doit avoir un maximum de 3 documents');
                         return;
                     }
@@ -315,6 +362,7 @@ export class CaseStudyController {
                     const ret = await this.parseAndSaveFiles(req.files);
 
                     if(!ret || !validateFilesType(req.files)) {
+                        logError(res.locals.user, "415", "Case study must be in .docx format")
                         res.status(415).json('L\'étude de cas doit être en format .docx');
                         return;
                     }
@@ -323,6 +371,7 @@ export class CaseStudyController {
                     caseStudy["page"] = ret.totalNbPages;
                 }
                 else{
+                    logError(res.locals.user, "415", "Case study must have at minimum 1 document")
                     res.status(415).json('L\'étude de cas doit avoir un minimum de 1 document');
                         return;
                 }
@@ -332,8 +381,10 @@ export class CaseStudyController {
                 const deputies = await this.userService.findUsers({ role: Role.Deputy });
                 this.emailService.sendPreApprovalNeededToDeputies(deputies, newCaseStudy, false);
 
+                logInfo(res.locals.user, "Successfully posted case study: " + caseStudy.title)
                 res.status(201).json(newCaseStudy);
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while posting case study")
                 console.log(err);
             }
         });
@@ -348,7 +399,14 @@ export class CaseStudyController {
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
 
                 if (!caseStudy) {
+                    logError(res.locals.user, "404", "Case study was not found")
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                if(caseStudy.status == CaseStep.WaitingComity) {
+                    logError(res.locals.user, "401", "Case study has already been preapproved")
+                    res.status(401).json('L\'étude de cas a déjà été préapprouvée');
                     return;
                 }
 
@@ -381,10 +439,13 @@ export class CaseStudyController {
                     caseStudy.approvalDecision = ApprovalDecision.REJECT;
                 }
                 await this.caseStudyService.updateCaseStudy(caseStudy);
+
+                logInfo(res.locals.user, "Successfully " + (caseStudy.approvalDecision? "approved ": "rejected ") + "case study " + caseStudy.title + " to step " + caseStudy.status)
                 res.status(200).json({
                     status: 'success',
                 });
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while submitting case study review")
                 console.log(err);
             }
         });
@@ -400,11 +461,13 @@ export class CaseStudyController {
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
 
                 if (!caseStudy) {
+                    logError(res.locals.user, "404", "Case study was not found")
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
 
                 if(caseStudy.status != CaseStep.WaitingComity) {
+                    logError(res.locals.user, "403", "Case study can't be reviewed in its current step")
                     res.status(403).json('L\'étude de cas ne peut pas être évalué dans son statut actuel');
                     return;
                 }
@@ -412,6 +475,7 @@ export class CaseStudyController {
                 if(caseStudy.reviewGroups[caseStudy.version].comityMemberReviews.find(
                     (review) => review.reviewAuthor === reviewerEmail
                   ) !== undefined) {
+                    logError(res.locals.user, "409", "Case study was already reviewed by this user")
                     res.status(409).json('L\'étude de cas a déjà été évalué par cet utilisateur');
                     return;
                 }
@@ -419,6 +483,7 @@ export class CaseStudyController {
                 for(const criteria of feedback) {
                     if(criteria.criteria === "Autre") continue;
                     if(criteria.ratings === "" || criteria.comments == "") {
+                        logError(res.locals.user, "400", "Some criterias were not filled by user")
                         res.status(400).json('Certains critères n\'ont pas été notés ou commentés');
                         return;
                     }
@@ -442,10 +507,12 @@ export class CaseStudyController {
                 const directors = await this.userService.findUsers({ role: Role.ComityDirector });
                 this.emailService.sendNewReviewSubmittedToComityDirector(directors, caseStudy, comityMemberReview.reviewAuthor);
 
+                logInfo(res.locals.user, "Successfully reviewed case study " + caseStudy.title)
                 res.status(200).json({
                     status: 'success',
                 });
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while submitting committee review")
                 console.log(err);
             }
         });
@@ -459,11 +526,13 @@ export class CaseStudyController {
                 let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
 
                 if (!caseStudy) {
+                    logError(res.locals.user, "404", "Case study was not found")
                     res.status(404).json('L\'étude de cas n\'a pas été trouvée');
                     return;
                 }
 
                 if(caseStudy.status != CaseStep.WaitingComity || caseStudy.approvalDecision != ApprovalDecision.PENDING) {
+                    logError(res.locals.user, "403", "Case study can't be reviewed in its current step")
                     res.status(403).json('L\'étude de cas ne peut pas être évalué dans son statut actuel');
                     return;
                 }
@@ -492,6 +561,8 @@ export class CaseStudyController {
                         } else {
                             await this.caseStudyService.deleteCaseStudy(caseStudy.id);
                             this.emailService.sendReviewDeletedToUser(caseStudy.submitter, caseStudy, comments);
+
+                            logInfo(res.locals.user, "Successfully deleted case study and submitted rejection final review of: " + caseStudy.title)
                             res.status(200).json({
                                 status: 'success',
                             });
@@ -513,10 +584,12 @@ export class CaseStudyController {
                 await this.caseStudyService.updateCaseStudy(caseStudy);
                 this.emailService.sendReviewResultToUser(caseStudy.submitter, caseStudy, isApproved, decision, comments)
 
+                logInfo(res.locals.user, "Successfully submitted final review of: " + caseStudy.title + " with approval decision" + caseStudy.approvalDecision)
                 res.status(200).json({
                     status: 'success',
                 });
             } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while submitting final review")
                 console.log(err);
             }
         });
@@ -525,16 +598,17 @@ export class CaseStudyController {
 
     }
     private middlewareRestrictTo(...allowedRoles: string[]) {
-        console.log('F')
         return (req: Request, res: Response, next: NextFunction) => {
             const user = res.locals.user;
             if (!user) {
+                logError(res.locals.user, "401", "User isn't specified, authentification error")
                 res.status(401).json(
                     'Authentication error'
                 );
                 return;
             }
             if (!allowedRoles.includes(user.role)) {
+                logError(res.locals.user, "401", "User is not allowed to perform this action with role: " + user.role)
                 res.status(403).json(
                     'You are not allowed to perform this action'
                 );
@@ -556,7 +630,7 @@ export class CaseStudyController {
             ) {
                 access_token = req.headers.authorization.split(' ')[1];
             } else if (req.cookies.accessToken) {
-                console.log('C');
+                //console.log('C');
                 access_token = req.cookies.accessToken;
             }            if (access_token) {
                 // Validate Access Token
@@ -587,9 +661,9 @@ export class CaseStudyController {
                 }
 
                 res.locals.user = user;
-                console.log('A');
+                //console.log('A');
             }
-            console.log('V');
+            //console.log('V');
 
             next();
         } catch (err: any) {

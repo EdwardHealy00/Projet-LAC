@@ -7,6 +7,7 @@ import { AnyZodObject, ZodError } from 'zod';
 import { createUserSchema, loginUserSchema, updatePasswordSchema } from '@app/schemas/user.schema';
 import { verifyJwt } from '@app/utils/jwt';
 import {Role} from "@app/models/Role";
+import { logError, logErrorNoAccount, logInfo, logInfoNoAccount } from '@app/utils/logs';
 
 // Exclude this fields from the response
 export const excludedFields = ['password'];
@@ -43,6 +44,7 @@ export class AuthController {
                 }
 
                 if (userInfo.role != Role.Student && userInfo.role != Role.ProfessorNotApproved) {
+                    logErrorNoAccount("422", "Forbidden to create high privilege account with this signup form")
                     res.status(422).json({
                         status: "Il est impossible de créer ce type d'identifiants à partir de ce formulaire. Cet incident sera reporté."
                     });
@@ -51,6 +53,7 @@ export class AuthController {
 
                 const user = await this.userService.createUser(userInfo);
                 if (!user) {
+                    logErrorNoAccount("500", "Forbidden to create high privilege account with this signup form")
                     res.status(500).json("Une erreur est survenue en créant l'utilisateur");
                     return;
                 }
@@ -62,6 +65,7 @@ export class AuthController {
                     this.emailService.sendNewUserEmail(deputies);
                 }
 
+                logInfoNoAccount("Successfully registered with email " + user.email)
                 res.status(201).json({
                     status: 'success',
                     data: {
@@ -85,6 +89,7 @@ export class AuthController {
                     !user ||
                     !(await user.comparePasswords(user.password, req.body.password))
                 ) {
+                    logErrorNoAccount("401", "Invalid email or password")
                     res.status(401).json('Les identifiants fournis sont incorrects');
                     return;
                 }
@@ -103,6 +108,7 @@ export class AuthController {
                 // Send Access Token in Cookie
                 res.cookie('accessToken', accessToken.access_token, accessTokenCookieOptions);
 
+                logInfoNoAccount("Successfully logged in with email " + user.email)
                 // Send Access Token
                 res.status(200).json({
                     status: 'success',
@@ -111,7 +117,7 @@ export class AuthController {
                     email: user!.email,
                 });
             } catch (err: any) {
-                console.log(err);
+                logErrorNoAccount(err.name, "Log in error")
                 res.status(400).json(
                     'Une erreur est survenue');
             }
@@ -120,11 +126,12 @@ export class AuthController {
         this.router.get('/logout', async (req: Request, res: Response, next: NextFunction) => {
             try {
                 res.clearCookie('accessToken');
+                logInfo(res.locals.user, "Logout successful")
                 res.status(200).json(
                     'Déconnexion'
                 );
             } catch (err: any) {
-                console.log(err);
+                logError(res.locals.user, err, "Logout failed")
                 res.status(400).json(
                     'Déconnexion échouée');
             }
@@ -134,6 +141,7 @@ export class AuthController {
             try {
                 const user = await this.userService.findUser({ email: req.body.email });
                 if (!user) {
+                    logErrorNoAccount("400", "User not found")
                     res.status(400).json(
                         'Utilisateur introuvable',
                     );
@@ -145,11 +153,13 @@ export class AuthController {
                 });
 
                 this.emailService.sendResetPasswordEmail(user!.email, resetToken.reset_token);
+                logInfoNoAccount("Reset password email sent to " + user!.email)
                 res.status(200).json(
                     'Courriel envoyé avec succès'
                 );
             } catch (err: any) {
                 console.log(err);
+                logErrorNoAccount(err.name, "Error sending reset password email")
                 res.status(400).json(
                     "Une erreur est survenue dans l'envoi du courriel"
                 );
@@ -162,22 +172,25 @@ export class AuthController {
                 const decoded = verifyJwt<{ sub: string }>(req.body.reset_token);
 
                 if (!decoded) {
+                    logErrorNoAccount("401", "Invalid token to reset password")
                     res.status(401).json('La demande de réinitalisation a expiré');
                     return;
                 }
 
                 const user = await this.userService.findUser({ _id: decoded!.sub });
                 if (!user) {
+                    logErrorNoAccount("401", "User not found")
                     res.status(401).json('Utilisateur introuvable');
                     return;
                 }
 
                 await this.userService.updatePassword(user!, req.body.password);
                 this.emailService.sendConfirmPasswordReset(user!.email);
-                res.status(200).json('Mot de passe réinitialisé avec succès',
-                );
+                logInfoNoAccount("Reset password successful for " + user!.email)
+                res.status(200).json('Mot de passe réinitialisé avec succès')
             } catch (err: any) {
                 console.log(err);
+                logErrorNoAccount("400", "Error resetting password")
                 res.status(400).json(
                     'Une erreur est survenue',
                 );

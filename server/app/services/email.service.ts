@@ -26,7 +26,7 @@ export class EmailService {
             if (err) {
                 console.log(err);
             } else {
-                console.log("Email sent");
+                console.log("Email sent from " + mailOptions?.from + " to " + mailOptions?.to + " with subject " + mailOptions?.subject);
             }
         }
         );
