@@ -28,7 +28,7 @@ export class AuthController {
 
                 const fileProof = req.files && req.files.length > 0 ? req.files[0] : undefined;
                 const userInfo = {
-                    email: req.body.email,
+                    email: req.body.email.toLowerCase(),
                     lastName: req.body.lastName,
                     firstName: req.body.firstName,
                     password: req.body.password,
@@ -82,7 +82,7 @@ export class AuthController {
         this.router.post('/login', this.middlewareValidate(loginUserSchema), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 // Get the user from the collection
-                const user = await this.userService.findUser({ email: req.body.email });
+                const user = await this.userService.findUser({ email: req.body.email.toLowerCase() });
                 // Check if user exist and password is correct
                 if (
                     !user ||
