@@ -72,12 +72,12 @@ export class UserController {
             try {
                 const user = await this.userService.findUser({ email: req.params.email });
                 if (!user) {
-                    res.status(404).json('User not found');
+                    res.status(404).json('Utilisateur introuvable');
                     return;
                 }
                 const proof = user.proof;
                 if (!proof) {
-                    res.status(401).json('Proof not found');
+                    res.status(401).json('Preuve introuvable');
                     return;
                 }
                 res.sendFile(proof.filename, { root: './proofUploads' });
@@ -92,7 +92,7 @@ export class UserController {
                 const { email, approved } = req.body;
                 const user = await this.userService.findUserWithoutPassword({ email: email });
                 if (!user) {
-                    res.status(404).json('User not found');
+                    res.status(404).json('Utilisateur introuvable');
                     return;
                 }
 
@@ -126,7 +126,7 @@ export class UserController {
 
             if (!access_token) {
                 res.status(401).json(
-                    'You are not logged in'
+                    "Vous n'êtes pas connecté"
                 );
                 return;
             }
@@ -136,7 +136,7 @@ export class UserController {
 
             if (!decoded) {
                 res.status(401).json(
-                    `Invalid token or user doesn't exist`
+                    `Jeton invalide ou bien l'utilisateur est inexistant`
                 );
                 return;
             }
@@ -146,21 +146,21 @@ export class UserController {
 
             if (!user) {
                 res.status(401).json(
-                    `User with that token no longer exist`
+                    `L'utilisateur avec ce jeton n'existe plus`
                 );
                 return;
             }
 
             if(user.role != decoded!.role) {
-                console.log('ca va pas bien');
+                //console.log('ca va pas bien');
                 res.status(401).json(
-                    `Role and user do not match`
+                    `Le rôle et l'utilisateur ne correspondent pas`
                 );
                 return;
             }
-            console.log('ca va bien');
-            console.log(user.role);
-            console.log(decoded!.role);
+           // console.log('ca va bien');
+            //console.log(user.role);
+            //console.log(decoded!.role);
 
             res.locals.user = user;
 
@@ -175,7 +175,7 @@ export class UserController {
         try {
             const user = res.locals.user;
             if (!user) {
-                return next(`Invalid token or session has expired`);
+                return next(`Jeton invalide ou bien la session a expiré`);
             }
 
             next();
@@ -189,7 +189,7 @@ export class UserController {
             const user = res.locals.user;
             if (!allowedRoles.includes(user.role)) {
                 res.status(403).json(
-                    'You are not allowed to perform this action'
+                    "Vous n'êtes pas authorisé à effectuer cette action"
                 );
                 return;
             }
