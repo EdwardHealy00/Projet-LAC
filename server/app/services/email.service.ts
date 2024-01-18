@@ -82,7 +82,12 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: deputy.email,
                 subject: "Un nouvel enseignant s'est enregistré",
-                text: "Un nouvel enseignant s'est enregistré, veuillez consulter votre compte pour évaluer celui-ci.",
+                text: 
+                    `Cher(e) ${deputy.email},`+
+                    `\n\nUn nouvel enseignant s'est enregistré à la plateforme et nécessite la vérification de son statut de professeur.`+
+                    `\n\nRendez-vous à l'adresse suivante pour effectuer celle-ci: ${process.env.REACT_APP_BASE_API_URL}/dashboard</p>`+
+                    `\n\nCordialement,`+
+                    `\n\nL'Équipe du LAC`,
             };
             this.sendEmail(mailOptions);
         }
@@ -93,7 +98,12 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: userEmail,
             subject: "Réinitialiser votre mot de passe",
-            text: `Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/reset-password/${resetToken}`,
+            text: 
+                `Cher(e) ${userEmail},`+
+                `\n\nUne demande de réinitialisation du mot de passe a été réclamé pour le compte LAC associé à cette adresse courriel.` +
+                `\n\nPour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/reset-password/${resetToken}` +
+                `\n\nCordialement,`+
+                `\n\nL'Équipe du LAC`,
         }
         this.sendEmail(mailOptions);
     }
@@ -103,7 +113,11 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: userEmail,
             subject: "Mot de passe réinitialisé",
-            text: "Votre mot de passe a été réinitialisé avec succès.",
+            text: 
+                `Cher(e) ${userEmail},\n\n `+
+                `\n\nVotre mot de passe a été réinitialisé avec succès.` +
+                `\n\nCordialement,`+
+                `\n\nL'Équipe du LAC`,
         }
         this.sendEmail(mailOptions);
     }
@@ -113,7 +127,10 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: userEmail,
             subject: "Votre preuve d'identité a été évaluée",
-            text: isApproved ? "Votre compte a été approuvé." : "Votre compte a été rejeté."
+            text: `Cher(e) ${userEmail},\n\n `+
+                isApproved ? `Votre compte a été approuvé. Vous pouvez dès maintenant déposer votre première étude de cas sur notre plateforme: ${process.env.REACT_APP_BASE_API_URL}/catalogue .` : `Votre compte a été rejeté. Veuillez nous contacter directement pour nous faire parvenir une seconde preuve.`+
+                `\n\nCordialement,`+
+                `\n\nL'Équipe du LAC`
         }
         this.sendEmail(mailOptions);
     }
@@ -128,11 +145,14 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: email,
             subject: `L'étude de cas nommée ${caseStudy.title}` + (isPreApproved ? ` a été préapprouvée` : ` a été rejetée par l'adjoint administratif`), 
-            text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors}` + 
+            text: `Cher(e) ${email},`+
+                    `\n\nVotre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors}` + 
                     (isPreApproved ? ` est maintenant prête à être évaluée par le comité scientifique.`
                                    : ` requiert des changements. Les critères suivants n'étaient pas respectés : \n\n` +`${criteriaText}`) +
-                    `\n\n Cliquez sur le lien suivant pour modifier celle-ci : ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
-
+                    `\n\nCliquez sur le lien suivant pour consulter celle-ci : ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`+
+                    `\n\nCordialement,`+
+                    `\n\nL'Équipe du LAC`
+                    ,
         }
         this.sendEmail(mailOptions);
     }
@@ -150,9 +170,12 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été revue`, 
-            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
+            text: `Cher(e) ${email},
+                    \n\nVotre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
                     `${decisionText} Consultez l'évaluation complète ci-dessous: \n\n${feedback}` + 
-                    `\n\n Cliquez ici pour y consulter son statut: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
+                    `\n\nCliquez ici pour y consulter son statut: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`+
+                    `\n\nCordialement,`+
+                    `\n\nL'Équipe du LAC`,
         }
         this.sendEmail(mailOptions);
     }
@@ -162,7 +185,10 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été publiée`,
-            text: `Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors} a été approuvée par la Presse Internationale de Polytechnique. \n\n Vous pouvez accéder à sa version publiée au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/catalogue`
+            text: `Cher(e) ${email},`+
+                    `\n\nFélicitations! Votre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors} a terminé avec succès le processus d'approbation et est désormais publiée sur notre plateforme. \n\n Vous pouvez accéder à sa version publiée au lien suivant: ${process.env.REACT_APP_BASE_API_URL}/catalogue`+
+                    `\n\nCordialement,`+
+                    `\n\nL'Équipe du LAC`,
         }
         this.sendEmail(mailOptions);
     }
@@ -173,7 +199,11 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: deputy.email,
                 subject: isModifiedCaseStudy? `Une étude de cas modifiée requiert votre attention à nouveau`: `Une nouvelle étude de cas requiert votre attention`,
-                text: (isModifiedCaseStudy? `Une étude de cas modifiée`: `Une nouvelle étude de cas`) + `nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de préapprobation. \n\n Cliquez sur le lien suivant pour y accéder : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
+                text: `Cher(e) ${deputy.email},` +
+                (isModifiedCaseStudy? `Une étude de cas modifiée`: `Une nouvelle étude de cas`) + `nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de préapprobation.`+
+                `\n\nCliquez sur le lien suivant pour y accéder : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`+
+                `\n\nCordialement,`+
+                `\n\nL'Équipe du LAC`,
             }
             this.sendEmail(mailOptions);
         }
@@ -185,7 +215,11 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: director.email,
                 subject: "Une étude de cas préapprouvée requiert votre attention",
-                text: `Une étude de cas préapprouvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de révision. \n\n Vous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
+                text: `Cher(e) ${director.email},` +
+                `\n\nUne étude de cas préapprouvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de révision.` + 
+                `\n\n Vous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`+
+                `\n\nCordialement,`+
+                `\n\nL'Équipe du LAC`,
             }
             this.sendEmail(mailOptions);
         }
@@ -197,7 +231,11 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: deputy.email,
                 subject: "Une étude de cas revue requiert votre attention",
-                text: `Une étude de cas revue, nommée ${caseStudy.title} et écrite par ${caseStudy.authors}, est en attente de confirmation finale. \n\n Vous pouvez y accéder au lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
+                text: `Cher(e) ${deputy.email},`+
+                `\n\nUne étude de cas revue, nommée ${caseStudy.title} et écrite par ${caseStudy.authors}, est en attente de confirmation finale.`+
+                `\n\n Vous pouvez y accéder au lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`+
+                `\n\nCordialement,`+
+                `\n\nL'Équipe du LAC`,
             }
             this.sendEmail(mailOptions);
         }
@@ -209,7 +247,11 @@ export class EmailService {
                 from: EMAIL_USERNAME,
                 to: director.email,
                 subject: `Une nouvelle révision a été complétée pour l'étude de cas ${caseStudy.title}`,
-                text: `Une nouvelle révision a été complétée par ${reviewAuthor} pour l\'étude de cas nommée ${caseStudy.title}. \n\n Vous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`,
+                text: `Cher(e) ${director.email},`+
+                `\n\nUne nouvelle révision a été complétée par ${reviewAuthor} pour l\'étude de cas nommée ${caseStudy.title}.`+
+                `\n\n Vous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`+
+                `\n\nCordialement,`+
+                `\n\nL'Équipe du LAC`,
             }
             this.sendEmail(mailOptions);
         }
@@ -220,8 +262,12 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été rejetée`,
-            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été redirigée vers le processus d'approbation des études de cas gratuites. Consultez l'évaluation complète ci-dessous : \n\n${comments}` + 
-            `\n\n Cliquez ici pour y consulter son statut : ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`,
+            text: `Cher(e) ${email},`+
+            `\n\nVotre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été redirigée vers le processus d'approbation des études de cas gratuites. Consultez l'évaluation complète ci-dessous :`+
+            `\n\n${comments}` + 
+            `\n\n Cliquez ici pour y consulter son statut : ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`+
+            `\n\nCordialement,`+
+            `\n\nL'Équipe du LAC`,
         }
         this.sendEmail(mailOptions);
     }
@@ -230,7 +276,10 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été rejetée`,
-            text: `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été retirée du processus d'approbation. Consultez l'évaluation complète ci-dessous : \n\n${comments}`
+            text: `Cher(e) ${email},`+
+            `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été retirée du processus d'approbation. Consultez l'évaluation complète ci-dessous : \n\n${comments}` +
+            `\n\nCordialement,`+
+            `\n\nL'Équipe du LAC`,
         }
         this.sendEmail(mailOptions);
     }
