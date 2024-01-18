@@ -277,7 +277,7 @@ export class EmailService {
             to: email,
             subject: `Votre étude de cas nommée ${caseStudy.title} a été rejetée`,
             text: `Cher(e) ${email},`+
-            `Votre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été retirée du processus d'approbation. Consultez l'évaluation complète ci-dessous : \n\n${comments}` +
+            `\n\nVotre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été retirée du processus d'approbation. Consultez l'évaluation complète ci-dessous : \n\n${comments}` +
             `\n\nCordialement,`+
             `\n\nL'Équipe du LAC`,
         }
