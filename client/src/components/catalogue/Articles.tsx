@@ -27,14 +27,14 @@ const Articles = forwardRef<ArticlesRef, ArticlesProps>((props, ref) => {
       const search = e.target.value;
 
       if (search.length > 0) {
-        const filteredCaseStudies = caseStudies
+        const filteredCaseStudies = showCaseStudies
           .filter((caseStudy) => {
             return onFilter(caseStudy, search);
           })
           .slice(0, 10);
         setShowCaseStudies(filteredCaseStudies);
       } else {
-        setShowCaseStudies(caseStudies);
+        onFilterChange();
       }
     },
   }));
