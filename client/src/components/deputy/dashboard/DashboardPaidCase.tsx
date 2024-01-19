@@ -124,10 +124,10 @@ function DashboardPaidCase() {
 
   function calculateCaseReceivedStats(): number[] {
     return [
+      paidCaseStudiesStep4.length + freeCaseStudiesStep4.length,
       paidCaseStudiesStep1.length + freeCaseStudiesStep1.length +
       paidCaseStudiesStep2.length + freeCaseStudiesStep2.length +
       paidCaseStudiesStep3.length + freeCaseStudiesStep3.length,
-      paidCaseStudiesStep4.length + freeCaseStudiesStep4.length,
     ];
   }
 
