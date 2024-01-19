@@ -353,9 +353,22 @@ export class CaseStudyController {
                 const caseStudy = req.body;
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
                 if (req.files) {
+
+                    if(req.files.length === 0) {
+                        logError(res.locals.user, "400", "Case study must have at least 1 document")
+                        res.status(400).json('L\'étude de cas doit au moins 1 document');
+                        return;
+                    }
                     if(req.files.length > MAX_FILES_PER_CASE) {
-                        logError(res.locals.user, "415", "Case study must have at maximum 3 documents")
-                        res.status(415).json('L\'étude de cas doit avoir un maximum de 3 documents');
+                        logError(res.locals.user, "400", "Case study must have at maximum 3 documents")
+                        res.status(400).json('L\'étude de cas doit avoir un maximum de 3 documents');
+                        return;
+                    }
+                    
+                    const foundCaseStudy = await this.caseStudyService.findCaseStudy({ title: caseStudy.title}, {});
+                    if (foundCaseStudy) {
+                        logError(res.locals.user, "400", "Case study with that title already exists")
+                        res.status(400).json('Une étude de cas avec ce titre existe déjà');
                         return;
                     }
 
@@ -371,9 +384,9 @@ export class CaseStudyController {
                     caseStudy["page"] = ret.totalNbPages;
                 }
                 else{
-                    logError(res.locals.user, "415", "Case study must have at minimum 1 document")
-                    res.status(415).json('L\'étude de cas doit avoir un minimum de 1 document');
-                        return;
+                    logError(res.locals.user, "400", "Case study must have at minimum 1 document")
+                    res.status(400).json('L\'étude de cas doit avoir un minimum de 1 document');
+                    return;
                 }
 
                 const newCaseStudy = await this.caseStudyService.createCaseStudy(caseStudy);

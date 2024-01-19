@@ -262,7 +262,6 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
     setVerified(false);
 
     sendAddCaseStudy(formData);
-    setAddCaseStudyDialogOpen(false);
   };
 
   const sendAddCaseStudy = (caseStudy: FormData) => {
@@ -277,6 +276,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
       .then((res) => {
         if (res.status === 201) {
           navigate("/catalogue");
+          setAddCaseStudyDialogOpen(false);
         }
       });
   };
