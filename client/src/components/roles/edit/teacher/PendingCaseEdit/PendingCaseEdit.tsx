@@ -34,6 +34,7 @@ import {
 import ReviewCard from "../../../approval/ReviewCard";
 import { ExpandMore } from "@mui/icons-material";
 import { navToCorrectTab } from "../../../../../utils/NavigationUtils";
+import ConfirmChangesDialog from "../../../../../utils/ConfirmChangesDialog";
 
 function PendingCaseEdit() {
   const navigate = useNavigate();
@@ -340,7 +341,6 @@ function PendingCaseEdit() {
                 {caseStudy.approvalDecision != ApprovalDecision.PENDING && (
                   <div id="user-actions">
                     <form
-                      onSubmit={handleConfirmChanges}
                       id="uploadNewFiles"
                       encType="multipart/form-data"
                     >
@@ -450,27 +450,11 @@ function PendingCaseEdit() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog
+      <ConfirmChangesDialog
         open={confirmChangesDialogOpen}
         onClose={handleConfirmChangesDialogClose}
-      >
-        <DialogTitle>
-          <b>Attention</b>
-        </DialogTitle>
-        <DialogContent>
-          Cette action est irréversible. Êtes-vous certain de vouloir confirmer
-          les changements? Il sera impossible de modifier l'étude de cas par la
-          suite.
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleConfirmChangesDialogClose} color="error">
-            Annuler
-          </Button>
-          <Button type="submit" form="uploadNewFiles" color="primary">
-            Confirmer
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={handleConfirmChanges}
+      />
     </div>
   );
 }

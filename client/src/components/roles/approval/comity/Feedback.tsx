@@ -19,6 +19,7 @@ import { CaseFeedback } from "../../../deputy/newCase/CaseFeedback";
 import { ApprovalDecision } from "../../../../model/enum/ApprovalDecision";
 import axios from "axios";
 import "./Feedback.scss";
+import ConfirmChangesDialog from "../../../../utils/ConfirmChangesDialog";
 
 
 export const comityCriteria: string[] = [
@@ -39,6 +40,7 @@ interface StateErrors {
 export default function ComityFeedback(caseData: SingleCaseProp) {
   const newCase = caseData.caseData;
   const navigate = useNavigate();
+  const [reviewForm, setReviewForm] = React.useState<any>();
   const [feedback] = React.useState<CaseFeedback[]>(new Array());
   const [decision, setDecision] = React.useState<ApprovalDecision | string>("");
   const onDecisionChanged = (e: any) => {
@@ -59,10 +61,27 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
     return initialState;
   });
 
+  const [
+    confirmChangesDialogOpen,
+    setConfirmChangesDialogOpen,
+  ] = React.useState(false);
+
+  const openConfirmChangesDialog = (e: any) => {
+    e.preventDefault();
+    const form = createReviewForm(e);
+    setReviewForm(form);
+    if(form) {
+      setConfirmChangesDialogOpen(true);
+    }
+  };
+
+  const handleConfirmChangesDialogClose = () => {
+    setConfirmChangesDialogOpen(false);
+  };
+
   let firstInvalidElementId: string | null = null;
 
   const onValidation = (e: any) => {
-    console.log("ERROR")
     let isValid = true;
     firstInvalidElementId = null;
     for (let i = 0; i < comityCriteria.length; i++) {
@@ -105,9 +124,7 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
     }
   };
 
-  const onDecisionSubmit = (e: any) => {
-    e.preventDefault();
-
+  const createReviewForm = (e: any) => {
     const isFormValid = onValidation(e);
     if (!isFormValid) {
       if (firstInvalidElementId) {
@@ -123,6 +140,7 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
       return;
     }
 
+    feedback.length = 0;
     for (let i = 0; i < comityCriteria.length; i++) {
       feedback.push({
         criteria: comityCriteria[i],
@@ -143,14 +161,14 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
     formData.append("decision", JSON.stringify(decision));
     formData.append("feedback", JSON.stringify(feedback));
 
-    sendCaseStudyResponse(formData);
+    return formData
   };
 
-  const sendCaseStudyResponse = (formData: FormData) => {
+  const sendCaseStudyResponse = () => {
     axios
       .post(
         `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/comityMemberReview/${newCase.id_}`,
-        formData,
+        reviewForm,
         {
           withCredentials: true,
         }
@@ -181,7 +199,7 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
         </Typography>
         <form
           className="radio-form-control"
-          onSubmit={onDecisionSubmit}
+          onSubmit={openConfirmChangesDialog}
           id="feedbackForm"
         >
           {comityCriteria.map((criteria, index) => (
@@ -310,6 +328,11 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
           </div>
         </div>          
       </Card>
+      <ConfirmChangesDialog
+        open={confirmChangesDialogOpen}
+        onClose={handleConfirmChangesDialogClose}
+        onConfirm={sendCaseStudyResponse}
+      />
     </div>
   );
 }

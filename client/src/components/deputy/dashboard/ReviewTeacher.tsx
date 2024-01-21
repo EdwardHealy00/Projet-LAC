@@ -5,6 +5,7 @@ import Dialog from "@mui/material/Dialog";
 import { TeacherValidate } from "../../../model/TeacherValidate";
 import axios from "axios";
 import { DialogActions, DialogContent } from "@mui/material";
+import ConfirmChangesDialog from "../../../utils/ConfirmChangesDialog";
 
 export interface ReviewTeacherProps {
   open: boolean;
@@ -19,6 +20,26 @@ export interface TeacherProps {
 
 function ReviewDialog(props: ReviewTeacherProps) {
   const { onClose, teacher, open } = props;
+  const [isApproved, setIsApproved] = React.useState(false);
+
+  const [
+    confirmChangesDialogOpen,
+    setConfirmChangesDialogOpen,
+  ] = React.useState(false);
+
+  const openConfirmChangesDialogAccept = () => {
+    setIsApproved(true);
+    setConfirmChangesDialogOpen(true);
+  };
+
+  const openConfirmChangesDialogRefuse = () => {
+    setIsApproved(false);
+    setConfirmChangesDialogOpen(true);
+  };
+
+  const handleConfirmChangesDialogClose = () => {
+    setConfirmChangesDialogOpen(false);
+  };
 
   const sendResult = async (isApproved: boolean) => {
     axios
@@ -40,12 +61,12 @@ function ReviewDialog(props: ReviewTeacherProps) {
       });
   };
 
-  const handSendResult = (isApproved: boolean) => {
+  const handleSendResult = () => {
     sendResult(isApproved);
     onClose(teacher);
   };
 
-  const handleClose = (isApproved: boolean) => {
+  const handleClose = () => {
     onClose(teacher);
   };
 
@@ -53,16 +74,21 @@ function ReviewDialog(props: ReviewTeacherProps) {
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Traiter la requête du professeur {teacher.name}</DialogTitle>
       <DialogContent>
-        {props.imageProof && <img src={props.imageProof} alt="proof" />}
+        {props.imageProof && <img src={props.imageProof} alt="proof" style={{ maxWidth: '100%', maxHeight: '100%' }}/>}
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => handSendResult(true)} variant="contained">
+        <Button onClick={openConfirmChangesDialogAccept} variant="contained">
           Approuver
         </Button>
-        <Button onClick={() => handSendResult(false)} variant="contained">
+        <Button color="error" onClick={openConfirmChangesDialogRefuse} variant="contained">
           Refuser
         </Button>
       </DialogActions>
+      <ConfirmChangesDialog
+        open={confirmChangesDialogOpen}
+        onClose={handleConfirmChangesDialogClose}
+        onConfirm={handleSendResult}
+      />
     </Dialog>
   );
 }
