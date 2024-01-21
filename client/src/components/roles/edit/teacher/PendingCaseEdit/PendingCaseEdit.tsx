@@ -16,7 +16,7 @@ import {
 import React, { useRef } from "react";
 import "./PendingCaseEdit.scss";
 import { Case } from "../../../../../model/CaseStudy";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PendingCaseEditTable, {
   PendingCaseEditTableRef,
 } from "./PendingCaseEditTable";
@@ -35,6 +35,7 @@ import ReviewCard from "../../../approval/ReviewCard";
 import { ExpandMore } from "@mui/icons-material";
 
 function PendingCaseEdit() {
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -87,8 +88,18 @@ function PendingCaseEdit() {
   };
 
   React.useEffect(() => {
+    window.scrollTo(0,0);
     getCaseStudy(id);
   }, [id]);
+
+  const handleReturnBtnClicked = () => {
+    if(!caseStudy || caseStudy.isPaidCase) {
+      navigate("/my-pending-case-studies/paid");
+    }
+    else {
+      navigate("/my-pending-case-studies/free");
+    }
+  };
 
   const getCaseStudy = (id: string | null) => {
     if (!id) return;
@@ -211,7 +222,7 @@ function PendingCaseEdit() {
     <div>
       {caseStudy && (
         <div>
-          <Button className="return" href="/my-pending-case-studies">
+          <Button className="return" onClick={handleReturnBtnClicked}>
             &gt; Retour à mes études de cas
           </Button>
           <div id="pending-case">

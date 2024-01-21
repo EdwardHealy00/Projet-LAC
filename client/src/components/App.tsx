@@ -231,9 +231,9 @@ function App() {
             element={<CollaborativeSpace />}
           />
           <Route path="/dashboard" element={<DashboardPaidCase />} />
-          <Route path="/my-pending-case-studies" element={<PendingCaseStudies />}/>
+          <Route path="/my-pending-case-studies/*" element={<PendingCaseStudies />}/>
           <Route path="/my-pending-case-studies/case-edit" element={<PendingCaseEdit />} />
-          <Route path="/approval" element={<Approval />} />
+          <Route path="/approval/*" element={<Approval />} />
           <Route path="/approval/new-case" element={<NewCase />} />
           <Route path="/create" element={<AddCaseStudy />} />
 

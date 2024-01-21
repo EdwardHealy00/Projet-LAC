@@ -9,13 +9,15 @@ import { Box, Button, Tab, Tabs } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
 import { createCaseFromData } from "../../../utils/ConvertUtils";
 import { ApprovalComityDirector } from "./comityDirector/Approval";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function filterByStep(caseStudies: Case[], step: CaseStep) {
   return caseStudies.filter((caseStudy) => caseStudy.status == step);
 }
 
 export default function Approval() {
-  const [tabValue, setTabValue] = React.useState("0");
+  const location = useLocation();
+  const [tabValue, setTabValue] = React.useState(location.pathname);
 
   const [paidCaseStudies, setPaidCaseStudies] = React.useState<Case[]>([]);
   const [paidCaseStudiesStep1, setPaidCaseStudiesStep1] = React.useState<Case[]>([]);
@@ -75,6 +77,7 @@ export default function Approval() {
   };
 
   React.useEffect(() => {
+    window.scrollTo(0, 0)
     getCaseStudies();
   }, []);
 
@@ -91,13 +94,13 @@ export default function Approval() {
         <TabContext value={tabValue}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={tabValue} onChange={onTabChange} centered>
-              <Tab label="Payant" value="0"></Tab>
-              <Tab label="Libre d'accès" value="1"></Tab>
+              <Tab  label="Payant" value="/approval/paid" component={Link} to={"/approval/paid"}></Tab >
+              <Tab label="Libre d'accès" value="/approval/free" component={Link} to={"/approval/free"}></Tab>
             </Tabs>
           </Box>
           
           {/*PAID CASES TAB*/}
-          <TabPanel value="0">
+          <TabPanel value="/approval/paid">
             <UnlockAccess
               role={[Role.Deputy]}
               children={
@@ -126,7 +129,7 @@ export default function Approval() {
           </TabPanel>
 
           {/*FREE CASES TAB*/}
-          <TabPanel value="1">
+          <TabPanel value="/approval/free">
             <UnlockAccess
               role={[Role.Deputy]}
               children={

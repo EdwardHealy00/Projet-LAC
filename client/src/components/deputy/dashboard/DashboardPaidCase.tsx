@@ -17,7 +17,7 @@ import { ApprovalDecision } from "../../../model/enum/ApprovalDecision";
 function DashboardPaidCase() {
   const navigate = useNavigate();
   const onConsult = () => {
-    navigate("/approval");
+    navigate("/approval/paid");
   };
 
   function filterByStep(caseStudies: Case[], step: CaseStep) {
