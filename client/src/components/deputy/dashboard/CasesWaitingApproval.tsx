@@ -35,6 +35,7 @@ export default function App(caseReceivedGraphProps: CaseStatusGraphProps) {
         font: {
           size: 20,
           weight: "bold",
+          family:  "-apple-system, BlinkMacSystemFont, 'Yaldevi', 'Gotu', sans-serif"
         },
       },
       legend: {
@@ -45,6 +46,10 @@ export default function App(caseReceivedGraphProps: CaseStatusGraphProps) {
         color: "black",
         align: "end" as "end",
         anchor: "end" as "end",
+        font: {
+          family:  "-apple-system, BlinkMacSystemFont, 'Yaldevi', 'Gotu', sans-serif",
+          weight: 'bold' as 'bold',
+        }
       },
     },
     scales: {
@@ -58,6 +63,11 @@ export default function App(caseReceivedGraphProps: CaseStatusGraphProps) {
         grid: {
           display: false,
         },
+        ticks: {
+          font: {
+            family:  "-apple-system, BlinkMacSystemFont, 'Yaldevi', 'Gotu', sans-serif"
+          }
+        }
       },
     },
     secondXAxis: {
