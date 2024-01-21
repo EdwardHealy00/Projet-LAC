@@ -12,6 +12,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Feedback.scss";
+import { navToCorrectTab } from "../../../../utils/NavigationUtils";
 
 export const checkList = Object.values(Criteria).filter(
   (value) => typeof value === "string"
@@ -58,7 +59,7 @@ export default function PreApproveFeedback(caseData: SingleCaseProp) {
         }
       )
       .then(() => {
-        navigate("/approval");
+        navToCorrectTab("/approval", navigate, newCase);
       });
   };
 

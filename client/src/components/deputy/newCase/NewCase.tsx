@@ -8,6 +8,7 @@ import {
 import React from "react";
 import "./NewCase.scss";
 import { Case } from "../../../model/CaseStudy";
+import { navToCorrectTab } from "../../../utils/NavigationUtils";
 import { useLocation, useNavigate } from "react-router-dom";
 import NewCaseTable from "./NewCaseTable";
 import axios from "axios";
@@ -33,12 +34,7 @@ function NewCase() {
   }, [id]);
 
   const handleReturnBtnClicked = () => {
-    if(!caseStudy || caseStudy.isPaidCase) {
-      navigate("/approval/paid");
-    }
-    else {
-      navigate("/approval/free");
-    }
+    navToCorrectTab("/approval", navigate, caseStudy);
   };
 
   const getCaseStudy = (id: string | null) => {

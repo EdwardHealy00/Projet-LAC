@@ -22,6 +22,7 @@ import {
 import ReviewCard from "../ReviewCard";
 import { ExpandMore } from "@mui/icons-material";
 import "./Feedback.scss";
+import { navToCorrectTab } from "../../../../utils/NavigationUtils";
 
 export const comityCriteria: string[] = [
   "Pertinence du cas",
@@ -55,7 +56,7 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
         }
       )
       .then(() => {
-        navigate("/approval");
+        navToCorrectTab("/approval", navigate, newCase);
       });
   };
 

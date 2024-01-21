@@ -33,6 +33,7 @@ import {
 } from "../../../../../utils/ApprovalDecision";
 import ReviewCard from "../../../approval/ReviewCard";
 import { ExpandMore } from "@mui/icons-material";
+import { navToCorrectTab } from "../../../../../utils/NavigationUtils";
 
 function PendingCaseEdit() {
   const navigate = useNavigate();
@@ -93,12 +94,7 @@ function PendingCaseEdit() {
   }, [id]);
 
   const handleReturnBtnClicked = () => {
-    if(!caseStudy || caseStudy.isPaidCase) {
-      navigate("/my-pending-case-studies/paid");
-    }
-    else {
-      navigate("/my-pending-case-studies/free");
-    }
+    navToCorrectTab("/my-pending-case-studies", navigate, caseStudy);
   };
 
   const getCaseStudy = (id: string | null) => {

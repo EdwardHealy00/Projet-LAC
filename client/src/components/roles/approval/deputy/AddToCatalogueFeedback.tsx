@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import "./Feedback.scss";
 import axios from "axios";
+import { navToCorrectTab } from "../../../../utils/NavigationUtils";
 
 export default function AddToCatalogueFeedback(caseData: SingleCaseProp) {
   const newCase = caseData.caseData;
@@ -32,7 +33,7 @@ export default function AddToCatalogueFeedback(caseData: SingleCaseProp) {
         }
       )
       .then(() => {
-        navigate("/approval");
+        navToCorrectTab("/approval", navigate, newCase);
       });
   };
 
