@@ -24,7 +24,7 @@ import { isEmailValid, isPasswordValid } from "../../utils/Validation";
 import { Role } from "../../model/enum/Role";
 
 export default function Register() {
-  const acceptedFileTypes = ".jpg,.jpeg,.pdf,.png,.svg,.tiff,.webp"
+  const acceptedFileTypes = ".jpg,.jpeg,.pdf,.png"
   const [open, setOpen] = React.useState(false);
   const [uploadedImage, setUploadedImage] = React.useState(
     "Preuve du statut de professeur"

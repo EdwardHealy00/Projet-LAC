@@ -42,3 +42,23 @@ export function downloadCaseStudyTemplate() {
   downloadLink2.click();
   URL.revokeObjectURL(templateDocxFile2);
 };
+
+export function downloadPDF(pdfFile: string) {
+  const downloadLink1 = document.createElement("a");
+  downloadLink1.href = pdfFile;
+  downloadLink1.download = "proof.pdf";
+  downloadLink1.click();
+  URL.revokeObjectURL(pdfFile);
+};
+
+export function isFilePDF(uint8Array: Uint8Array) {
+  const slice = uint8Array.subarray(0, 4); // Check the first 4 bytes
+
+  // Check for common PDF magic numbers in the header
+  return (
+    slice[0] === 0x25 && // %
+    slice[1] === 0x50 && // P
+    slice[2] === 0x44 && // D
+    slice[3] === 0x46    // F
+  );
+}
