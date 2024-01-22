@@ -276,6 +276,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
       .then((res) => {
         if (res.status === 201) {
           navigate("/catalogue");
+          setAddCaseStudyDialogOpen(false);
         }
       });
   };
@@ -442,7 +443,6 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
             variant="contained"
             type="submit"
             form="caseStudyForm"
-            onClick={handleCaseStudyDialogClose}
           >
             Ajouter
           </Button>

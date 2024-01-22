@@ -72,7 +72,7 @@ const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
                 children={
                   <WhiteButton
                     className="navbutton"
-                    href="/my-pending-case-studies"
+                    href="/my-pending-case-studies/paid"
                   >
                     Mes études de cas
                   </WhiteButton>

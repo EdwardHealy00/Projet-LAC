@@ -195,7 +195,7 @@ function App() {
 
     if (mainNavBar && mainContent && window.location.pathname !== "/") {
         const navbarHeight = mainNavBar.clientHeight;
-        mainContent.style.marginTop = `${navbarHeight}px`;
+        mainContent.style.paddingTop = `${navbarHeight}px`;
     }
   }
 
@@ -209,48 +209,51 @@ function App() {
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
                 margin: 0,
-                padding: 0,
-                minHeight: '100vh',
-            },
-            }}
+                padding: 0
+                },
+                '#content': {
+                  minHeight: '90vh',
+                }
+          }}
       />
        <div>
       <AppContext.Provider value={contextValue}>
-          <NavBar ref={navBarRef}/>
-      <div id="content">
-        <ResponseSnackbar ref={snackBarRef} />
-        <Routes>
-          <Route path="/" element={<AboutPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/guide" element={<GuidePage />} />
-          <Route path="/catalogue" element={<Catalogue />} />
-          {/* <Route path="/etude-de-cas" element={<CaseStudyWTconnection />} /> */}
-          <Route path="/etude-de-cas" element={<CaseStudyWconnection />} />
-          <Route
-            path="/espace-de-collaboration"
-            element={<CollaborativeSpace />}
-          />
-          <Route path="/dashboard" element={<DashboardPaidCase />} />
-          <Route path="/my-pending-case-studies" element={<PendingCaseStudies />}/>
-          <Route path="/my-pending-case-studies/case-edit" element={<PendingCaseEdit />} />
-          <Route path="/approval" element={<Approval />} />
-          <Route path="/approval/new-case" element={<NewCase />} />
-          <Route path="/create" element={<AddCaseStudy />} />
+        <NavBar ref={navBarRef}/>
+        <div id="content">
+          <ResponseSnackbar ref={snackBarRef} />
+          <Routes>
+            <Route path="/" element={<AboutPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/guide" element={<GuidePage />} />
+            <Route path="/catalogue" element={<Catalogue />} />
+            {/* <Route path="/etude-de-cas" element={<CaseStudyWTconnection />} /> */}
+            <Route path="/etude-de-cas" element={<CaseStudyWconnection />} />
+            <Route
+              path="/espace-de-collaboration"
+              element={<CollaborativeSpace />}
+            />
+            <Route path="/dashboard" element={<DashboardPaidCase />} />
+            <Route path="/my-pending-case-studies/*" element={<PendingCaseStudies />}/>
+            <Route path="/my-pending-case-studies/case-edit" element={<PendingCaseEdit />} />
+            <Route path="/approval/*" element={<Approval />} />
+            <Route path="/approval/new-case" element={<NewCase />} />
+            <Route path="/create" element={<AddCaseStudy />} />
 
-          <Route path="/forbidden" element={<ForbiddenPage />} />
-          <Route
-            path="/reset-password/:resetToken"
-            element={<ResetPassword />}
-          />
-          <Route
-              path="/*"
-              element={<div>Error 404</div>}
-          />
-      </Routes>
-      </div>
-      <footer style={{height: "50px", width: "100%", backgroundColor: "#06091f", display: "flex", justifyContent: "center", marginTop: "5vh"}}>
-        <div style={{display:"inline-block", color: "whitesmoke"}}>&copy; 2023</div>
-      </footer>
+            <Route path="/forbidden" element={<ForbiddenPage />} />
+            <Route
+              path="/reset-password/:resetToken"
+              element={<ResetPassword />}
+            />
+            <Route
+                path="/*"
+                element={<div>Error 404</div>}
+            />
+        </Routes>
+        </div>
+        <footer style={{height: "5vh", width: "100%", backgroundColor: "#06091f", display: "flex", justifyContent: "center", marginTop: "5vh"}}>
+          <div style={{display:"inline-block", color: "whitesmoke"}}>&copy; 2023</div>
+        </footer>
+      
     
       <LoginPopup onLoggedIn={onLoggedIn} ref={loginPopupRef}/>
   </AppContext.Provider>

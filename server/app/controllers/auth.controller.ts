@@ -29,7 +29,7 @@ export class AuthController {
 
                 const fileProof = req.files && req.files.length > 0 ? req.files[0] : undefined;
                 const userInfo = {
-                    email: req.body.email,
+                    email: req.body.email.toLowerCase(),
                     lastName: req.body.lastName,
                     firstName: req.body.firstName,
                     password: req.body.password,
@@ -46,7 +46,7 @@ export class AuthController {
                 if (userInfo.role != Role.Student && userInfo.role != Role.ProfessorNotApproved) {
                     logErrorNoAccount("422", "Forbidden to create high privilege account with this signup form")
                     res.status(422).json({
-                        status: 'It is not possible to create this type of account from the signup form. This will be reported.'
+                        status: "Il est impossible de créer ce type d'identifiants à partir de ce formulaire. Cet incident sera reporté."
                     });
                     return;
                 }
@@ -54,11 +54,11 @@ export class AuthController {
                 const user = await this.userService.createUser(userInfo);
                 if (!user) {
                     logErrorNoAccount("500", "Forbidden to create high privilege account with this signup form")
-                    res.status(500).json('Error creating user');
+                    res.status(500).json("Une erreur est survenue en créant l'utilisateur");
                     return;
                 }
 
-                this.emailService.sendWelcomeEmail(user!.email!, user!.firstName! + ' ' + user!.lastName!);
+                this.emailService.sendWelcomeEmail(user!.email!, user!.firstName! + ' ' + user!.lastName!, user!.role!);
 
                 if(user.role && userInfo.role == Role.ProfessorNotApproved) {
                     const deputies = await this.userService.findUsers({ role: Role.Deputy });
@@ -74,27 +74,23 @@ export class AuthController {
                 });
             } catch (err: any) {
                 console.log(err);
-                //if (err.code === 11000) {
-                    logErrorNoAccount("409", "Error while registering")
-                    res.status(409).json(
-                        'Email already exists'
-                    );
-                //}
-                //next(err);
+                res.status(409).json(
+                    "Un compte est déjà associé à cette adresse courriel"
+                );
             }
         });
 
         this.router.post('/login', this.middlewareValidate(loginUserSchema), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 // Get the user from the collection
-                const user = await this.userService.findUser({ email: req.body.email });
+                const user = await this.userService.findUser({ email: req.body.email.toLowerCase() });
                 // Check if user exist and password is correct
                 if (
                     !user ||
                     !(await user.comparePasswords(user.password, req.body.password))
                 ) {
                     logErrorNoAccount("401", "Invalid email or password")
-                    res.status(401).json('Invalid email or password');
+                    res.status(401).json('Les identifiants fournis sont incorrects');
                     return;
                 }
                 // Create an Access Token
@@ -123,7 +119,7 @@ export class AuthController {
             } catch (err: any) {
                 logErrorNoAccount(err.name, "Log in error")
                 res.status(400).json(
-                    'Email already exist');
+                    'Une erreur est survenue');
             }
         });
 
@@ -132,12 +128,12 @@ export class AuthController {
                 res.clearCookie('accessToken');
                 logInfo(res.locals.user, "Logout successful")
                 res.status(200).json(
-                    'Logout success'
+                    'Déconnexion'
                 );
             } catch (err: any) {
                 logError(res.locals.user, err, "Logout failed")
                 res.status(400).json(
-                    'Logout fail');
+                    'Déconnexion échouée');
             }
         });
 
@@ -147,7 +143,7 @@ export class AuthController {
                 if (!user) {
                     logErrorNoAccount("400", "User not found")
                     res.status(400).json(
-                        'User not found',
+                        'Utilisateur introuvable',
                     );
                 }
                 const resetToken = await this.userService.createResetToken(user!);
@@ -159,13 +155,13 @@ export class AuthController {
                 this.emailService.sendResetPasswordEmail(user!.email, resetToken.reset_token);
                 logInfoNoAccount("Reset password email sent to " + user!.email)
                 res.status(200).json(
-                    'Email sent'
+                    'Courriel envoyé avec succès'
                 );
             } catch (err: any) {
                 console.log(err);
                 logErrorNoAccount(err.name, "Error sending reset password email")
                 res.status(400).json(
-                    'Email not sent'
+                    "Une erreur est survenue dans l'envoi du courriel"
                 );
             }
 
@@ -177,27 +173,26 @@ export class AuthController {
 
                 if (!decoded) {
                     logErrorNoAccount("401", "Invalid token to reset password")
-                    res.status(401).json('Invalid token');
+                    res.status(401).json('La demande de réinitalisation a expiré');
                     return;
                 }
 
                 const user = await this.userService.findUser({ _id: decoded!.sub });
                 if (!user) {
                     logErrorNoAccount("401", "User not found")
-                    res.status(401).json('User not found');
+                    res.status(401).json('Utilisateur introuvable');
                     return;
                 }
 
                 await this.userService.updatePassword(user!, req.body.password);
                 this.emailService.sendConfirmPasswordReset(user!.email);
                 logInfoNoAccount("Reset password successful for " + user!.email)
-                res.status(200).json('Password reset',
-                );
+                res.status(200).json('Mot de passe réinitialisé avec succès')
             } catch (err: any) {
                 console.log(err);
                 logErrorNoAccount("400", "Error resetting password")
                 res.status(400).json(
-                    'Password not reset',
+                    'Une erreur est survenue',
                 );
             }
         });
@@ -211,14 +206,12 @@ export class AuthController {
                     query: req.query,
                     body: req.body,
                 });
-
                 return next();
             } catch (err: any) {
-                console.log(err);
-                if (err instanceof ZodError) {
-                    return res.status(400).json("Il y a une erreur dans le formulaire");
-                }
-                return next(err);
+                if (err instanceof ZodError && err.errors[0]) {
+                    return res.status(401).json(err.errors[0].message); 
+                } 
+                return res.status(401).json("Une erreur est survenue: " + err);
             }
         };
     }

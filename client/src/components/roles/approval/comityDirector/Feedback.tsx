@@ -22,6 +22,8 @@ import {
 import ReviewCard from "../ReviewCard";
 import { ExpandMore } from "@mui/icons-material";
 import "./Feedback.scss";
+import { navToCorrectTab } from "../../../../utils/NavigationUtils";
+import ConfirmChangesDialog from "../../../../utils/ConfirmChangesDialog";
 
 export const comityCriteria: string[] = [
   "Pertinence du cas",
@@ -35,27 +37,43 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
   const newCase = caseData.caseData;
   const navigate = useNavigate();
   const [decision, setDecision] = React.useState<ApprovalDecision | string>("");
+  const [comments, setComments] = React.useState<string>("");
+
+  const [
+    confirmChangesDialogOpen,
+    setConfirmChangesDialogOpen,
+  ] = React.useState(false);
+
+  const openConfirmChangesDialog = (e: any) => {
+    e.preventDefault();
+    const reviewComments = e.target.elements.Comments.value;
+    setComments(reviewComments);
+    setConfirmChangesDialogOpen(true);
+  };
+
+  const handleConfirmChangesDialogClose = () => {
+    setConfirmChangesDialogOpen(false);
+  };
+
   const onDecisionChanged = (e: any) => {
     setDecision(e.target.value);
   };
 
-  const onDecisionSubmit = (e: any) => {
-    e.preventDefault();
-
+  const onDecisionSubmit = () => {
     axios
       .post(
         `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/FinalReview`,
         {
           case: newCase.id_,
           decision: decision,
-          comments: e.target.elements.Comments.value,
+          comments: comments,
         },
         {
           withCredentials: true,
         }
       )
       .then(() => {
-        navigate("/approval");
+        navToCorrectTab("/approval", navigate, newCase);
       });
   };
 
@@ -146,7 +164,7 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
       <div id="final-feedback">
         <Typography variant="h4">Faire l'évaluation finale du cas</Typography>
         <Card id="final-feedback-card">
-          <form onSubmit={onDecisionSubmit} id="finalFeedbackForm">
+          <form onSubmit={openConfirmChangesDialog} id="finalFeedbackForm">
             <Typography>
               <b>Commentaires</b>
             </Typography>
@@ -210,6 +228,11 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
           </form>
         </Card>
       </div>
+      <ConfirmChangesDialog
+        open={confirmChangesDialogOpen}
+        onClose={handleConfirmChangesDialogClose}
+        onConfirm={onDecisionSubmit}
+      />
     </div>
   );
 }

@@ -16,7 +16,7 @@ import {
 import React, { useRef } from "react";
 import "./PendingCaseEdit.scss";
 import { Case } from "../../../../../model/CaseStudy";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PendingCaseEditTable, {
   PendingCaseEditTableRef,
 } from "./PendingCaseEditTable";
@@ -33,8 +33,11 @@ import {
 } from "../../../../../utils/ApprovalDecision";
 import ReviewCard from "../../../approval/ReviewCard";
 import { ExpandMore } from "@mui/icons-material";
+import { navToCorrectTab } from "../../../../../utils/NavigationUtils";
+import ConfirmChangesDialog from "../../../../../utils/ConfirmChangesDialog";
 
 function PendingCaseEdit() {
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -87,8 +90,13 @@ function PendingCaseEdit() {
   };
 
   React.useEffect(() => {
+    window.scrollTo(0,0);
     getCaseStudy(id);
   }, [id]);
+
+  const handleReturnBtnClicked = () => {
+    navToCorrectTab("/my-pending-case-studies", navigate, caseStudy);
+  };
 
   const getCaseStudy = (id: string | null) => {
     if (!id) return;
@@ -211,7 +219,7 @@ function PendingCaseEdit() {
     <div>
       {caseStudy && (
         <div>
-          <Button className="return" href="/my-pending-case-studies">
+          <Button className="return" onClick={handleReturnBtnClicked}>
             &gt; Retour à mes études de cas
           </Button>
           <div id="pending-case">
@@ -333,7 +341,6 @@ function PendingCaseEdit() {
                 {caseStudy.approvalDecision != ApprovalDecision.PENDING && (
                   <div id="user-actions">
                     <form
-                      onSubmit={handleConfirmChanges}
                       id="uploadNewFiles"
                       encType="multipart/form-data"
                     >
@@ -443,27 +450,11 @@ function PendingCaseEdit() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog
+      <ConfirmChangesDialog
         open={confirmChangesDialogOpen}
         onClose={handleConfirmChangesDialogClose}
-      >
-        <DialogTitle>
-          <b>Attention</b>
-        </DialogTitle>
-        <DialogContent>
-          Cette action est irréversible. Êtes-vous certain de vouloir confirmer
-          les changements? Il sera impossible de modifier l'étude de cas par la
-          suite.
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleConfirmChangesDialogClose} color="error">
-            Annuler
-          </Button>
-          <Button type="submit" form="uploadNewFiles" color="primary">
-            Confirmer
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={handleConfirmChanges}
+      />
     </div>
   );
 }

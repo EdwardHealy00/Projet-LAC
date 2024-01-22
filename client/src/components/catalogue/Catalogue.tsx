@@ -195,7 +195,7 @@ export default function Catalogue() {
         const navbar2Height = catalogueNavBar.clientHeight;
 
         catalogueNavBar.style.top = `${navbar1Height - 2}px`;
-        mainContent.style.marginTop = `${navbar1Height + navbar2Height}px`;
+        mainContent.style.paddingTop = `${navbar2Height}px`;
     }
   }
 

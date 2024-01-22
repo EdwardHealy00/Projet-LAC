@@ -8,7 +8,8 @@ import {
 import React from "react";
 import "./NewCase.scss";
 import { Case } from "../../../model/CaseStudy";
-import { useLocation } from "react-router-dom";
+import { navToCorrectTab } from "../../../utils/NavigationUtils";
+import { useLocation, useNavigate } from "react-router-dom";
 import NewCaseTable from "./NewCaseTable";
 import axios from "axios";
 import { CaseStep } from "../../../model/enum/CaseStatus";
@@ -21,14 +22,20 @@ import ComityDirectorFeedback from "../../roles/approval/comityDirector/Feedback
 import { UnlockAccess } from "../../connection/UnlockAccess";
 
 function NewCase() {
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   let [caseStudy, SetCaseStudy] = React.useState<Case>();
 
   React.useEffect(() => {
+    window.scrollTo(0, 0)
     getCaseStudy(id);
   }, [id]);
+
+  const handleReturnBtnClicked = () => {
+    navToCorrectTab("/approval", navigate, caseStudy);
+  };
 
   const getCaseStudy = (id: string | null) => {
     if (!id) return;
@@ -76,7 +83,7 @@ function NewCase() {
       <UnlockAccess
         role={[Role.Deputy, Role.ComityDirector]}
         children={
-          <Button href="/approval">
+          <Button onClick={handleReturnBtnClicked}>
             &gt; Retour au tableau de cas
           </Button>
         }></UnlockAccess>

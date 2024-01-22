@@ -11,12 +11,26 @@ import {
 import { useNavigate } from "react-router-dom";
 import "./Feedback.scss";
 import axios from "axios";
+import { navToCorrectTab } from "../../../../utils/NavigationUtils";
+import ConfirmChangesDialog from "../../../../utils/ConfirmChangesDialog";
 
 export default function AddToCatalogueFeedback(caseData: SingleCaseProp) {
   const newCase = caseData.caseData;
   const navigate = useNavigate();
 
   const [urlValue, setURLValue] = React.useState("");
+  const [
+    confirmChangesDialogOpen,
+    setConfirmChangesDialogOpen,
+  ] = React.useState(false);
+  
+  const openConfirmChangesDialog = () => {
+    setConfirmChangesDialogOpen(true);
+  };
+
+  const handleConfirmChangesDialogClose = () => {
+    setConfirmChangesDialogOpen(false);
+  };
 
   const sendCaseStudyResponse = () => {
     axios
@@ -32,7 +46,7 @@ export default function AddToCatalogueFeedback(caseData: SingleCaseProp) {
         }
       )
       .then(() => {
-        navigate("/approval");
+        navToCorrectTab("/approval", navigate, newCase);
       });
   };
 
@@ -66,11 +80,16 @@ export default function AddToCatalogueFeedback(caseData: SingleCaseProp) {
         <Button
           disabled={urlValue.trim() === "" && newCase.isPaidCase}
           variant="contained"
-          onClick={() => sendCaseStudyResponse()}
+          onClick={openConfirmChangesDialog}
         >
           Confirmer
         </Button>
       </Card>
+      <ConfirmChangesDialog
+        open={confirmChangesDialogOpen}
+        onClose={handleConfirmChangesDialogClose}
+        onConfirm={sendCaseStudyResponse}
+      />
     </div>
   );
 }

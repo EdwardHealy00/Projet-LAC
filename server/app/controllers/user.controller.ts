@@ -79,13 +79,13 @@ export class UserController {
                 const user = await this.userService.findUser({ email: req.params.email });
                 if (!user) {
                     logError(res.locals.user, "404", "user not found")
-                    res.status(404).json('User not found');
+                    res.status(404).json('Utilisateur introuvable');
                     return;
                 }
                 const proof = user.proof;
                 if (!proof) {
                     logError(res.locals.user, "404", "Proof not found")
-                    res.status(401).json('Proof not found');
+                    res.status(401).json('Preuve introuvable');
                     return;
                 }
 
@@ -103,7 +103,7 @@ export class UserController {
                 const user = await this.userService.findUserWithoutPassword({ email: email });
                 if (!user) {
                     logError(res.locals.user, "404", "user not found")
-                    res.status(404).json('User not found');
+                    res.status(404).json('Utilisateur introuvable');
                     return;
                 }
 
@@ -140,7 +140,7 @@ export class UserController {
             if (!access_token) {
                 logErrorNoAccount("401", "User is not logged in")
                 res.status(401).json(
-                    'You are not logged in'
+                    "Vous n'êtes pas connecté"
                 );
                 return;
             }
@@ -151,7 +151,7 @@ export class UserController {
             if (!decoded) {
                 logErrorNoAccount("401", "Invalid token or user doesn't exist")
                 res.status(401).json(
-                    `Invalid token or user doesn't exist`
+                    `Jeton invalide ou bien l'utilisateur est inexistant`
                 );
                 return;
             }
@@ -162,7 +162,7 @@ export class UserController {
             if (!user) {
                 logErrorNoAccount("401", "User with that token no longer exist")
                 res.status(401).json(
-                    `User with that token no longer exist`
+                    `L'utilisateur avec ce jeton n'existe plus`
                 );
                 return;
             }
@@ -171,7 +171,7 @@ export class UserController {
                 //console.log('ca va pas bien');
                 logErrorNoAccount("401", "Role and user do not match")
                 res.status(401).json(
-                    `Role and user do not match`
+                    `Le rôle et l'utilisateur ne correspondent pas`
                 );
                 return;
             }
@@ -192,7 +192,7 @@ export class UserController {
         try {
             const user = res.locals.user;
             if (!user) {
-                return next(`Invalid token or session has expired`);
+                return next(`Jeton invalide ou bien la session a expiré`);
             }
 
             next();
@@ -207,7 +207,7 @@ export class UserController {
             if (!allowedRoles.includes(user.role)) {
                 logError(res.locals.user, "403", "User is not allowed to perform this action")
                 res.status(403).json(
-                    'You are not allowed to perform this action'
+                    "Vous n'êtes pas authorisé à effectuer cette action"
                 );
                 return;
             }

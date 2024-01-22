@@ -12,6 +12,8 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Feedback.scss";
+import { navToCorrectTab } from "../../../../utils/NavigationUtils";
+import ConfirmChangesDialog from "../../../../utils/ConfirmChangesDialog";
 
 export const checkList = Object.values(Criteria).filter(
   (value) => typeof value === "string"
@@ -25,6 +27,18 @@ export default function PreApproveFeedback(caseData: SingleCaseProp) {
   );
   const [isApproved, setApproved] = React.useState(false);
   const [failedCriterias] = React.useState<number[]>(new Array());
+  const [
+    confirmChangesDialogOpen,
+    setConfirmChangesDialogOpen,
+  ] = React.useState(false);
+
+  const openConfirmChangesDialog = () => {
+    setConfirmChangesDialogOpen(true);
+  };
+
+  const handleConfirmChangesDialogClose = () => {
+    setConfirmChangesDialogOpen(false);
+  };
 
   const handleVerifyCheck = (index: number) => {
     const updatedCheckedState = checkedState.map((item: boolean, i) => {
@@ -58,7 +72,7 @@ export default function PreApproveFeedback(caseData: SingleCaseProp) {
         }
       )
       .then(() => {
-        navigate("/approval");
+        navToCorrectTab("/approval", navigate, newCase);
       });
   };
 
@@ -85,13 +99,19 @@ export default function PreApproveFeedback(caseData: SingleCaseProp) {
             des modifications à effectuer.
           </b>
         </Typography>
-        <Button variant="contained" disabled={!isApproved} onClick={() => sendCaseStudyResponse()}>
+        <Button variant="contained" disabled={!isApproved} onClick={openConfirmChangesDialog}>
           Préapprouver l'étude de cas
         </Button>
-        <Button variant="contained" color="error" disabled={isApproved} onClick={() => sendCaseStudyResponse()}>
+        <Button variant="contained" color="error" disabled={isApproved} onClick={openConfirmChangesDialog}>
           Rejeter l'étude de cas
         </Button>
+        
       </Card>
+      <ConfirmChangesDialog
+        open={confirmChangesDialogOpen}
+        onClose={handleConfirmChangesDialogClose}
+        onConfirm={sendCaseStudyResponse}
+      />
     </div>
   );
 }

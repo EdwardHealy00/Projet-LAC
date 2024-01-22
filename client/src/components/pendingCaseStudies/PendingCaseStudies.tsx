@@ -8,13 +8,15 @@ import { PendingCasesTeacher } from "../roles/edit/teacher/PendingCases";
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
 import { createCaseFromData } from "../../utils/ConvertUtils";
+import { Link, useLocation } from "react-router-dom";
 
 function filterByStep(caseStudies: Case[], step: CaseStep) {
   return caseStudies.filter((caseStudy) => caseStudy.status == step);
 }
 
 export default function PendingCaseStudies() {
-  const [tabValue, setTabValue] = React.useState("0");
+  const location = useLocation();
+  const [tabValue, setTabValue] = React.useState(location.pathname);
 
   const [paidCaseStudiesStep1, setPaidCaseStudiesStep1] = React.useState<Case[]>([]);
   const [paidCaseStudiesStep2, setPaidCaseStudiesStep2] = React.useState<Case[]>([]);
@@ -73,6 +75,7 @@ export default function PendingCaseStudies() {
   };
 
   React.useEffect(() => {
+    window.scrollTo(0, 0)
     getCaseStudies();
   }, []);
 
@@ -90,13 +93,13 @@ export default function PendingCaseStudies() {
         <TabContext value={tabValue}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={tabValue} onChange={onTabChange} centered>
-              <Tab label="Payant" value="0"></Tab>
-              <Tab label="Libre d'accès" value="1"></Tab>
+              <Tab label="Payant" value="/my-pending-case-studies/paid" component={Link} to={"/my-pending-case-studies/paid"}></Tab>
+              <Tab label="Libre d'accès" value="/my-pending-case-studies/free" component={Link} to={"/my-pending-case-studies/free"}></Tab>
             </Tabs>
           </Box>
           
           {/*PAID CASES TAB*/}
-          <TabPanel value="0">
+          <TabPanel value="/my-pending-case-studies/paid">
             <UnlockAccess
               role={[Role.Professor]}
               children={
@@ -111,7 +114,7 @@ export default function PendingCaseStudies() {
           </TabPanel>
 
           {/*FREE CASES TAB*/}
-          <TabPanel value="1">
+          <TabPanel value="/my-pending-case-studies/free">
             <UnlockAccess
               role={[Role.Professor]}
               children={
