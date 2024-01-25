@@ -31,15 +31,17 @@ export default function ValidateTeacherList() {
       .then((res) => {
         const teachers = [];
         for (const teacher of res.data.data.users) {
-          teachers.push(
-            createData(
-              teacher.firstName + " " + teacher.lastName,
-              teacher.email,
-              teacher.country,
-              teacher.school,
-              teacher.proofUrl
-            )
-          );
+          if(teacher.proof){
+            teachers.push(
+              createData(
+                teacher.firstName + " " + teacher.lastName,
+                teacher.email,
+                teacher.country,
+                teacher.school,
+                teacher.proofUrl
+              )
+            );
+          }
         }
         setTeachers(teachers);
       })

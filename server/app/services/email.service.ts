@@ -128,7 +128,7 @@ export class EmailService {
             to: userEmail,
             subject: "Votre preuve d'identité a été évaluée",
             text: `Cher(e) ${userEmail},\n\n `+
-                isApproved ? `Votre compte a été approuvé. Vous pouvez dès maintenant déposer votre première étude de cas sur notre plateforme: ${process.env.REACT_APP_BASE_API_URL}/catalogue .` : `Votre compte a été rejeté. Veuillez nous contacter directement pour nous faire parvenir une seconde preuve.`+
+                isApproved ? `Votre compte a été approuvé. Vous pouvez dès maintenant déposer votre première étude de cas sur notre plateforme: ${process.env.REACT_APP_BASE_API_URL}/catalogue .` : `Votre compte a été rejeté. Si vous le désirez, vous pouvez effectuer une autre tentative en soumettant une nouvelle preuve directement sur la plateforme: ${process.env.REACT_APP_BASE_API_URL}/catalogue`+
                 `\n\nCordialement,`+
                 `\n\nL'Équipe du LAC`
         }

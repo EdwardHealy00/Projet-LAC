@@ -20,20 +20,20 @@ export class UserController {
         this.router.use(this.middlewareDeserializeUser.bind(this));
         this.router.use(this.middlewareRequireUser.bind(this));
 
-        // this.router.get('/me', async (req: Request, res: Response, next: NextFunction) => {
-        //     try {
-        //         const user = res.locals.user;
-        //         res.status(200).json({
-        //             status: 'success',
-        //             data: {
-        //                 user,
-        //             },
-        //         });
-        //     } catch (err: any) {
-        //         console.log(err);
-        //         next(err);
-        //     }
-        // });
+        this.router.get('/me', async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const user = res.locals.user;
+                res.status(200).json({
+                    status: 'success',
+                    data: {
+                        user,
+                    },
+                });
+            } catch (err: any) {
+                console.log(err);
+                next(err);
+            }
+        });
 
         this.router.get('/', this.middlewareRestrictTo(Role.Admin), async (req: Request, res: Response, next: NextFunction) => {
             try {
@@ -97,6 +97,37 @@ export class UserController {
             }
         });
 
+        this.router.post('/proof', this.middlewareRestrictTo(Role.ProfessorNotApproved), async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const user = res.locals.user;
+                const fileProof = req.files && req.files.length > 0 ? req.files[0] : undefined;
+                if (!user) {
+                    logError(res.locals.user, "404", "user not found")
+                    res.status(404).json('Utilisateur introuvable');
+                    return;
+                }
+                if(!fileProof) {
+                    logError(res.locals.user, "404", "proof not found")
+                    res.status(404).json('Preuve introuvable');
+                    return;
+                }
+
+                user.proof = fileProof;
+                await this.userService.updateUser(user);
+
+         
+                this.emailService.sendNewUserEmail(user.email);
+
+                logInfo(res.locals.user, "Successfully updated proof")
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while updating proof")
+                next(err);
+            }
+        });
+
         this.router.post('/approvalResult', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const { email, approved } = req.body;
@@ -107,11 +138,16 @@ export class UserController {
                     return;
                 }
 
-                user.role = approved ? Role.Professor : Role.Student;
+                if(approved) {
+                    user.role = Role.Professor;
+                } else {
+                    user.proof = null;
+                }
+
                 await this.userService.updateUser(user);
                 this.emailService.sendApprovalResultToTeacher(user!.email, approved);
 
-                logInfo(res.locals.user, "Successfully sent approval to teacher")
+                logInfo(res.locals.user, "Successfully sent approval to teacher with answer:" + approved)
                 res.status(200).json({
                     status: 'success',
                 });

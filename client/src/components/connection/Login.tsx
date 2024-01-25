@@ -2,6 +2,7 @@ import React, {
   forwardRef,
   useContext,
   useImperativeHandle,
+  useRef,
   useState,
 } from "react";
 import Button from "@mui/material/Button";
@@ -10,7 +11,8 @@ import axios from "axios";
 import { Role } from "../../model/enum/Role";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../App";
-import { Typography, alpha, styled, useTheme } from "@mui/material";
+import { Typography } from "@mui/material";
+import ResubmitProofPopup, { ResubmitProofPopupRef } from "./ResubmitProofPopup";
 
 export interface Props {}
 export interface LoginRef {
@@ -25,8 +27,31 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
   }));
 
   const appContext = useContext(AppContext);
-  const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("logged_in")));
+  const resubmitProofPopupRef = useRef<ResubmitProofPopupRef | null>(null);
+  const [loggedIn, setLoggedIn] = useState(
+    Boolean(localStorage.getItem("logged_in"))
+  );
+  const [hasToResubmitProof, setHasToResubmitProof] = useState(false);
+
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    getUserInfo();
+  }, []);
+
+  const getUserInfo = () => {
+    axios
+      .get(`${process.env.REACT_APP_BASE_API_URL}/api/users/me`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          const user = res.data.data.user;
+          const hasToResubmit = user.role === Role.ProfessorNotApproved && !user.proof;
+          setHasToResubmitProof(hasToResubmit);
+        }
+      });
+  }
 
   const onLogout = () => {
     axios
@@ -40,7 +65,7 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
           localStorage.removeItem("email");
           localStorage.removeItem("logged_in");
           setLoggedIn(false);
-          navigate("/catalogue")
+          navigate("/catalogue");
         }
       });
   };
@@ -72,6 +97,12 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
     }
   };
 
+  const openResubmitProofPopup = () => {
+    if(resubmitProofPopupRef.current) {
+      resubmitProofPopupRef.current.setPopupOpen();
+    }
+  };
+
   return (
     <div>
       {!loggedIn && (
@@ -93,6 +124,18 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
               {showRole(localStorage.getItem("role") as Role)}
             </Typography>
           </div>
+          {hasToResubmitProof && (
+            <div id="resubmitInfo">
+              <Button
+                id="resubmitButton"
+                variant="contained"
+                color="warning"
+                onClick={openResubmitProofPopup}
+              >
+                Resoumettre une preuve
+              </Button>
+            </div>
+          )}
           <Button
             id="logoutButton"
             variant="contained"
@@ -103,8 +146,10 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
           </Button>
         </div>
       )}
+      <ResubmitProofPopup ref={resubmitProofPopupRef}/>
     </div>
   );
 });
 
 export default Login;
+
