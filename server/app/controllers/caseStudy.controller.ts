@@ -465,6 +465,48 @@ export class CaseStudyController {
             }
         });
 
+        this.router.post('/addReviewer/:id', this.middlewareRestrictTo(Role.Comity, Role.Admin), async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.params.id;
+                const memberEmail = req.body.email;
+
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
+
+                if (!caseStudy) {
+                    logError(res.locals.user, "404", "Case study was not found")
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                // Check if the memberEmail is already in the reviewers array
+                if (caseStudy.reviewers && caseStudy.reviewers.includes(memberEmail)) {
+                    logInfo(res.locals.user, "Reviewer " + memberEmail + " is already assigned to " + caseStudy.title);
+                    res.status(200).json({
+                        status: 'success',
+                    });
+                    return;
+                }
+
+                if(!caseStudy.reviewers) {
+                    caseStudy.reviewers = [];
+                }
+                caseStudy.reviewers.push(memberEmail);
+
+                caseStudy.markModified('reviewers');
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+
+                this.emailService.sendAssignedCaseStudyToReview(memberEmail, caseStudy);
+
+                logInfo(res.locals.user, "Successfully added reviewer " + memberEmail + " to " + caseStudy.title);
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while submitting committee review")
+                console.log(err);
+            }
+        });
+
         this.router.post('/comityMemberReview/:id', this.middlewareRestrictTo(Role.Comity, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.params.id;

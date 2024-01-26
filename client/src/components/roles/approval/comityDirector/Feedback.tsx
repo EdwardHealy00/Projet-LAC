@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { SingleCaseProp } from "../../../../model/CaseStudy";
 import {
   Accordion,
@@ -24,6 +24,8 @@ import { ExpandMore } from "@mui/icons-material";
 import "./Feedback.scss";
 import { navToCorrectTab } from "../../../../utils/NavigationUtils";
 import ConfirmChangesDialog from "../../../../utils/ConfirmChangesDialog";
+import InvitePopup, { InvitePopupRef } from "./manageInvites/InvitePopup";
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 export const comityCriteria: string[] = [
   "Pertinence du cas",
@@ -38,6 +40,7 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
   const navigate = useNavigate();
   const [decision, setDecision] = React.useState<ApprovalDecision | string>("");
   const [comments, setComments] = React.useState<string>("");
+  const invitePopupRef = useRef<InvitePopupRef | null>(null);
 
   const [
     confirmChangesDialogOpen,
@@ -53,6 +56,12 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
 
   const handleConfirmChangesDialogClose = () => {
     setConfirmChangesDialogOpen(false);
+  };
+
+  const openInvitePopup = () => {
+    if(invitePopupRef.current) {
+      invitePopupRef.current.setPopupOpen();
+    }
   };
 
   const onDecisionChanged = (e: any) => {
@@ -80,7 +89,10 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
   return (
     <div>
       <div>
-        <Typography variant="h4">Évaluations des membres du comité</Typography>
+        <div id="evaluation-label">
+          <Typography variant="h4">Évaluations des membres du comité</Typography>
+          <Button variant="contained" onClick={openInvitePopup}><GroupAddIcon/></Button>
+        </div>
         {newCase.reviewGroups.map((reviewGroup, version) => (
           <div id="version-accordion" key={version}>
             {version !== newCase.version && (
@@ -232,6 +244,10 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
         open={confirmChangesDialogOpen}
         onClose={handleConfirmChangesDialogClose}
         onConfirm={onDecisionSubmit}
+      />
+      <InvitePopup 
+        caseData={newCase} 
+        ref={invitePopupRef}
       />
     </div>
   );

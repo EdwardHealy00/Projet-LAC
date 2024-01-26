@@ -29,9 +29,14 @@ export class UserService {
         return userModel.find();
     }
 
+    
+    // async findUsers(query: FilterQuery<User>, options: QueryOptions = {}) {
+    //     return userModel.find(query, options);
+    // }
+
     // Find all users by any fields
-    async findUsers(query: FilterQuery<User>, options: QueryOptions = {}) {
-        return userModel.find(query, options);
+    async findUsers(where: FilterQuery<User>, select?: string) {
+        return userModel.find().where(where).select(select);
     }
 
     // Find one user by any fields

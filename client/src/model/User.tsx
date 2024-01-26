@@ -19,3 +19,9 @@ export interface UserPasswordReset {
     reset_token: string;
     password: string;
 }
+
+export interface User {
+    lastName: string;
+    firstName: string;
+    email: string;
+}

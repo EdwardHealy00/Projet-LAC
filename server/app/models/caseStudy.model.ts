@@ -45,6 +45,9 @@ export class CaseStudy {
     @prop({default: [{version: 0, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING}]})
     reviewGroups: ReviewGroup[];
 
+    @prop({})
+    reviewers: string[];
+
     @prop({default: 0})
     version: number;
 

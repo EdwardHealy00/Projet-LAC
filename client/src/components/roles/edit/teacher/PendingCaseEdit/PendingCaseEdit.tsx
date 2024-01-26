@@ -120,6 +120,7 @@ function PendingCaseEdit() {
           res.data.subjects,
           res.data.files,
           res.data.reviewGroups,
+          res.data.reviewers,
           res.data.version,
           res.data.approvalDecision,
           res.data.comments,

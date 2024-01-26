@@ -54,6 +54,50 @@ export class UserController {
             }
         });
 
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin), async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const users = await this.userService.findAllUsers();
+
+                logInfo(res.locals.user, "Successfully get all users")
+                res.status(200).json({
+                    status: 'success',
+                    result: users.length,
+                    data: {
+                        users,
+                    },
+                });
+            } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while getting all users")
+                console.log(err);
+                next(err);
+            }
+        });
+
+        this.router.get("/committeeMembers", this.middlewareRestrictTo(Role.Admin, Role.ComityDirector), async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                // Get info of all committee members
+                const users = await this.userService.findUsers({ role: 'comity' }, 'firstName lastName email');
+
+                logInfo(res.locals.user, "Successfully get all reviewers");
+                res.status(200).json({
+                    status: "success",
+                    result: users.length,
+                    data: {
+                        users,
+                    },
+                });
+                } catch (err: any) {
+                logError(
+                    res.locals.user,
+                    err.name,
+                    "Error while getting all reviewers"
+                );
+                console.log(err);
+                next(err);
+                }
+            }
+        );
+
         this.router.get('/approval', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response, next: NextFunction) => {
 
             try {

@@ -79,6 +79,7 @@ function DashboardPaidCase() {
               caseStudy.subjects,
               caseStudy.files,
               caseStudy.reviewGroups,
+              caseStudy.reviewers,
               caseStudy.version,
               caseStudy.approvalDecision,
               caseStudy.comments,

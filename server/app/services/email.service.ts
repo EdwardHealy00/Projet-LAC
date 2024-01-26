@@ -241,6 +241,20 @@ export class EmailService {
         }
     }
 
+    sendAssignedCaseStudyToReview(committeeMember: string, caseStudy: CaseStudy) {
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: committeeMember,
+            subject: `Votre participation a l'étude de cas ${caseStudy.title} est requise`,
+            text: `Cher(e) ${committeeMember},`+
+            `\n\nVotre participation à l\'évaluation par le comité scientifique de l\'étude de cas nommée ${caseStudy.title} est requise.`+
+            `\n\nVous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`+
+            `\n\nCordialement,`+
+            `\n\nL'Équipe du LAC`,
+        }
+        this.sendEmail(mailOptions);
+    }
+
     sendNewReviewSubmittedToComityDirector(directors: Array<User>, caseStudy: CaseStudy, reviewAuthor: string) {
         for(var director of directors) {
             const mailOptions = {
