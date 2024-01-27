@@ -85,7 +85,7 @@ export default function CaseTable(rows: CaseProp) {
                   <TableCell 
                     style={{
                       width: '20%',
-                      color: row.reviewGroups[row.version].comityMemberReviews.length === row.reviewers.length
+                      color: row.reviewGroups[row.version].comityMemberReviews.length === row.reviewers.length && row.reviewers.length !== 0
                         ? 'green'
                         : 'inherit'
                     }}
