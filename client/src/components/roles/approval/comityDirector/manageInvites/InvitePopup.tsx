@@ -74,7 +74,7 @@ const InvitePopup = forwardRef<InvitePopupRef, Props>((props, ref) => {
         </List>
       </DialogContent>
       <DialogActions>
-        <Button>Fermer</Button>
+        <Button onClick={handleClose}>Fermer</Button>
       </DialogActions>
     </Dialog>
   );
