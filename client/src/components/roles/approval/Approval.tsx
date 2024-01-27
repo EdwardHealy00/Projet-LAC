@@ -10,6 +10,7 @@ import { TabContext, TabPanel } from "@mui/lab";
 import { createCaseFromData } from "../../../utils/ConvertUtils";
 import { ApprovalComityDirector } from "./comityDirector/Approval";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ApprovalComity } from "./comity/Approval";
 
 function filterByStep(caseStudies: Case[], step: CaseStep) {
   return caseStudies.filter((caseStudy) => caseStudy.status == step);
@@ -86,6 +87,17 @@ export default function Approval() {
     setTabValue(newValue);
   };
 
+  function isPendingForReview(caseItem: Case): boolean {
+    const userEmail = localStorage.getItem("email");
+
+    return !!userEmail &&
+      caseItem.reviewers &&
+      caseItem.reviewers.includes(userEmail) &&
+      !caseItem.reviewGroups[caseItem.version].comityMemberReviews.some(
+        (review) => review.reviewAuthor === localStorage.email
+      );
+  }
+
   return (
     <div>
       <Button className="return" href="/dashboard">
@@ -114,14 +126,15 @@ export default function Approval() {
             ></UnlockAccess>
 
             
-            {/* 
-            For now comity members wont have access to all pending cases
+          
             <UnlockAccess
               role={[Role.Comity]}
-              children={<ApprovalComity caseStudies={paidCaseStudiesStep2.filter((caseItem) => {
-                return !caseItem.comityMemberReviews || !caseItem.comityMemberReviews.some((review) => review.reviewAuthor === localStorage.email);
-              })} />}
-            ></UnlockAccess> */}
+              children={<ApprovalComity caseStudies={
+                paidCaseStudiesStep2.filter((caseItem) => {
+                  return isPendingForReview(caseItem);
+                })
+              }/>}
+            ></UnlockAccess>
 
             <UnlockAccess
               role={[Role.ComityDirector]}
@@ -142,14 +155,14 @@ export default function Approval() {
               }
             ></UnlockAccess>
 
-            {/* 
-             For now comity members wont have access to all pending cases
             <UnlockAccess
               role={[Role.Comity]}
-              children={<ApprovalComity caseStudies={freeCaseStudiesStep2.filter((caseItem) => {
-                return !caseItem.comityMemberReviews || !caseItem.comityMemberReviews.some((review) => review.reviewAuthor === localStorage.email);
-              })} />}
-            ></UnlockAccess> */}
+              children={<ApprovalComity caseStudies={
+                freeCaseStudiesStep2.filter((caseItem) => {
+                  return isPendingForReview(caseItem);
+                })
+              }/>}
+            ></UnlockAccess>
 
             <UnlockAccess
               role={[Role.ComityDirector]}

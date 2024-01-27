@@ -27,7 +27,7 @@ export class CaseStudyController {
         this.router.use(this.middlewareDeserializeUser.bind(this));
 
 
-        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.ComityDirector), async (req: Request, res: Response) => {
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.ComityDirector, Role.Comity), async (req: Request, res: Response) => {
             try {
                 const caseStudies = await this.caseStudyService.findAllCaseStudys();
 
@@ -524,6 +524,12 @@ export class CaseStudyController {
                 if(caseStudy.status != CaseStep.WaitingComity) {
                     logError(res.locals.user, "403", "Case study can't be reviewed in its current step")
                     res.status(403).json('L\'étude de cas ne peut pas être évalué dans son statut actuel');
+                    return;
+                }
+                
+                if(!caseStudy.reviewers.includes(reviewerEmail)) {
+                    logError(res.locals.user, "401", "This user has not been assigned to review this case study")
+                    res.status(401).json('L\'utilisateur n\'a pas été assigné comme évaluateur de cette étude de cas');
                     return;
                 }
 

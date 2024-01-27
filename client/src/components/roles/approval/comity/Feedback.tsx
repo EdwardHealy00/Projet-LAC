@@ -20,6 +20,7 @@ import { ApprovalDecision } from "../../../../model/enum/ApprovalDecision";
 import axios from "axios";
 import "./Feedback.scss";
 import ConfirmChangesDialog from "../../../../utils/ConfirmChangesDialog";
+import { navToCorrectTab } from "../../../../utils/NavigationUtils";
 
 
 export const comityCriteria: string[] = [
@@ -174,7 +175,7 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
         }
       )
       .then(() => {
-        navigate("/catalogue");
+        navToCorrectTab("/approval", navigate, newCase);
       });
   };
 
