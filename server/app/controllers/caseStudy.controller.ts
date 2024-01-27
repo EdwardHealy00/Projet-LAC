@@ -463,7 +463,7 @@ export class CaseStudyController {
             }
         });
 
-        this.router.post('/addReviewer/:id', this.middlewareRestrictTo(Role.Comity, Role.Admin), async (req: Request, res: Response) => {
+        this.router.post('/addReviewer/:id', this.middlewareRestrictTo(Role.ComityDirector, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.params.id;
                 const memberEmail = req.body.email;
