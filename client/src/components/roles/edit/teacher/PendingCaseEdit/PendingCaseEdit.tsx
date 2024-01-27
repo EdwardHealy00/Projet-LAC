@@ -227,7 +227,7 @@ function PendingCaseEdit() {
             <Typography variant="h4">Informations sur le cas</Typography>
             <Card id="generalCaseInfo">
               <div>
-                <Typography>{caseStudy.date.substring(0, 10)}</Typography>
+                <Typography>{new Date(caseStudy.date).toLocaleDateString('fr-CA')}</Typography>
                 <ColoredTypography variant="h3">
                   {caseStudy.title}
                 </ColoredTypography>

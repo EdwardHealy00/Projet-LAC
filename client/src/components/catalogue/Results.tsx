@@ -73,7 +73,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
           <div className="top-info">
             <div className="leftside-info">
               <Typography variant="caption">
-                {caseData.date.substring(0, 10)}
+                {new Date(caseData.date).toLocaleDateString('fr-CA')}
               </Typography>
               <div className="title-and-icon">
                 <ColoredTypography variant="h4" className="field">

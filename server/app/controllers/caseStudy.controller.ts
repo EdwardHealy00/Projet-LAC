@@ -350,8 +350,6 @@ export class CaseStudyController {
 
         this.router.post('/', this.middlewareRestrictTo(Role.Professor, Role.Deputy, Role.Admin), async (req: Request, res: Response) => {
             try {
-                console.log(new Date(Date.now()).toISOString())
-                console.log(new Date().toISOString())
                 const caseStudy = req.body;
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
                 if (req.files) {

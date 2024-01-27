@@ -36,7 +36,7 @@ export class CaseStudy {
     @prop({ required: true })
     desc: string;
 
-    @prop({ default: new Date(Date.now()).toISOString() })
+    @prop({ default: () => new Date().toISOString() })
     date: string;
 
     @prop({})

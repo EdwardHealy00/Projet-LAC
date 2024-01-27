@@ -94,7 +94,7 @@ function NewCase() {
           <Card id="generalCaseInfo">
             <div>
                   <Typography>
-                    {caseStudy.date.substring(0, 10)}
+                    {new Date(caseStudy.date).toLocaleDateString('fr-CA')}
                   </Typography>
                     <ColoredTypography variant="h3">
                       {caseStudy.title}
