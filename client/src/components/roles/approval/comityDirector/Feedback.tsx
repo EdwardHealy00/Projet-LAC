@@ -91,7 +91,7 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
       <div>
         <div id="evaluation-label">
           <Typography variant="h4">Évaluations des membres du comité</Typography>
-          <Button variant="contained" onClick={openInvitePopup}><GroupAddIcon/></Button>
+          <Button variant="text" onClick={openInvitePopup} style={{ padding: 0 }}><GroupAddIcon/></Button>
         </div>
         {newCase.reviewGroups.map((reviewGroup, version) => (
           <div id="version-accordion" key={version}>
@@ -102,7 +102,10 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
                   aria-controls="panel1a-content"
                   id="panel1a-header"
                 >
-                  <Typography>Version #{version + 1}</Typography>
+                  <Typography>Version #{version + 1}
+                    {" "}
+                    {newCase.reviewGroups[version].comityMemberReviews.length}/{newCase.reviewers.length}
+                  </Typography>
                 </AccordionSummary>
                 <div className="review-grid">
                   {reviewGroup.comityMemberReviews.map((review, index) => (
@@ -152,6 +155,8 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
             >
               <Typography>
                 <b>Version courante</b>
+                {" "}
+                {newCase.reviewGroups[newCase.version].comityMemberReviews.length}/{newCase.reviewers.length}
               </Typography>
             </AccordionSummary>
             <div className="review-grid">

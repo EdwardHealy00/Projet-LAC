@@ -82,11 +82,22 @@ export default function CaseTable(rows: CaseProp) {
               )}
               {row.approvalDecision == ApprovalDecision.PENDING && (
                 <>
-                  <TableCell style={{ width: '20%' }} align="center">{getStatus(row.status)}</TableCell>
+                  <TableCell 
+                    style={{
+                      width: '20%',
+                      color: row.reviewGroups[row.version].comityMemberReviews.length === row.reviewers.length
+                        ? 'green'
+                        : 'inherit'
+                    }}
+                    align="center"
+                  >
+                    {getStatus(row.status)}
+                    {" "}
+                    {row.reviewGroups[row.version].comityMemberReviews.length}/{row.reviewers.length}
+                    </TableCell>
                   <TableCell style={{ width: '10%', paddingTop: '0%', paddingBottom: '0%' }} align="right">
                     <Button
                       variant="contained"
-                      sx={{ backgroundColor: "#c00000" }}
                       onClick={() => handleCase(row.id_)}
                     >
                       Traiter

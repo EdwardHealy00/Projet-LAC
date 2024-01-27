@@ -217,7 +217,7 @@ export class EmailService {
                 subject: "Une étude de cas préapprouvée requiert votre attention",
                 text: `Cher(e) ${director.email},` +
                 `\n\nUne étude de cas préapprouvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de révision.` + 
-                `\n\n Vous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`+
+                `\n\nVous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`+
                 `\n\nCordialement,`+
                 `\n\nL'Équipe du LAC`,
             }
@@ -271,6 +271,22 @@ export class EmailService {
         }
     }
 
+    sendLastReviewSubmittedToComityDirector(directors: Array<User>, caseStudy: CaseStudy, reviewAuthor: string) {
+        for(var director of directors) {
+            const mailOptions = {
+                from: EMAIL_USERNAME,
+                to: director.email,
+                subject: `La dernière révision requise a été complétée pour l'étude de cas ${caseStudy.title}`,
+                text: `Cher(e) ${director.email},`+
+                `\n\nLa dernière révision requise a été complétée par ${reviewAuthor} pour l\'étude de cas nommée ${caseStudy.title}.`+
+                `\n\nPour effectuer la révision finale, vous pouvez accéder à l'étude de cas par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`+
+                `\n\nCordialement,`+
+                `\n\nL'Équipe du LAC`,
+            }
+            this.sendEmail(mailOptions);
+        }
+    }
+
     sendReviewConvertedToFreeToUser(email: string, caseStudy: CaseStudy, comments: string) {
         const mailOptions = {
             from: EMAIL_USERNAME,
@@ -279,7 +295,7 @@ export class EmailService {
             text: `Cher(e) ${email},`+
             `\n\nVotre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors} a été rejetée. Celle-ci a été redirigée vers le processus d'approbation des études de cas gratuites. Consultez l'évaluation complète ci-dessous :`+
             `\n\n${comments}` + 
-            `\n\n Cliquez ici pour y consulter son statut : ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`+
+            `\n\nCliquez ici pour y consulter son statut : ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`+
             `\n\nCordialement,`+
             `\n\nL'Équipe du LAC`,
         }

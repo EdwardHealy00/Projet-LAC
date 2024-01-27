@@ -2,6 +2,7 @@ import React from "react";
 import "./InviteItem.scss";
 import { Button, ListItem, ListItemText, Typography } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import DoneIcon from '@mui/icons-material/Done';
 import axios from "axios";
 
 interface Props {
@@ -34,9 +35,16 @@ const InviteItem: React.FC<Props> = ({ caseData, userData }) => {
       <ListItemText
         className="label-layout"
         primary={
-          <Typography className="reviewer-label" variant="h4">
-            {userData.firstName + " " + userData.lastName}
-          </Typography>
+          <div className="primary-row">
+            <Typography className="reviewer-label" variant="h4">
+              {userData.firstName + " " + userData.lastName}
+            </Typography>
+            {caseData.reviewGroups[caseData.version].comityMemberReviews.some(
+              (review: { reviewAuthor: any; }) => review.reviewAuthor === userData.email
+            ) &&
+              <DoneIcon className="doneIcon"/>
+            }
+          </div>
         }
         secondary={
           <Typography className="reviewer-label" variant="caption">
@@ -44,6 +52,7 @@ const InviteItem: React.FC<Props> = ({ caseData, userData }) => {
           </Typography>
         }
       />
+
 
       <Button
         className="invite-btn"

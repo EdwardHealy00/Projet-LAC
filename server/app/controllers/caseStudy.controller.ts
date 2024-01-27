@@ -566,7 +566,13 @@ export class CaseStudyController {
                 await this.caseStudyService.updateCaseStudy(caseStudy);
 
                 const directors = await this.userService.findUsers({ role: Role.ComityDirector });
-                this.emailService.sendNewReviewSubmittedToComityDirector(directors, caseStudy, comityMemberReview.reviewAuthor);
+
+                // if all requested reviewers answered, send different email to director
+                if(caseStudy.reviewGroups[caseStudy.version].comityMemberReviews.length === caseStudy.reviewers.length) {
+                    this.emailService.sendLastReviewSubmittedToComityDirector(directors, caseStudy, comityMemberReview.reviewAuthor);
+                } else {
+                    this.emailService.sendNewReviewSubmittedToComityDirector(directors, caseStudy, comityMemberReview.reviewAuthor);
+                }
 
                 logInfo(res.locals.user, "Successfully reviewed case study " + caseStudy.title)
                 res.status(200).json({
