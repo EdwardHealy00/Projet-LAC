@@ -3,18 +3,22 @@
 }
 
 #logoutButton {
-    margin-left: 1%;
+    margin-left: 0.5%;
 }
 
 #login {
     display: flex;
     flex-direction: row;
+    justify-content: flex-end;
 }
 
 #loginInfo {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    flex-grow: 1;
     width: fit-content;
+}
+
+#resubmitInfo {
+    margin-left: 0.5%;
 }

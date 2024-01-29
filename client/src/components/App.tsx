@@ -118,7 +118,8 @@ function App() {
         main: '#f44336', 
       },
       warning: {
-        main: '#ff9800', 
+        main: '#ff9800',
+        light: '#ffb74d' 
       },
       success: {
         main: '#4caf50', 
