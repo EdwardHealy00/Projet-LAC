@@ -86,7 +86,6 @@ export default function CaseTable(rows: CaseProp) {
                   <TableCell style={{ width: '10%', paddingTop: '0%', paddingBottom: '0%' }} align="right">
                     <Button
                       variant="contained"
-                      sx={{ backgroundColor: "#c00000" }}
                       onClick={() => handleCase(row.id_)}
                     >
                       Traiter

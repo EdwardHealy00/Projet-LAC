@@ -85,7 +85,7 @@ const CaseStudyWconnection = () => {
                   <b>Nombre de pages :</b> {displayedCase.page}
                 </div>
                 <div>
-                  <b>Date :</b> {displayedCase.date.substring(0, 10)}
+                  <b>Date :</b> {new Date(displayedCase.date).toLocaleDateString('fr-CA')}
                 </div>
               </div>
             </div>

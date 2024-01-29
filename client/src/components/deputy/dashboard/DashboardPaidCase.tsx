@@ -79,6 +79,7 @@ function DashboardPaidCase() {
               caseStudy.subjects,
               caseStudy.files,
               caseStudy.reviewGroups,
+              caseStudy.reviewers,
               caseStudy.version,
               caseStudy.approvalDecision,
               caseStudy.comments,
@@ -168,18 +169,10 @@ function DashboardPaidCase() {
           }
         ></UnlockAccess>
       </div>
-      <Divider></Divider>
-      <div id="approvalTeacher">
-        <div id="titleApprovalTeacher">
-          <Typography variant="h3">
-            Professeur(e)s en attente d'approbation
-          </Typography>
-        </div>
-        <UnlockAccess
+      <UnlockAccess
           role={[Role.Deputy]}
           children={<ValidateTeacherList />}
         ></UnlockAccess>
-      </div>
     </div>
   );
 }

@@ -3,15 +3,11 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  TextField,
   DialogActions,
   Button,
   Typography,
 } from "@mui/material";
-import ForgotPassword from "./ForgotPassword";
-import Register from "./Register";
 import axios from "axios";
-import { UserLogin } from "../../model/User";
 import React, { forwardRef, useImperativeHandle } from "react";
 import { useNavigate } from "react-router-dom";
 import { PhotoCamera } from "@mui/icons-material";

@@ -14,19 +14,22 @@ import {
   Card,
   CardContent,
   Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import { NewCaseStudy } from "../../model/CaseStudy";
 import axios from "axios";
 import MenuItem from "@mui/material/MenuItem";
 import { Disciplines, Subjects } from "./Catalogue";
 import { useNavigate } from "react-router-dom";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { checkList } from "../roles/approval/deputy/PreApproveFeedback";
 import { MAX_FILES_PER_CASE } from "../../utils/Constants";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import PaidSwitch from "./PaidSwitch";
 import "./AddCaseStudy.scss";
 import { forwardRef, useImperativeHandle } from "react";
+import CaseStudyFilesTable, { CaseStudyFilesTableRef } from "./CaseStudyFilesTable";
 
 export interface Props {}
 export interface AddCaseStudyDialogRef {
@@ -41,6 +44,31 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
   }));
 
   const navigate = useNavigate();
+
+  const [
+    duplicateErrorDialogOpen,
+    setDuplicateErrorDialogOpen,
+  ] = React.useState(false);
+  const [
+    maxNumberOfFilesDialogOpen,
+    SetMaxNumberOfFilesDialogOpen,
+  ] = React.useState(false);
+
+  const openDuplicateErrorDialog = () => {
+    setDuplicateErrorDialogOpen(true);
+  };
+
+  const handleDuplicateErrorDialogClose = () => {
+    setDuplicateErrorDialogOpen(false);
+  };
+
+  const openMaxNumberOfFilesDialog = () => {
+    SetMaxNumberOfFilesDialogOpen(true);
+  };
+
+  const handleMaxNumberOfFilesDialogClose = () => {
+    SetMaxNumberOfFilesDialogOpen(false);
+  };
 
   const [addCaseStudyDialogOpen, setAddCaseStudyDialogOpen] = React.useState(
     false
@@ -58,10 +86,6 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
   const [isVerified, setVerified] = React.useState(false);
   const [isPaid, setIsPaid] = React.useState(false);
 
-  const [caseStudyFileName, setCaseStudyFileName] = React.useState(
-    "Aucun document n'a été téléversé"
-  );
-
   const [selectedDiscipline, setSelectedDiscipline] = React.useState("");
 
   const onDisciplineChanged = (e: any) => {
@@ -70,19 +94,19 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
 
   const [selectedSubjects, setSelectedSubject] = React.useState<string[]>([]);
 
+  const [reachedMaxFiles, setReachedMaxFiles] = React.useState(false);
+
+  const getFilesToUpload = () => {
+    if(caseStudyFilesTableRef.current) {
+      return caseStudyFilesTableRef.current.GetFilesToUpload();
+    }
+    return []
+  }
   const onSubjectChanged = (e: any) => {
     setSelectedSubject(e.target.value);
   };
 
-  const [state, setState] = React.useState({
-    caseStudyFile: "",
-    title: "",
-    desc: "",
-    author: "",
-    course: "",
-    discipline: "",
-    subject: "",
-  });
+  const caseStudyFilesTableRef = React.useRef<CaseStudyFilesTableRef | null>(null);
 
   const initialStateErrors = {
     caseStudyFile: { isError: false, message: "" },
@@ -104,6 +128,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
     let isValid = true;
     const stateErrorsCopy = { ...initialStateErrors };
 
+    setReachedMaxFiles(files.length >= MAX_FILES_PER_CASE);
     if (files.length > MAX_FILES_PER_CASE) {
       stateErrorsCopy.caseStudyFile = {
         isError: true,
@@ -120,7 +145,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
     let isValid = true;
     const stateErrorsCopy = { ...initialStateErrors };
 
-    if (e.caseStudyFile.value.trim() === "") {
+    if (getFilesToUpload().length === 0) {
       stateErrorsCopy.caseStudyFile = {
         isError: true,
         message: "Veuillez entrer votre étude de cas",
@@ -128,7 +153,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
       isValid = false;
     }
 
-    if (e.caseStudyFile.files.length > MAX_FILES_PER_CASE) {
+    if (getFilesToUpload().length > MAX_FILES_PER_CASE) {
       stateErrorsCopy.caseStudyFile = {
         isError: true,
         message: `Un maximum de ${MAX_FILES_PER_CASE} documents peuvent être inclus dans une étude de cas`,
@@ -198,14 +223,11 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      onUploadValidation(e.target.files);
-      let fileNames = e.target.files[0].name;
-      for (let i = 1; i < e.target.files.length; i++) {
-        fileNames += ", " + e.target.files[i].name;
-      }
-      setCaseStudyFileName(fileNames);
+    if (e.target.files && e.target.files.length > 0 && caseStudyFilesTableRef.current) {
+      const files = caseStudyFilesTableRef.current.AddFiles(e.target.files);
+      onUploadValidation(files);
     }
+    e.target.value = "";
   };
 
   const handleVerifyCheck = (index: number) => {
@@ -228,13 +250,15 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
       return;
     }
 
+    let filesToUpload: File[] = getFilesToUpload()
+
     const caseStudy = {
       title: e.target.elements.title.value,
       desc: e.target.elements.desc.value,
       authors: e.target.elements.author.value,
       submitter: localStorage.getItem("email"),
       classId: e.target.elements.course.value,
-      files: Array.from(e.target.elements.caseStudyFile.files),
+      files: filesToUpload,
       discipline: e.target.elements.discipline.value,
       isPaidCase: isPaid,
     } as NewCaseStudy;
@@ -248,11 +272,10 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
     selectedSubjects.forEach((subject) =>
       formData.append("subjects[]", subject)
     );
-    Array.from(e.target.elements.caseStudyFile.files).forEach((file) =>
+    Array.from(filesToUpload).forEach((file) =>
       formData.append("files[]", file as Blob)
     );
 
-    setCaseStudyFileName("Aucun document n'a été téléversé");
     setSelectedDiscipline("");
     setSelectedSubject([]);
     for(const index in checkList) {
@@ -309,27 +332,6 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
             encType="multipart/form-data"
           >
             <PaidSwitch onChange={handlePaidSwitchChange} />
-            <div>
-              <Button variant="contained" component="label">
-                <FileUploadIcon />
-                Téléverser des documents Word
-                <input
-                  hidden
-                  accept=".docx"
-                  type="file"
-                  onChange={handleFileUpload}
-                  name="caseStudyFile"
-                  multiple
-                />
-              </Button>
-              <FormLabel error={stateErrors.caseStudyFile.isError}>
-                {caseStudyFileName && (
-                  <Typography variant="caption" id="no-docs-text">
-                    {caseStudyFileName}
-                  </Typography>
-                )}
-              </FormLabel>
-            </div>
             <TextField
               autoFocus
               margin="dense"
@@ -414,6 +416,26 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
                 </FormControl>
               </div>
             </div>
+            <div>
+              <Button variant="contained" component="label" fullWidth disabled={reachedMaxFiles}>
+                <FileUploadIcon />
+                Téléverser des documents Word (Maximum 3)
+                <input
+                  hidden
+                  accept=".docx"
+                  type="file"
+                  onChange={handleFileUpload}
+                  name="caseStudyFile"
+                  multiple
+                />
+              </Button>
+              <CaseStudyFilesTable ref={caseStudyFilesTableRef}
+                setReachedMaxFiles={setReachedMaxFiles}
+                openDuplicateErrorDialog={openDuplicateErrorDialog}
+                closeDuplicateErrorDialog={handleDuplicateErrorDialogClose}
+                openMaxNumberOfFilesDialog={openMaxNumberOfFilesDialog}
+                closeMaxNumberOfFilesDialog={handleMaxNumberOfFilesDialogClose}/>
+            </div>
           </form>
           <Card>
             <Typography id="verify-text" variant="h4">
@@ -448,6 +470,44 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
           </Button>
         </div>
       </div>
+      <Dialog
+        open={duplicateErrorDialogOpen}
+        onClose={handleDuplicateErrorDialogClose}
+        fullWidth={true}
+      >
+        <DialogTitle>Erreur de téléversement</DialogTitle>
+
+        <DialogContent>
+          Un fichier du même nom est déjà présent pour cette étude de cas.
+        </DialogContent>
+
+        <DialogActions>
+          <Button variant="contained" onClick={handleDuplicateErrorDialogClose}>
+            Fermer
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={maxNumberOfFilesDialogOpen}
+        onClose={handleMaxNumberOfFilesDialogClose}
+        fullWidth={true}
+      >
+        <DialogTitle>Erreur de téléversement</DialogTitle>
+
+        <DialogContent>
+          Un maximum de {MAX_FILES_PER_CASE} documents peuvent être téléversés
+          pour une étude de cas.
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            variant="contained"
+            onClick={handleMaxNumberOfFilesDialogClose}
+          >
+            Fermer
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   );
 });

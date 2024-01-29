@@ -59,6 +59,7 @@ function NewCase() {
           res.data.subjects,
           res.data.files,
           res.data.reviewGroups,
+          res.data.reviewers,
           res.data.version,
           res.data.approvalDecision,
           res.data.comments,
@@ -93,7 +94,7 @@ function NewCase() {
           <Card id="generalCaseInfo">
             <div>
                   <Typography>
-                    {caseStudy.date.substring(0, 10)}
+                    {new Date(caseStudy.date).toLocaleDateString('fr-CA')}
                   </Typography>
                     <ColoredTypography variant="h3">
                       {caseStudy.title}

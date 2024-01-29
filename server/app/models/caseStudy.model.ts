@@ -36,7 +36,7 @@ export class CaseStudy {
     @prop({ required: true })
     desc: string;
 
-    @prop({ default: new Date(Date.now()).toISOString() })
+    @prop({ default: () => new Date().toISOString() })
     date: string;
 
     @prop({})
@@ -44,6 +44,9 @@ export class CaseStudy {
 
     @prop({default: [{version: 0, comityMemberReviews: [], directorComments: "", directorApprovalDecision: ApprovalDecision.PENDING}]})
     reviewGroups: ReviewGroup[];
+
+    @prop({})
+    reviewers: string[];
 
     @prop({default: 0})
     version: number;

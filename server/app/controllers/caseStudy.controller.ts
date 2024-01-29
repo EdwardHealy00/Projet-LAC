@@ -27,7 +27,7 @@ export class CaseStudyController {
         this.router.use(this.middlewareDeserializeUser.bind(this));
 
 
-        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.ComityDirector), async (req: Request, res: Response) => {
+        this.router.get('/', this.middlewareRestrictTo(Role.Admin, Role.Deputy, Role.ComityDirector, Role.Comity), async (req: Request, res: Response) => {
             try {
                 const caseStudies = await this.caseStudyService.findAllCaseStudys();
 
@@ -350,8 +350,6 @@ export class CaseStudyController {
 
         this.router.post('/', this.middlewareRestrictTo(Role.Professor, Role.Deputy, Role.Admin), async (req: Request, res: Response) => {
             try {
-                console.log(new Date(Date.now()).toISOString())
-                console.log(new Date().toISOString())
                 const caseStudy = req.body;
                 caseStudy["isPaidCase"] = caseStudy["isPaidCase"] === 'true';
                 if (req.files) {
@@ -465,6 +463,48 @@ export class CaseStudyController {
             }
         });
 
+        this.router.post('/addReviewer/:id', this.middlewareRestrictTo(Role.ComityDirector, Role.Admin), async (req: Request, res: Response) => {
+            try {
+                const caseStudyId = req.params.id;
+                const memberEmail = req.body.email;
+
+                let caseStudy = await this.caseStudyService.findCaseStudyById(caseStudyId);
+
+                if (!caseStudy) {
+                    logError(res.locals.user, "404", "Case study was not found")
+                    res.status(404).json('L\'étude de cas n\'a pas été trouvée');
+                    return;
+                }
+
+                // Check if the memberEmail is already in the reviewers array
+                if (caseStudy.reviewers && caseStudy.reviewers.includes(memberEmail)) {
+                    logInfo(res.locals.user, "Reviewer " + memberEmail + " is already assigned to " + caseStudy.title);
+                    res.status(200).json({
+                        status: 'success',
+                    });
+                    return;
+                }
+
+                if(!caseStudy.reviewers) {
+                    caseStudy.reviewers = [];
+                }
+                caseStudy.reviewers.push(memberEmail);
+
+                caseStudy.markModified('reviewers');
+                await this.caseStudyService.updateCaseStudy(caseStudy);
+
+                this.emailService.sendAssignedCaseStudyToReview(memberEmail, caseStudy);
+
+                logInfo(res.locals.user, "Successfully added reviewer " + memberEmail + " to " + caseStudy.title);
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while submitting committee review")
+                console.log(err);
+            }
+        });
+
         this.router.post('/comityMemberReview/:id', this.middlewareRestrictTo(Role.Comity, Role.Admin), async (req: Request, res: Response) => {
             try {
                 const caseStudyId = req.params.id;
@@ -484,6 +524,12 @@ export class CaseStudyController {
                 if(caseStudy.status != CaseStep.WaitingComity) {
                     logError(res.locals.user, "403", "Case study can't be reviewed in its current step")
                     res.status(403).json('L\'étude de cas ne peut pas être évalué dans son statut actuel');
+                    return;
+                }
+                
+                if(!caseStudy.reviewers.includes(reviewerEmail)) {
+                    logError(res.locals.user, "401", "This user has not been assigned to review this case study")
+                    res.status(401).json('L\'utilisateur n\'a pas été assigné comme évaluateur de cette étude de cas');
                     return;
                 }
 
@@ -520,7 +566,13 @@ export class CaseStudyController {
                 await this.caseStudyService.updateCaseStudy(caseStudy);
 
                 const directors = await this.userService.findUsers({ role: Role.ComityDirector });
-                this.emailService.sendNewReviewSubmittedToComityDirector(directors, caseStudy, comityMemberReview.reviewAuthor);
+
+                // if all requested reviewers answered, send different email to director
+                if(caseStudy.reviewGroups[caseStudy.version].comityMemberReviews.length === caseStudy.reviewers.length) {
+                    this.emailService.sendLastReviewSubmittedToComityDirector(directors, caseStudy, comityMemberReview.reviewAuthor);
+                } else {
+                    this.emailService.sendNewReviewSubmittedToComityDirector(directors, caseStudy, comityMemberReview.reviewAuthor);
+                }
 
                 logInfo(res.locals.user, "Successfully reviewed case study " + caseStudy.title)
                 res.status(200).json({

@@ -37,6 +37,7 @@ export interface Case {
   files: Document[];
   version: number;
   reviewGroups: ReviewGroup[];
+  reviewers: string[];
   approvalDecision: ApprovalDecision;
   comments: string;
   ratings: number;

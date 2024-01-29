@@ -62,7 +62,7 @@ const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
                 Catalogue
               </WhiteButton>
               <UnlockAccess
-                role={[Role.Deputy, Role.ComityDirector]}
+                role={[Role.Deputy, Role.ComityDirector, Role.Comity]}
                 children={
                   <WhiteButton href="/dashboard">Tableau de bord</WhiteButton>
                 }
