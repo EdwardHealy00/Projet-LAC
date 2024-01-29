@@ -310,10 +310,10 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
                   Publication dans l'état
                 </MenuItem>
                 <MenuItem value={ApprovalDecision.MAJOR_CHANGES}>
-                  Publication avec révision majeure
+                  Demande de révisions majeures
                 </MenuItem>
                 <MenuItem value={ApprovalDecision.MINOR_CHANGES}>
-                  Publication avec révision mineure
+                  Demande de révisions mineures
                 </MenuItem>
                 <MenuItem value={ApprovalDecision.REJECT}>Rejet</MenuItem>
               </Select>

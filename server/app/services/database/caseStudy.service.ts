@@ -85,8 +85,8 @@ export class CaseStudyService {
         const caseStudy: DocumentType<CaseStudy> | null = await caseStudyQuery.exec();
         if(!caseStudy) return false;
 
-        await CaseStudyModel.deleteOne({ _id: id });
         this.deleteFilesForCaseStudy(caseStudy, true);
+        await CaseStudyModel.deleteOne({ _id: id });
         return true;
     }
 
