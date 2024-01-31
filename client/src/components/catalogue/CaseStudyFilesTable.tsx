@@ -12,7 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { forwardRef, useImperativeHandle } from "react";
 import { createDocumentFromFile } from "../../utils/ConvertUtils";
 import { MAX_FILES_PER_CASE } from "../../utils/Constants";
-import { Typography } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 
 interface CaseProp {
   openDuplicateErrorDialog: Function;
@@ -128,18 +128,11 @@ const CaseStudyFilesTable = forwardRef<CaseStudyFilesTableRef, CaseProp>(
         )}
         {changedCaseFiles.length > 0 && (
           <TableContainer>
+            <div id="fileCounterLabel">
+              <Typography variant="body1"><b>{changedCaseFiles.length}/3 documents déposés</b></Typography>
+            </div>
+            <Divider></Divider>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left">
-                    <b>Titre du document</b>
-                  </TableCell>
-                  <TableCell align="right">
-                    <b>{changedCaseFiles.length}/3</b>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-
               <TableBody>
                 {changedCaseFiles.map((row) => (
                   <TableRow
