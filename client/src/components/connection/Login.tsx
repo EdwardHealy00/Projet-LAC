@@ -83,9 +83,9 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
       case Role.Deputy:
         return "Adjoint administratif";
       case Role.Professor:
-        return "Professeur";
+        return "Enseignant";
       case Role.ProfessorNotApproved:
-        return "Professeur en attente d'approbation";
+        return "Enseignant en attente d'approbation";
       default:
         return "";
     }
