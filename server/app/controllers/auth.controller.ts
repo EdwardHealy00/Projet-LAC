@@ -152,7 +152,7 @@ export class AuthController {
                     expires: new Date(Date.now() + 60 * 60 * 1000)
                 });
 
-                this.emailService.sendResetPasswordEmail(user!.email, resetToken.reset_token);
+                this.emailService.sendResetPasswordEmail(user!.email, user!.firstName! + ' ' + user!.lastName!, resetToken.reset_token);
                 logInfoNoAccount("Reset password email sent to " + user!.email)
                 res.status(200).json(
                     'Courriel envoyé avec succès'
@@ -185,7 +185,7 @@ export class AuthController {
                 }
 
                 await this.userService.updatePassword(user!, req.body.password);
-                this.emailService.sendConfirmPasswordReset(user!.email);
+                this.emailService.sendConfirmPasswordReset(user!.email, user!.firstName! + ' ' + user!.lastName!);
                 logInfoNoAccount("Reset password successful for " + user!.email)
                 res.status(200).json('Mot de passe réinitialisé avec succès')
             } catch (err: any) {

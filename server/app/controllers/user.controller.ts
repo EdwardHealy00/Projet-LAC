@@ -189,7 +189,7 @@ export class UserController {
                 }
 
                 await this.userService.updateUser(user);
-                this.emailService.sendApprovalResultToTeacher(user!.email, approved);
+                this.emailService.sendApprovalResultToTeacher(user!.email, user!.firstName! + ' ' + user!.lastName!, approved);
 
                 logInfo(res.locals.user, "Successfully sent approval to teacher with answer:" + approved)
                 res.status(200).json({

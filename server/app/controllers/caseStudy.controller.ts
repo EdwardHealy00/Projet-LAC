@@ -423,13 +423,17 @@ export class CaseStudyController {
                     return;
                 }
 
+                const user = await this.userService.findUser({ email: caseStudy.submitter});
+
                 if(caseStudy.status == CaseStep.WaitingPreApproval) {
                     let writtenCriterias: string[] = [];
                     for(var criteriaIndex of failedCriterias) {
                         writtenCriterias.push(Criteria[criteriaIndex]);
                     }
-                    this.emailService.sendPreApprovalResultToUser(caseStudy.submitter, caseStudy, isApproved, writtenCriterias)
-                    
+                    if(user) {
+                        this.emailService.sendPreApprovalResultToUser(caseStudy.submitter, user!.firstName + ' ' + user!.lastName, caseStudy, isApproved, writtenCriterias)
+                    }
+
                     if(isApproved) {
                         const directors = await this.userService.findUsers({ role: Role.ComityDirector });
                         this.emailService.sendReviewNeededToDirector(directors, caseStudy);
@@ -443,7 +447,9 @@ export class CaseStudyController {
                     // Delete review files once published and main files if paid case
                     await this.caseStudyService.deleteFilesForCaseStudy(caseStudy, caseStudy.isPaidCase); 
 
-                    this.emailService.sendNotifyCaseStudyPublishedToUser(caseStudy.submitter, caseStudy);
+                    if(user) {
+                        this.emailService.sendNotifyCaseStudyPublishedToUser(caseStudy.submitter, user!.firstName + ' ' + user!.lastName, caseStudy);
+                    }
                 }
 
                 if (isApproved) {
@@ -493,7 +499,11 @@ export class CaseStudyController {
                 caseStudy.markModified('reviewers');
                 await this.caseStudyService.updateCaseStudy(caseStudy);
 
-                this.emailService.sendAssignedCaseStudyToReview(memberEmail, caseStudy);
+                const user = await this.userService.findUser({ email: memberEmail});
+
+                if(user) {
+                    this.emailService.sendAssignedCaseStudyToReview(memberEmail, user!.firstName + ' ' + user!.lastName, caseStudy);
+                }
 
                 logInfo(res.locals.user, "Successfully added reviewer " + memberEmail + " to " + caseStudy.title);
                 res.status(200).json({
@@ -604,6 +614,8 @@ export class CaseStudyController {
                     return;
                 }
 
+                const user = await this.userService.findUser({ email: caseStudy.submitter});
+
                 // Add to history
                 caseStudy.reviewGroups[caseStudy.version].directorComments = comments;
                 caseStudy.reviewGroups[caseStudy.version].directorApprovalDecision = decision;
@@ -624,10 +636,16 @@ export class CaseStudyController {
                     if(decision == ApprovalDecision.REJECT) {
                         if(caseStudy.isPaidCase) {
                             caseStudy.isPaidCase = false;
-                            this.emailService.sendReviewConvertedToFreeToUser(caseStudy.submitter, caseStudy, comments);
+
+                            if(user) {
+                                this.emailService.sendReviewConvertedToFreeToUser(caseStudy.submitter, user!.firstName + ' ' + user!.lastName, caseStudy, comments);
+                            }
                         } else {
                             await this.caseStudyService.deleteCaseStudy(caseStudy.id);
-                            this.emailService.sendReviewDeletedToUser(caseStudy.submitter, caseStudy, comments);
+
+                            if(user) {
+                                this.emailService.sendReviewDeletedToUser(caseStudy.submitter, user!.firstName + ' ' + user!.lastName, caseStudy, comments);
+                            }
 
                             logInfo(res.locals.user, "Successfully deleted case study and submitted rejection final review of: " + caseStudy.title)
                             res.status(200).json({
@@ -649,7 +667,10 @@ export class CaseStudyController {
                 caseStudy.comments = comments;
                 
                 await this.caseStudyService.updateCaseStudy(caseStudy);
-                this.emailService.sendReviewResultToUser(caseStudy.submitter, caseStudy, isApproved, decision, comments)
+
+                if(user) {
+                    this.emailService.sendReviewResultToUser(caseStudy.submitter, user!.firstName + ' ' + user!.lastName, caseStudy, isApproved, decision, comments)
+                }
 
                 logInfo(res.locals.user, "Successfully submitted final review of: " + caseStudy.title + " with approval decision" + caseStudy.approvalDecision)
                 res.status(200).json({
