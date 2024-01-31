@@ -160,10 +160,10 @@ export class EmailService {
     sendReviewResultToUser(email: string, caseStudy: CaseStudy, isApproved: boolean, decision: ApprovalDecision, feedback: string) {
         let decisionText = '';
         switch(decision){
-            case ApprovalDecision.MINOR_CHANGES: decisionText = 'requiert des changements mineurs.'; break;
-            case ApprovalDecision.MAJOR_CHANGES: decisionText = 'requiert des changements majeurs.'; break;
-            case ApprovalDecision.REJECT: decisionText = 'a été rejetée.'; break;
-            case ApprovalDecision.APPROVED: decisionText = 'a été approuvée par le comité scientifique.';
+            case ApprovalDecision.MINOR_CHANGES: decisionText =  'requiert des changements mineurs.'; break;
+            case ApprovalDecision.MAJOR_CHANGES: decisionText = ' requiert des changements majeurs.'; break;
+            case ApprovalDecision.REJECT: decisionText = ' a été rejetée.'; break;
+            case ApprovalDecision.APPROVED: decisionText = ' a été approuvée par le comité scientifique.';
         }
     
         const mailOptions = {
