@@ -41,7 +41,7 @@ export class EmailService {
                 html: `
                     <p>Cher(e) ${userName},</p>
                     <br>
-                    <p>Nous sommes ravis de vous accueillir au sein du Laboratoire d'Apprentissage par les Cas (LAC) en tant que professeur(e)! 🚀 </p>
+                    <p>Nous sommes ravis de vous accueillir au sein du Laboratoire d'Apprentissage par les Cas (LAC) en tant qu'enseignant(e)! 🚀 </p>
                     <br>   
                     <p>Notre adjoint administratif ne devrait pas tarder à réviser votre preuve de statut! En attendant, nous vous recommandons fortement de jeter un coup d'oeil à nos <a href="${process.env.REACT_APP_BASE_API_URL}/guide}" target="_blank">guide pédagogiques</a>.</p>
                     <p>Ceux-ci ont été soigneusement élaborés pour vous accompagner dans la rédaction et l'animation d'étude de cas</p>
@@ -84,7 +84,7 @@ export class EmailService {
                 subject: "Un nouvel enseignant s'est enregistré",
                 text: 
                     `Cher(e) ${deputy.firstName} ${deputy.lastName},`+
-                    `\n\nUn nouvel enseignant s'est enregistré à la plateforme et nécessite la vérification de son statut de professeur.`+
+                    `\n\nUn nouvel enseignant s'est enregistré à la plateforme et nécessite la vérification de son statut d'enseignant.`+
                     `\n\nRendez-vous à l'adresse suivante pour effectuer celle-ci: ${process.env.REACT_APP_BASE_API_URL}/dashboard</p>`+
                     `\n\nCordialement,`+
                     `\n\nL'Équipe du LAC`,

@@ -81,7 +81,7 @@ function ReviewDialog(props: ReviewTeacherProps) {
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>
-        <Typography variant="h5">Traiter la requête du professeur {teacher.name}</Typography>
+        <Typography variant="h5">Traiter la requête de l'enseignant {teacher.name}</Typography>
       </DialogTitle>
       <DialogContent>
         {props.imageProof && 
