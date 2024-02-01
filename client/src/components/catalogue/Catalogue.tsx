@@ -39,6 +39,8 @@ export const Disciplines = [
   "Génie électrique",
   "Génie géologique",
   "Génie industriel",
+  "Génie informatique",
+  "Génie logiciel",
   "Génie mécanique",
   "Génie des mines",
   "Mathématiques",
