@@ -78,7 +78,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
                 </ColoredTypography>
                 {caseData.isPaidCase && <AttachMoney className="dollar-icon" />}
               </div>
-              <Typography variant="h5">Par {caseData.authors}</Typography>
+              <Typography variant="h5" align="left" className="field">Par {caseData.authors}</Typography>
             </div>
             <div className="rightside-info">
               <Rating value={caseData.ratings} readOnly size="small"></Rating>

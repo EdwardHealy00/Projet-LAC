@@ -339,6 +339,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
               name="title"
               type="text"
               fullWidth
+              inputProps={{ maxLength: 200 }}
               error={stateErrors.title.isError}
             />
             <TextField
@@ -359,6 +360,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
               type="text"
               helperText="John Doe, Jane Doe"
               fullWidth
+              inputProps={{ maxLength: 200 }}
               error={stateErrors.author.isError}
             />
             <TextField
