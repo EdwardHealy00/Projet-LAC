@@ -12,6 +12,7 @@ import { getStatus } from "../../../../utils/Status";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { ApprovalDecision } from "../../../../model/enum/ApprovalDecision";
 import OverflowTooltip from "../../OverflowTooltip";
+import { Typography } from "@mui/material";
 
 interface CaseProp {
   cases: Case[];
@@ -109,6 +110,9 @@ export default function CaseTable(rows: CaseProp) {
           ))}
         </TableBody>
       </Table>
+      {rows.cases.length === 0 && (
+          <Typography align="center" variant="body1" style={{ margin: '1.5%' }}>Aucune étude de cas déposée</Typography>
+        )}
     </TableContainer>
   );
 }
