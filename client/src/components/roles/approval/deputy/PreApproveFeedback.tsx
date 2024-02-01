@@ -47,18 +47,22 @@ export default function PreApproveFeedback(caseData: SingleCaseProp) {
     setCheckedState(updatedCheckedState);
 
     let approved = true;
-    failedCriterias.splice(0);
     updatedCheckedState.forEach((item, index) => {
+      approved = approved && item;
+    });
+    setApproved(approved);
+  };
+
+  const sendCaseStudyResponse = () => {
+    let approved = true;
+    failedCriterias.splice(0);
+    checkedState.forEach((item, index) => {
       approved = approved && item;
       if (!item) {
         failedCriterias.push(index);
       }
     });
 
-    setApproved(approved);
-  };
-
-  const sendCaseStudyResponse = () => {
     axios
       .post(
         `${process.env.REACT_APP_BASE_API_URL}/api/caseStudies/approvalResult`,
