@@ -298,7 +298,12 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
       )
       .then((res) => {
         if (res.status === 201) {
-          navigate("/catalogue");
+          if(isPaid) {
+            navigate("/my-pending-case-studies/paid");
+          } else {
+            navigate("/my-pending-case-studies/free");
+          }
+
           setAddCaseStudyDialogOpen(false);
         }
       });
