@@ -1,18 +1,15 @@
 import React from "react";
 import "./Results.scss";
-import { AttachMoney, Download, ZoomIn, Launch } from "@mui/icons-material";
+import { AttachMoney, Download, Launch } from "@mui/icons-material";
 import {
   Button,
   ButtonBase,
   Card,
   CardContent,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
-  List,
   Rating,
   Typography,
   useTheme,
@@ -119,9 +116,6 @@ const Results: React.FC<Props> = ({ caseData }) => {
                 </Typography>
               </div>
               <div className="actions">
-                <Button onClick={openInfoDialog}>
-                  <ZoomIn></ZoomIn>
-                </Button>
                 <Button onClick={onActionClick}>
                   {caseData.isPaidCase && <Launch></Launch>}
                   {!caseData.isPaidCase && <Download></Download>}
