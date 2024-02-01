@@ -280,6 +280,7 @@ export default function Register() {
                 >
                   <MenuItem value={Role.ProfessorNotApproved}>Enseignant/Enseignante</MenuItem>
                   <MenuItem value={Role.Student}>Étudiant/Étudiante</MenuItem>
+                  <MenuItem value={Role.ComityNotApproved}>Membre du comité scientifique</MenuItem>
                 </Select>
               </FormControl>
               {showProof && (

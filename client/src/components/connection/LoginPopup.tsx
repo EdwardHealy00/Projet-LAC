@@ -76,11 +76,12 @@ const LoginPopup = forwardRef<LoginPopupRef, Props>(
   const getLandingPageByRole = (role: string) => {
     switch (role) {
       case "student": 
+      case "comityNotApproved":
       case "professorNotApproved": return "/catalogue";
       case "professorApproved": return "/my-pending-case-studies";
+      case "comityDirector":
       case "deputy": return "/dashboard";
       case "comity": return "/approval/paid";
-      case "comityDirector": return "/approval/paid";
       default: return "/catalogue";
     }
   }

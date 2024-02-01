@@ -65,7 +65,11 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
           localStorage.removeItem("email");
           localStorage.removeItem("logged_in");
           setLoggedIn(false);
-          navigate("/catalogue");
+          if(window.location.pathname === "/guide") {
+            navigate("/guide");
+          } else {
+            navigate("/catalogue");
+          }
         }
       });
   };
@@ -86,6 +90,8 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
         return "Enseignant";
       case Role.ProfessorNotApproved:
         return "Enseignant en attente d'approbation";
+      case Role.ComityNotApproved:
+        return "Membre du comité en attente d'approbation";
       default:
         return "";
     }

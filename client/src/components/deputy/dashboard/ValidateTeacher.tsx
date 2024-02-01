@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
-import { TeacherValidate } from "../../../model/TeacherValidate";
+import { TeacherValidate } from "../../../model/UserValidate";
 import { Divider, Typography } from "@mui/material";
 import ReviewTeacher from "./ReviewTeacher";
 

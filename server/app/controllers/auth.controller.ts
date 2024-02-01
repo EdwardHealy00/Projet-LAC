@@ -43,7 +43,7 @@ export class AuthController {
                     userInfo["proof"] = fileProof;
                 }
 
-                if (userInfo.role != Role.Student && userInfo.role != Role.ProfessorNotApproved) {
+                if (userInfo.role != Role.Student && userInfo.role != Role.ProfessorNotApproved && userInfo.role != Role.ComityNotApproved) {
                     logErrorNoAccount("422", "Forbidden to create high privilege account with this signup form")
                     res.status(422).json({
                         status: "Il est impossible de créer ce type d'identifiants à partir de ce formulaire. Cet incident sera reporté."

@@ -2,7 +2,7 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-import { TeacherValidate } from "../../../model/TeacherValidate";
+import { TeacherValidate } from "../../../model/UserValidate";
 import axios from "axios";
 import { DialogActions, DialogContent, Typography } from "@mui/material";
 import ConfirmChangesDialog from "../../../utils/ConfirmChangesDialog";

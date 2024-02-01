@@ -118,6 +118,26 @@ export class UserController {
             }
         });
 
+        this.router.get('/approvalMembers', this.middlewareRestrictTo(Role.Admin, Role.ComityDirector), async (req: Request, res: Response, next: NextFunction) => {
+
+            try {
+                const users = await this.userService.findUsers({ role: Role.ComityNotApproved });
+
+                logInfo(res.locals.user, "Successfully got all pending members")
+                res.status(200).json({
+                    status: 'success',
+                    result: users.length,
+                    data: {
+                        users,
+                    },
+                });
+            } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while getting all pending members")
+                console.log(err);
+                next(err);
+            }
+        });
+
         this.router.get('/proof/:email', this.middlewareRestrictTo(Role.Admin, Role.Deputy), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const user = await this.userService.findUser({ email: req.params.email });
@@ -182,6 +202,12 @@ export class UserController {
                     return;
                 }
 
+                if(user.role !== Role.ProfessorNotApproved) {
+                    logError(res.locals.user, "422", "User is not a pending teacher")
+                    res.status(404).json('L\'utilisateur n\'est pas un professeur en attente');
+                    return;
+                }
+
                 if(approved) {
                     user.role = Role.Professor;
                 } else {
@@ -192,6 +218,41 @@ export class UserController {
                 this.emailService.sendApprovalResultToTeacher(user!.email, user!.firstName! + ' ' + user!.lastName!, approved);
 
                 logInfo(res.locals.user, "Successfully sent approval to teacher with answer:" + approved)
+                res.status(200).json({
+                    status: 'success',
+                });
+            } catch (err: any) {
+                logError(res.locals.user, err.name, "Error while sending approval")
+                next(err);
+            }
+        });
+
+        this.router.post('/approvalResultMember', this.middlewareRestrictTo(Role.Admin, Role.ComityDirector), async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const { email, approved } = req.body;
+                const user = await this.userService.findUserWithoutPassword({ email: email });
+                if (!user) {
+                    logError(res.locals.user, "404", "user not found")
+                    res.status(404).json('Utilisateur introuvable');
+                    return;
+                }
+
+                if(user.role !== Role.ComityNotApproved) {
+                    logError(res.locals.user, "422", "User is not a pending member")
+                    res.status(404).json('L\'utilisateur n\'est pas un membre en attente');
+                    return;
+                }
+
+                if(approved) {
+                    user.role = Role.Comity;
+                } else {
+                    user.role = Role.Student;
+                }
+
+                await this.userService.updateUser(user);
+                this.emailService.sendApprovalResultToMember(user!.email, user!.firstName! + ' ' + user!.lastName!, approved);
+
+                logInfo(res.locals.user, "Successfully sent approval to member with answer:" + approved)
                 res.status(200).json({
                     status: 'success',
                 });

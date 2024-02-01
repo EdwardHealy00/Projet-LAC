@@ -114,7 +114,7 @@ export class EmailService {
             to: userEmail,
             subject: "Mot de passe réinitialisé",
             text: 
-                `Cher(e) ${userName},\n\n `+
+                `Cher(e) ${userName},\n\n`+
                 `\n\nVotre mot de passe a été réinitialisé avec succès.` +
                 `\n\nCordialement,`+
                 `\n\nL'Équipe du LAC`,
@@ -127,8 +127,21 @@ export class EmailService {
             from: EMAIL_USERNAME,
             to: userEmail,
             subject: "Votre preuve d'identité a été évaluée",
-            text: `Cher(e) ${userName},\n\n `+
-                isApproved ? `Votre compte a été approuvé. Vous pouvez dès maintenant déposer votre première étude de cas sur notre plateforme: ${process.env.REACT_APP_BASE_API_URL}/catalogue .` : `Votre compte a été rejeté. Si vous le désirez, vous pouvez effectuer une autre tentative en soumettant une nouvelle preuve directement sur la plateforme: ${process.env.REACT_APP_BASE_API_URL}/catalogue`+
+            text: `Cher(e) ${userName},\n\n`+
+                (isApproved ? `Votre compte a été approuvé. \n\nVous pouvez dès maintenant déposer votre première étude de cas sur notre plateforme: ${process.env.REACT_APP_BASE_API_URL}/catalogue .` : `Votre compte a été rejeté. \n\nSi vous le désirez, vous pouvez effectuer une autre tentative en soumettant une nouvelle preuve directement sur la plateforme: ${process.env.REACT_APP_BASE_API_URL}/catalogue` ) +
+                `\n\nCordialement,`+
+                `\n\nL'Équipe du LAC`
+        }
+        this.sendEmail(mailOptions);
+    }
+
+    sendApprovalResultToMember(userEmail: string, userName: string, isApproved: boolean) {
+        const mailOptions = {
+            from: EMAIL_USERNAME,
+            to: userEmail,
+            subject: "Votre demande d'admission au comité scientifique a été évaluée",
+            text: `Cher(e) ${userName},\n\n`+
+                (isApproved ? `Votre demande d'admission au comité scientifique a été approuvée. Restez à l'affût des futures demandes d'évaluations qui vous seront adressées. \n\nEntre-temps, Vous pouvez consultez le catalogue d'études de cas publiées sur notre plateforme: ${process.env.REACT_APP_BASE_API_URL}/catalogue .` : `Votre demande d'admission au comité scientifique a été rejetée. En conséquence, votre compte a été rétrogradé au rôle d'étudiant. \n\nVeuillez-nous contacter directement si vous croyez que ceci est une erreur.`) +
                 `\n\nCordialement,`+
                 `\n\nL'Équipe du LAC`
         }
