@@ -96,6 +96,8 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
         if (firstInvalidElementId === null) {
           firstInvalidElementId = `rating${i}`; // Set the first invalid element ID
         }
+      } else {
+        stateErrors[`radioGroup${i}`] = { isError: false, message: "" };
       }
       if (e.target.elements["comments" + i].value.trim() === "") {
         stateErrors[`comments${i}`] = {
@@ -106,8 +108,10 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
         isValid = false;
 
         if (firstInvalidElementId === null) {
-          firstInvalidElementId = `comments${i}`; // Set the first invalid element ID
+          firstInvalidElementId = `rating${i}`; // Set the first invalid element ID
         }
+      } else {
+        stateErrors[`comments${i}`] = { isError: false, message: "" };
       }
     }
 
@@ -125,6 +129,13 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
     }
   };
 
+  const calculateScrollPos = (invalidElement: HTMLElement) => {
+    const elementRect = invalidElement.getBoundingClientRect();
+    const mainNavBar = document.querySelector('#nav-bar') as HTMLElement;
+    const navbar1Height = mainNavBar.clientHeight;
+    return elementRect.top + window.scrollY - navbar1Height - 50;
+  }
+
   const createReviewForm = (e: any) => {
     const isFormValid = onValidation(e);
     if (!isFormValid) {
@@ -133,7 +144,10 @@ export default function ComityFeedback(caseData: SingleCaseProp) {
           `[name="${firstInvalidElementId}"]`
         );
         if (firstInvalidElement) {
-          firstInvalidElement.scrollIntoView({ behavior: "smooth" });
+          window.scroll({
+            top: calculateScrollPos(firstInvalidElement),
+            behavior: 'smooth'
+          });
         } else {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
