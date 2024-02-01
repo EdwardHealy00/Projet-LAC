@@ -169,9 +169,9 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: email,
-            subject: (caseStudy.version != 0 ? `La version #${caseStudy.version + 1} de votre`:`Votre`) + ` étude de cas nommée ${caseStudy.title} a été revue`, 
+            subject: (caseStudy.version > 1 ? `La version #${caseStudy.version} de votre`:`Votre`) + ` étude de cas nommée ${caseStudy.title} a été revue`, 
             text: `Cher(e) ${userName},` +
-                    `\n\n` + (caseStudy.version != 0 ? `La version #${caseStudy.version + 1} de votre`:`Votre`) + ` étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
+                    `\n\n` + (caseStudy.version > 1 ? `La version #${caseStudy.version} de votre`:`Votre`) + ` étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
                     `${decisionText} Consultez l'évaluation complète ci-dessous: \n\n${feedback}` + 
                     `\n\nCliquez ici pour y consulter son statut: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`+
                     `\n\nCordialement,`+
