@@ -144,9 +144,9 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: email,
-            subject: `L'étude de cas nommée ${caseStudy.title}` + (isPreApproved ? ` a été préapprouvée` : ` a été rejetée par l'adjoint administratif`), 
+            subject: `L'étude de cas nommée ${caseStudy.title}` + (caseStudy.version != 0 ? ` version #${caseStudy.version + 1}`:``) + (isPreApproved ? ` a été préapprouvée` : ` a été rejetée par l'adjoint administratif`), 
             text: `Cher(e) ${userName},`+
-                    `\n\nVotre étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors}` + 
+                    `\n\n` + (caseStudy.version != 0 ? `La version #${caseStudy.version + 1} de votre`:`Votre`) + ` étude de cas nommée ${caseStudy.title} et écrite par ${caseStudy.authors}` + 
                     (isPreApproved ? ` est maintenant prête à être évaluée par le comité scientifique.`
                                    : ` requiert des changements. Les critères suivants n'étaient pas respectés : \n\n` +`${criteriaText}`) +
                     `\n\nCliquez sur le lien suivant pour consulter celle-ci : ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`+
@@ -169,9 +169,9 @@ export class EmailService {
         const mailOptions = {
             from: EMAIL_USERNAME,
             to: email,
-            subject: `Votre étude de cas nommée ${caseStudy.title} a été revue`, 
-            text: `Cher(e) ${userName},
-                    \n\nVotre étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
+            subject: (caseStudy.version != 0 ? `La version #${caseStudy.version + 1} de votre`:`Votre`) + ` étude de cas nommée ${caseStudy.title} a été revue`, 
+            text: `Cher(e) ${userName},` +
+                    `\n\n` + (caseStudy.version != 0 ? `La version #${caseStudy.version + 1} de votre`:`Votre`) + ` étude de cas nommée ${caseStudy.title}, écrite par ${caseStudy.authors}` + 
                     `${decisionText} Consultez l'évaluation complète ci-dessous: \n\n${feedback}` + 
                     `\n\nCliquez ici pour y consulter son statut: ${process.env.REACT_APP_BASE_API_URL}/my-pending-case-studies/case-edit?id=${caseStudy._id}`+
                     `\n\nCordialement,`+
@@ -216,7 +216,7 @@ export class EmailService {
                 to: director.email,
                 subject: "Une étude de cas préapprouvée requiert votre attention",
                 text: `Cher(e) ${director!.firstName! + ' ' + director!.lastName!},` +
-                `\n\nUne étude de cas préapprouvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de révision.` + 
+                `\n\n` + (caseStudy.version != 0 ? `La version #${caseStudy.version + 1} d'une`:`Une`) + ` étude de cas préapprouvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de révision.` + 
                 `\n\nVous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`+
                 `\n\nCordialement,`+
                 `\n\nL'Équipe du LAC`,
