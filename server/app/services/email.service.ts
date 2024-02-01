@@ -241,6 +241,22 @@ export class EmailService {
         }
     }
 
+    sendReviewNeededToReviewers(reviewers: Array<string>, caseStudy: CaseStudy) {
+        for(var reviewer of reviewers) {
+            const mailOptions = {
+                from: EMAIL_USERNAME,
+                to: reviewer,
+                subject: "Une étude de cas préapprouvée requiert votre attention",
+                text: `Cher(e) réviseur(e),` +
+                `\n\n` + (caseStudy.version != 0 ? `La version #${caseStudy.version + 1} de l'`:`L'`) + `étude de cas préapprouvée nommée ${caseStudy.title} et écrite par ${caseStudy.authors} est en attente de révision.` + 
+                `\n\nVous pouvez y accéder par le lien suivant : ${process.env.REACT_APP_BASE_API_URL}/approval/new-case?id=${caseStudy._id}`+
+                `\n\nCordialement,`+
+                `\n\nL'Équipe du LAC`,
+            }
+            this.sendEmail(mailOptions);
+        }
+    }
+
     sendAssignedCaseStudyToReview(committeeMember: string, userName: string, caseStudy: CaseStudy) {
         const mailOptions = {
             from: EMAIL_USERNAME,
