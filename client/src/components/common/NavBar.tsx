@@ -13,7 +13,7 @@ import Login, { LoginRef } from "../connection/Login";
 import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
 import logo from "../../img/logo-lac-short.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface Props {}
 
@@ -22,7 +22,8 @@ export interface NavBarRef {
 }
 
 const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
-  const navigate = useNavigate()
+  const location = useLocation();
+  const theme = useTheme();
 
   useImperativeHandle(ref, () => ({
     SetIsLoggedIn(value: boolean) {
@@ -34,15 +35,14 @@ const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
 
   const loginRef = useRef<LoginRef | null>(null);
 
-  const theme = useTheme();
-
-  const WhiteButton = styled(Button)({
+  const WhiteButton = styled(Button)(({ href }: { href: string }) => ({
     color: theme.palette.primary.contrastText,
+    backgroundColor: location.pathname === href ? alpha(theme.palette.common.white, 0.10) : 'transparent',
 
     "&:hover": {
       backgroundColor: alpha(theme.palette.common.white, 0.15), // Change to the desired hover color
     },
-  });
+  }));
 
   const appBarStyles = {
     backgroundColor: theme.palette.primary.main,
