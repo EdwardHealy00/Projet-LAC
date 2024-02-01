@@ -103,7 +103,7 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
                   id="panel1a-header"
                 >
                   <Typography>Version #{version + 1}
-                    {" "}
+                    {" - "}
                     {newCase.reviewGroups[version].comityMemberReviews.length}/{newCase.reviewers.length}
                   </Typography>
                 </AccordionSummary>
@@ -155,7 +155,7 @@ export default function ComityDirectorFeedback(caseData: SingleCaseProp) {
             >
               <Typography>
                 <b>Version courante</b>
-                {" "}
+                {" - "}
                 {newCase.reviewGroups[newCase.version].comityMemberReviews.length}/{newCase.reviewers.length}
               </Typography>
             </AccordionSummary>
