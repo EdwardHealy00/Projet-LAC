@@ -35,6 +35,7 @@ import ReviewCard from "../../../approval/ReviewCard";
 import { ExpandMore } from "@mui/icons-material";
 import { navToCorrectTab } from "../../../../../utils/NavigationUtils";
 import ConfirmChangesDialog from "../../../../../utils/ConfirmChangesDialog";
+import { CaseStep } from "../../../../../model/enum/CaseStatus";
 
 function PendingCaseEdit() {
   const navigate = useNavigate();
@@ -407,6 +408,20 @@ function PendingCaseEdit() {
                 )}
               </Card>
             </div>
+            {caseStudy.approvalDecision === ApprovalDecision.PENDING && 
+              <div id="not-editable-txt">
+                <Typography variant="body1"><b>Il est impossible de modifier cette étude de cas à ce moment-ci.</b></Typography>
+                {caseStudy.status === CaseStep.WaitingPreApproval &&
+                 <Typography variant="body1">Cette étude de cas est actuellement en attente de pré-approbation. Notre équipe administrative examinera attentivement votre soumission dans les plus brefs délais. Vous serez informé(e) par courriel du résultat de cette étape dès qu'elle sera conclue.</Typography>
+                }
+                {caseStudy.status === CaseStep.WaitingComity &&
+                 <Typography variant="body1">Cette étude de cas est actuellement en attente de révision du comité scientifique. Notre équipe examinera attentivement votre soumission dans les plus brefs délais. Vous serez informé(e) par courriel du résultat de cette étape dès qu'elle sera conclue.</Typography>
+                }
+                {caseStudy.status === CaseStep.WaitingCatalogue &&
+                 <Typography variant="body1">Cette étude de cas est actuellement en attente d'ajout au catalogue. Notre équipe administrative confirmera l'ajout au catalogue de votre étude de cas dans les plus brefs délais. Vous serez informé(e) par courriel dès que cette étape sera conclue.</Typography>
+                }
+              </div> 
+            }
           </div>
         </div>
       )}
