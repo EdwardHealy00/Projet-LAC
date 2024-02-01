@@ -37,12 +37,19 @@ const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
 
   const WhiteButton = styled(Button)(({ href }: { href: string }) => ({
     color: theme.palette.primary.contrastText,
-    backgroundColor: location.pathname === href ? alpha(theme.palette.common.white, 0.10) : 'transparent',
+    backgroundColor: isPageSelected(window.location.pathname, href) ? alpha(theme.palette.common.white, 0.10) : 'transparent',
 
     "&:hover": {
       backgroundColor: alpha(theme.palette.common.white, 0.15), // Change to the desired hover color
     },
   }));
+
+  const isPageSelected = (pathname: string, buttonPath: string) => {
+    if (buttonPath === "/dashboard") {
+      return pathname === buttonPath || pathname === "/approval/paid" || pathname === "/approval/free";
+    }
+    return pathname === buttonPath;
+  }
 
   const appBarStyles = {
     backgroundColor: theme.palette.primary.main,
