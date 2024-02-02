@@ -142,7 +142,7 @@ export default function ValidateMemberList() {
           </TableContainer>
         )) || (
           <div>
-            <h1>Aucun membre à valider</h1>
+            <Typography align="center" variant="body1">Aucun membre à valider</Typography>
           </div>
         )}
       </div>
