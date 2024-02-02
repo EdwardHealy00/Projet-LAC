@@ -63,7 +63,7 @@ const LoginPopup = forwardRef<LoginPopupRef, Props>(
           localStorage.setItem("email", res.data.email);
           localStorage.setItem("logged_in", "true");
           if(!hasExpired){
-            window.location.reload(); // User logged in from landing page
+            window.location.href = getLandingPageByRole(res.data.role) // User logged in from landing page
           } else if(props.onLoggedIn){
             props.onLoggedIn(); // Refresh only Login/Logout button to not lose changes
           } 
@@ -72,6 +72,19 @@ const LoginPopup = forwardRef<LoginPopupRef, Props>(
         console.log(err);
       });
   };
+
+  const getLandingPageByRole = (role: string) => {
+    switch (role) {
+      case "student": 
+      case "comityNotApproved":
+      case "professorNotApproved": return "/catalogue";
+      case "professorApproved": return "/my-pending-case-studies";
+      case "comityDirector":
+      case "deputy": return "/dashboard";
+      case "comity": return "/approval/paid";
+      default: return "/catalogue";
+    }
+  }
       
   return (
     <Dialog open={open} onClose={handleClose}>

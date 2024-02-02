@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import "./Catalogue.scss";
 import SearchBar from "./SearchBar";
 import {
@@ -25,6 +25,7 @@ import { Add } from "@mui/icons-material";
 import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
 import Articles, { ArticlesRef } from "./Articles";
 import AddCaseStudy, { AddCaseStudyDialogRef } from "./AddCaseStudy";
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface Filter {
   name: string;
@@ -39,6 +40,8 @@ export const Disciplines = [
   "Génie électrique",
   "Génie géologique",
   "Génie industriel",
+  "Génie informatique",
+  "Génie logiciel",
   "Génie mécanique",
   "Génie des mines",
   "Mathématiques",
@@ -199,6 +202,20 @@ export default function Catalogue() {
     }
   }
 
+  interface ClearButtonProps {
+    filterArray: string[];
+    setFilterFunction: React.Dispatch<React.SetStateAction<string[]>>;
+  }
+  
+  const ClearButton: FC<ClearButtonProps> = ({ filterArray, setFilterFunction }) => (
+    <Button
+      style={{ visibility: filterArray.length !== 0 ? 'visible' : 'hidden' }}
+      disabled={filterArray.length === 0}
+      onClick={() => setFilterFunction([])}
+    >
+      <ClearIcon />
+    </Button>
+  );
 
   return (
     <div>
@@ -240,7 +257,7 @@ export default function Catalogue() {
             </Button>
           </div>
           <div className="filter-form-container">
-            <FormControl className="filter-form-control ">
+            <FormControl className="filter-form-control">
               <InputLabel id="type-select-label">Type de cas</InputLabel>
               <Select
                 labelId="type-select-label"
@@ -270,9 +287,10 @@ export default function Catalogue() {
                 </MenuItem>
               </Select>
             </FormControl>
+            <ClearButton filterArray={typeFilters} setFilterFunction={setTypeFilters} />
           </div>
           <div className="filter-form-container">
-            <FormControl className="filter-form-control ">
+            <FormControl className="filter-form-control">
               <InputLabel id="type-select-label">Discipline</InputLabel>
               <Select
                 labelId="type-select-label"
@@ -298,9 +316,10 @@ export default function Catalogue() {
                 ))}
               </Select>
             </FormControl>
+            <ClearButton filterArray={disciplineFilters} setFilterFunction={setDisciplineFilters} />
           </div>
           <div className="filter-form-container">
-            <FormControl className="filter-form-control ">
+            <FormControl className="filter-form-control">
               <InputLabel id="type-select-label">Sujet</InputLabel>
               <Select
                 labelId="type-select-label"
@@ -326,9 +345,10 @@ export default function Catalogue() {
                 ))}
               </Select>
             </FormControl>
+            <ClearButton filterArray={subjectFilters} setFilterFunction={setSubjectFilters} />
           </div>
           <div className="filter-form-container">
-            <FormControl className="filter-form-control ">
+            <FormControl className="filter-form-control">
               <InputLabel id="type-select-label">Date de parution</InputLabel>
               <Select
                 labelId="type-select-label"
@@ -357,9 +377,10 @@ export default function Catalogue() {
                 ))}
               </Select>
             </FormControl>
+            <ClearButton filterArray={dateFilters} setFilterFunction={setDateFilters} />
           </div>
           <div className="filter-form-container">
-            <FormControl className="filter-form-control ">
+            <FormControl className="filter-form-control">
               <InputLabel id="type-select-label">Nombre de pages</InputLabel>
               <Select
                 labelId="type-select-label"
@@ -388,9 +409,10 @@ export default function Catalogue() {
                 ))}
               </Select>
             </FormControl>
+            <ClearButton filterArray={numberPagesFilters} setFilterFunction={setNumberPagesFilters} />
           </div>
           <div className="filter-form-container">
-            <FormControl className="filter-form-control ">
+            <FormControl className="filter-form-control">
               <InputLabel id="type-select-label">Auteur</InputLabel>
               <Select
                 labelId="type-select-label"
@@ -416,6 +438,7 @@ export default function Catalogue() {
                 ))}
               </Select>
             </FormControl>
+            <ClearButton filterArray={authorsFilters} setFilterFunction={setAuthorsFilters} />
           </div>
         </Card>
         <Articles

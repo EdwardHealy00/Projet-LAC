@@ -7,6 +7,7 @@ export enum Role {
     Professor = "professorApproved",
     ProfessorNotApproved = "professorNotApproved",
     PolyPress = "polypress",
+    ComityNotApproved = "comityNotApproved"
 }
 
 export interface RoleProps {

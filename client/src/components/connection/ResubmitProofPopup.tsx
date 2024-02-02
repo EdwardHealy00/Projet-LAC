@@ -29,7 +29,7 @@ const ResubmitProofPopup = forwardRef<ResubmitProofPopupRef, Props>(
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const [uploadedImage, setUploadedImage] = React.useState(
-      "Preuve du statut de professeur"
+      "Preuve du statut d'enseignant"
     );
 
     const initialStateErrors = {
@@ -50,7 +50,7 @@ const ResubmitProofPopup = forwardRef<ResubmitProofPopupRef, Props>(
           alert(
             "Type de fichier invalide. Types supportés: " + acceptedFileTypes
           );
-          setUploadedImage("Preuve de votre statut de professeur");
+          setUploadedImage("Preuve de votre statut d\'enseignant");
           return;
         }
         const stateErrorsCopy = { ...initialStateErrors };
@@ -95,7 +95,7 @@ const ResubmitProofPopup = forwardRef<ResubmitProofPopupRef, Props>(
         <DialogContent>
           <DialogContentText>
             <Typography variant="body1">
-              Votre preuve de statut de professeur a été refusé par
+              Votre preuve de statut d'enseignant a été refusé par
               l'administration. Vous pouvez effectuer une nouvelle tentative
               ci-dessous:
             </Typography>

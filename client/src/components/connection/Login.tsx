@@ -65,7 +65,11 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
           localStorage.removeItem("email");
           localStorage.removeItem("logged_in");
           setLoggedIn(false);
-          navigate("/catalogue");
+          if(window.location.pathname === "/guide") {
+            navigate("/guide");
+          } else {
+            navigate("/catalogue");
+          }
         }
       });
   };
@@ -83,9 +87,11 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
       case Role.Deputy:
         return "Adjoint administratif";
       case Role.Professor:
-        return "Professeur";
+        return "Enseignant";
       case Role.ProfessorNotApproved:
-        return "Professeur en attente d'approbation";
+        return "Enseignant en attente d'approbation";
+      case Role.ComityNotApproved:
+        return "Membre du comité en attente d'approbation";
       default:
         return "";
     }

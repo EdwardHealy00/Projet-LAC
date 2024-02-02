@@ -55,9 +55,10 @@
 
 .filter-form-container {
     padding-top: 4%;
+    display: flex;
+    flex-direction: row;
 }
 
 .filter-form-control {
     width: 100%;
 }
-

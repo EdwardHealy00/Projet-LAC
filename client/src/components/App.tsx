@@ -56,10 +56,12 @@ function App() {
 
   axios.interceptors.response.use(
     (response) => {
-      snackBarRef.current!.handleClick(
-        false,
-        "Votre requête a été traitée avec succès"
-      );
+      if (response.config.method === 'post' || response.config.method === 'POST') {
+        snackBarRef.current!.handleClick(
+          false,
+          "Votre requête a été traitée avec succès"
+        );
+      }
       return response;
     },
     async (error) => {

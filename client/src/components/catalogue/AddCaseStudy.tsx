@@ -298,7 +298,12 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
       )
       .then((res) => {
         if (res.status === 201) {
-          navigate("/catalogue");
+          if(isPaid) {
+            navigate("/my-pending-case-studies/paid");
+          } else {
+            navigate("/my-pending-case-studies/free");
+          }
+
           setAddCaseStudyDialogOpen(false);
         }
       });
@@ -339,6 +344,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
               name="title"
               type="text"
               fullWidth
+              inputProps={{ maxLength: 200 }}
               error={stateErrors.title.isError}
             />
             <TextField
@@ -359,6 +365,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
               type="text"
               helperText="John Doe, Jane Doe"
               fullWidth
+              inputProps={{ maxLength: 200 }}
               error={stateErrors.author.isError}
             />
             <TextField

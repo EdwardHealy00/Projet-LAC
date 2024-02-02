@@ -13,6 +13,7 @@ import axios from "axios";
 import { CaseStep } from "../../../model/enum/CaseStatus";
 import { createCaseFromData } from "../../../utils/ConvertUtils";
 import { ApprovalDecision } from "../../../model/enum/ApprovalDecision";
+import ValidateMemberList from "./ValidateMember";
 
 function DashboardPaidCase() {
   const navigate = useNavigate();
@@ -172,6 +173,10 @@ function DashboardPaidCase() {
       <UnlockAccess
           role={[Role.Deputy]}
           children={<ValidateTeacherList />}
+        ></UnlockAccess>
+      <UnlockAccess
+          role={[Role.ComityDirector]}
+          children={<ValidateMemberList />}
         ></UnlockAccess>
     </div>
   );

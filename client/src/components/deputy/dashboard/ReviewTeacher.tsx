@@ -2,7 +2,7 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-import { TeacherValidate } from "../../../model/TeacherValidate";
+import { TeacherValidate } from "../../../model/UserValidate";
 import axios from "axios";
 import { DialogActions, DialogContent, Typography } from "@mui/material";
 import ConfirmChangesDialog from "../../../utils/ConfirmChangesDialog";
@@ -81,7 +81,7 @@ function ReviewDialog(props: ReviewTeacherProps) {
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>
-        <Typography variant="h5">Traiter la requête du professeur {teacher.name}</Typography>
+        <Typography variant="h5">Traiter la requête de l'enseignant {teacher.name}</Typography>
       </DialogTitle>
       <DialogContent>
         {props.imageProof && 

@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
-import { TeacherValidate } from "../../../model/TeacherValidate";
+import { TeacherValidate } from "../../../model/UserValidate";
 import { Divider, Typography } from "@mui/material";
 import ReviewTeacher from "./ReviewTeacher";
 
@@ -61,7 +61,7 @@ export default function ValidateTeacherList() {
       <div id="approvalTeacher">
         <div id="titleApprovalTeacher">
           <Typography variant="h3">
-            Professeur(e)s en attente d'approbation
+            Enseignant(e)s en attente d'approbation
           </Typography>
         </div>
         {(teachers.length > 0 && (
@@ -99,7 +99,7 @@ export default function ValidateTeacherList() {
           </TableContainer>
         )) || (
           <div>
-            <h1>Aucun professeur à valider</h1>
+            <Typography align="center" variant="body1">Aucun enseignant(e) à valider</Typography>
           </div>
         )}
       </div>

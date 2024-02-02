@@ -27,7 +27,7 @@ export default function Register() {
   const acceptedFileTypes = ".jpg,.jpeg,.pdf,.png"
   const [open, setOpen] = React.useState(false);
   const [uploadedImage, setUploadedImage] = React.useState(
-    "Preuve du statut de professeur"
+    "Preuve du statut d'enseignant"
   );
   const [showProof, setShowProof] = React.useState(true);
   const countryListOptions = useMemo(() => countryList().getData(), []);
@@ -39,7 +39,7 @@ export default function Register() {
       if(!acceptedFileTypes.includes(ext.toLowerCase())){
         e.target.value = ''
         alert('Type de fichier invalide. Types supportés: ' + acceptedFileTypes)
-        setUploadedImage('Preuve de votre statut de professeur');
+        setUploadedImage('Preuve de votre statut d\'enseignant');
         return
       }
 
@@ -141,7 +141,7 @@ export default function Register() {
     if (e.role.value === Role.ProfessorNotApproved && e.proof.value === "") {
       stateErrorsCopy.proof = {
         isError: true,
-        message: "Veuillez entrer votre preuve de votre statut de professeur",
+        message: "Veuillez entrer votre preuve de votre statut d\'enseignant",
       };
       isValid = false;
     }
@@ -280,6 +280,7 @@ export default function Register() {
                 >
                   <MenuItem value={Role.ProfessorNotApproved}>Enseignant/Enseignante</MenuItem>
                   <MenuItem value={Role.Student}>Étudiant/Étudiante</MenuItem>
+                  <MenuItem value={Role.ComityNotApproved}>Membre du comité scientifique</MenuItem>
                 </Select>
               </FormControl>
               {showProof && (
