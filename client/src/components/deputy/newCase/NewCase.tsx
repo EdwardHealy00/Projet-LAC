@@ -20,6 +20,7 @@ import { createCaseFromData } from "../../../utils/ConvertUtils";
 import { Role } from "../../../model/enum/Role";
 import ComityDirectorFeedback from "../../roles/approval/comityDirector/Feedback";
 import { UnlockAccess } from "../../connection/UnlockAccess";
+import { languageToString } from "../../../model/enum/Language";
 
 function NewCase() {
   const navigate = useNavigate();
@@ -64,7 +65,8 @@ function NewCase() {
           res.data.approvalDecision,
           res.data.comments,
           res.data.ratings,
-          res.data.votes
+          res.data.votes,
+          res.data.language
         );
 
         SetCaseStudy({ ...caseStudy });
@@ -120,6 +122,11 @@ function NewCase() {
                   {" "}
                   <b>Sujet(s) : </b>
                   {caseStudy.subjects.join(", ")}
+                </Typography>
+                <Typography variant="body1">
+                  {" "}
+                  <b>Langue : </b>
+                  {languageToString(caseStudy.language)}
                 </Typography>
                 <Typography variant="body1">
                   {" "}

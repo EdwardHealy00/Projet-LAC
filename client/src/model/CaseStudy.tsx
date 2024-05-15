@@ -2,6 +2,7 @@ import { ComityMemberReview, ReviewGroup } from "../components/deputy/newCase/Ca
 import { Document } from "./Document";
 import { ApprovalDecision } from "./enum/ApprovalDecision";
 import { CaseStep } from "./enum/CaseStatus";
+import { Language } from "./enum/Language";
 
 // //hardcoded case study
 // export interface CaseStudy {
@@ -43,6 +44,7 @@ export interface Case {
   ratings: number;
   votes: number;
   url: string;
+  language: Language
 }
 
 export interface NewCaseStudy {
@@ -54,6 +56,7 @@ export interface NewCaseStudy {
   files: any;
   discipline: string;
   isPaidCase: boolean;
+  language: Language
 }
 
 export interface CaseStudyProps {

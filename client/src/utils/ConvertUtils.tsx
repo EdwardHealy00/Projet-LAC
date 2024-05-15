@@ -3,6 +3,7 @@ import { CaseStep } from "../model/enum/CaseStatus";
 import { Document } from "../model/Document";
 import { ReviewGroup } from "../components/deputy/newCase/CaseFeedback";
 import { ApprovalDecision } from "../model/enum/ApprovalDecision";
+import { Language } from "../model/enum/Language";
 
 export function createCaseFromData(
     id_: number,
@@ -24,7 +25,8 @@ export function createCaseFromData(
     approvalDecision: ApprovalDecision,
     comments: string,
     ratings: number,
-    votes: number
+    votes: number,
+    language: Language
   ): Case {
     const filesData: Document[] = [];
     for (let i = 0; i < files.length; i++) {
@@ -52,7 +54,8 @@ export function createCaseFromData(
         comments,
         ratings,
         votes,
-        url: ""
+        url: "",
+        language
       };
 
 }

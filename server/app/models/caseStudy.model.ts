@@ -7,6 +7,7 @@ import {
 import { CaseStep } from './CaseStatus';
 import { ReviewGroup } from './ComityMemberReview';
 import { ApprovalDecision } from './ApprovalDecision';
+import { Language } from './Language';
 
 @modelOptions({
     schemaOptions: {
@@ -83,6 +84,9 @@ export class CaseStudy {
 
     @prop({ default: ""})
     url: string;
+
+    @prop({ default: Language.FRENCH})
+    language: Language;
 }
 
 const CaseStudyModel = getModelForClass(CaseStudy);

@@ -63,6 +63,11 @@ export const Subjects = [
   "Innovation",
 ];
 
+export const Languages = [
+  "Français",
+  "Anglais"
+];
+
 export default function Catalogue() {
   const dates = [
     "0-3 mois",
@@ -75,6 +80,7 @@ export default function Catalogue() {
   const numberPages = ["1 à 4 pages", "5 à 10 pages", "11+ pages"];
   const [filters, setFilters] = React.useState<Filter[]>([]);
   const [typeFilters, setTypeFilters] = React.useState<string[]>([]);
+  const [languageFilters, setLanguageFilters] = React.useState<string[]>([]);
   const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>(
     []
   );
@@ -98,6 +104,13 @@ export default function Catalogue() {
   const OnChangeType = (event: SelectChangeEvent<any>) => {
     const { target: { value } } = event;
     setTypeFilters(
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const OnChangeLanguage= (event: SelectChangeEvent<any>) => {
+    const { target: { value } } = event;
+    setLanguageFilters(
       typeof value === "string" ? value.split(",") : value
     );
   };
@@ -144,6 +157,7 @@ export default function Catalogue() {
     }
     setFilters([]);
     setTypeFilters([]);
+    setLanguageFilters([]);
     setDisciplineFilters([]);
     setSubjectFilters([]);
     setDateFilters([]);
@@ -288,6 +302,39 @@ export default function Catalogue() {
               </Select>
             </FormControl>
             <ClearButton filterArray={typeFilters} setFilterFunction={setTypeFilters} />
+          </div>
+          <div className="filter-form-container">
+            <FormControl className="filter-form-control">
+              <InputLabel id="type-select-label">Langue</InputLabel>
+              <Select
+                labelId="type-select-label"
+                id="type-select"
+                multiple
+                value={languageFilters}
+                onChange={OnChangeLanguage}
+                input={
+                  <OutlinedInput
+                    id="select-multiple-chip"
+                    label="Langue"
+                  />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value, index) => (
+                      <Chip key={index} label={value} />
+                    ))}
+                  </Box>
+                )}
+              >
+                <MenuItem key={0} value={"Français"}>
+                  Français
+                </MenuItem>
+                <MenuItem key={1} value={"Anglais"}>
+                  Anglais
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <ClearButton filterArray={languageFilters} setFilterFunction={setLanguageFilters  } />
           </div>
           <div className="filter-form-container">
             <FormControl className="filter-form-control">
@@ -444,6 +491,7 @@ export default function Catalogue() {
         <Articles
           ref={articlesRef}
           typeFilters={typeFilters}
+          languageFilters={languageFilters}
           disciplineFilters={disciplineFilters}
           subjectFilters={subjectFilters}
           dateFilters={dateFilters}

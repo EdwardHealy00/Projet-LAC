@@ -17,6 +17,7 @@ import {
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { handleFileDownload } from "../../utils/FileDownloadUtil";
+import { languageToString } from "../../model/enum/Language";
 
 interface Props {
   caseData: any;
@@ -109,6 +110,11 @@ const Results: React.FC<Props> = ({ caseData }) => {
                   <b>Sujet(s) : </b>
                   {caseData.subjects.join(", ")}
                 </Typography>
+                <Typography variant="body2">
+                  {" "}
+                  <b>Langue : </b>
+                  {languageToString(caseData.language)}
+                </Typography>
                 <Typography variant="body2" className="info-text field">
                   {" "}
                   <b>Nombre de pages : </b>
@@ -198,6 +204,11 @@ const Results: React.FC<Props> = ({ caseData }) => {
                 <b>Sujet(s) : </b>
                 {caseData.subjects.join(", ")}
               </Typography>
+              <Typography variant="body1" className="spaced">
+                  {" "}
+                  <b>Langue : </b>
+                  {languageToString(caseData.language)}
+                </Typography>
               <Typography variant="body1" className="spaced">
                 {" "}
                 <b>Nombre de pages : </b>

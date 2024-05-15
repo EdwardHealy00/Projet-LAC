@@ -36,6 +36,7 @@ import { ExpandMore } from "@mui/icons-material";
 import { navToCorrectTab } from "../../../../../utils/NavigationUtils";
 import ConfirmChangesDialog from "../../../../../utils/ConfirmChangesDialog";
 import { CaseStep } from "../../../../../model/enum/CaseStatus";
+import { languageToString } from "../../../../../model/enum/Language";
 
 function PendingCaseEdit() {
   const navigate = useNavigate();
@@ -126,7 +127,8 @@ function PendingCaseEdit() {
           res.data.approvalDecision,
           res.data.comments,
           res.data.ratings,
-          res.data.votes
+          res.data.votes,
+          res.data.language
         );
 
         SetCaseStudy({ ...caseStudy });
@@ -253,6 +255,11 @@ function PendingCaseEdit() {
                   {" "}
                   <b>Sujet(s) : </b>
                   {caseStudy.subjects.join(", ")}
+                </Typography>
+                <Typography variant="body1">
+                  {" "}
+                  <b>Langue : </b>
+                  {languageToString(caseStudy.language)}
                 </Typography>
                 <Typography variant="body1">
                   {" "}
