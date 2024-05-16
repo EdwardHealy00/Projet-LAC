@@ -7,7 +7,7 @@ import Login, {LoginRef} from "../../connection/Login";
 const LandingNavBar = () => {
 
     return <div className="nav-container">
-        <img src={logo} alt="LAC logo" />
+        <img className="lac-logo" src={logo} alt="LAC logo" />
         <LandingButton onClick={()=> { // @ts-ignore
             document.getElementById("a-propos").scrollIntoView({alignToTop:true, behavior: "smooth"});}} text={'À propos'}></LandingButton>
         <LandingButton onClick={()=>{ // @ts-ignore
