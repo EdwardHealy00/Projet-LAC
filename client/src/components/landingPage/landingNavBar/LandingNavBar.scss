@@ -1,20 +1,21 @@
 .nav-container {
   display: flex;
-  justify-content: center;
-  column-gap: 50px;
+  justify-content: left;
+  column-gap: 4.5%;
   flex-direction: row;
-  margin: 0% 0% 0% 0%;
+  margin: 0% 22% 0% 22%;
   padding: 1% 0 1% 0;
 }
 
-.lac-logo {
-  max-width: 30%;
-  align-self: center;
-}
-
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1500px) {
+  .lac-logo {
+    max-width: 30%;
+    align-self: center;
+  }
   .nav-container {
     column-gap: 1%;
+    justify-content: center;
+    margin: 0% 0% 0% 0%;
   }
 }
 
