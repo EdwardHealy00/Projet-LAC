@@ -176,7 +176,7 @@ export default function AboutPage() {
             <header className="student-banner">
                 <div></div>
                 <div id="access-platform">
-                    <Button variant="contained" color="primary"  href="/catalogue">Accéder à la plateforme</Button>
+                    <Button variant="contained" color="primary" href="/catalogue"><div className="platform-button-txt">Accéder à la plateforme</div></Button>
                 </div>
             </header>
             <div className="landing-segment-container">
