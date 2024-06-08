@@ -111,6 +111,7 @@ h1 {
   font-size: 1.5rem;
 }
 
+
 @media screen and (max-width: 1000px) {
   .landing-segment-column-left {
     width: 65vw;
@@ -123,6 +124,7 @@ h1 {
   #a-propos {
     font-size: 1.8rem;
   }
+
 }
 
 @media screen and (max-width: 750px) {
@@ -141,6 +143,7 @@ h1 {
   h1 {
     margin-bottom: 0.5rem;
   }
+
 }
 
 @media screen and (max-width: 500px) {
@@ -163,6 +166,7 @@ h1 {
   h1 {
     margin-bottom: 0.3rem;
   }
+
 }
 
 @media screen and (max-width: 400px) {
@@ -179,12 +183,12 @@ h1 {
   }
 }
 
-  @media screen and (max-width: 350px) {
-    .p-reactive {
-      font-size: 0.5rem;
-    }
-
-    .platform-button-txt {
-      font-size: 0.5rem;
-    }
+@media screen and (max-width: 350px) {
+  .p-reactive {
+    font-size: 0.5rem;
   }
+
+  .platform-button-txt {
+    font-size: 0.5rem;
+  }
+}

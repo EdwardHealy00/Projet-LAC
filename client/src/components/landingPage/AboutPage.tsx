@@ -15,7 +15,7 @@ import MEDIA from "../../img/icons/media.svg";
 import PENCIL from "../../img/icons/pencil.svg";
 import SPELL from "../../img/icons/spell.svg";
 import {TeamMember} from "../../model/Team";
-import {Accordion, AccordionDetails, AccordionSummary, Button, Fab, SxProps, Tooltip, makeStyles} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Button, Fab, SxProps, Tooltip, makeStyles, useTheme} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Timeline from "../about/creation/Timeline";
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
@@ -154,23 +154,33 @@ export default function AboutPage() {
         },
     ];
 
+    const theme = useTheme();
     const fabStyle = {
         position: 'fixed',
         bottom: 16,
         right: 16,
-        width: "4vw",
-        height: "4vw"
+        width: 56, 
+        height: 56,
+        [theme.breakpoints.down('sm')]: {
+            width: 48, 
+            height: 48, 
+            bottom: 12,
+            right: 12,
+        },
     };
-
+    
     const iconStyle = {
-        width: "2.5vw",
-        height: "2.5vw"
-      };
+        fontSize: 'xx-large',
+        color: 'inherit', 
+        [theme.breakpoints.down('sm')]: {
+            fontSize: 'x-large',
+        },
+    };
 
     return <div id="landingPage">
             <LandingNavBar></LandingNavBar>
             <Tooltip title= "Accéder aux ressources pédagogiques" arrow>
-                <Fab sx={fabStyle as SxProps} id="guide-button" color="primary" size="large" href="/guide"><LightbulbIcon sx={iconStyle as SxProps} fontSize="large"/>
+                <Fab sx={fabStyle as SxProps} id="guide-button" color="primary" href="/guide"><LightbulbIcon sx={iconStyle as SxProps}/>
                 </Fab>
             </Tooltip>
             <header className="student-banner">
