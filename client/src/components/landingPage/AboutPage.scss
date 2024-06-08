@@ -36,6 +36,7 @@
 .landing-segment-column-left {
   display: flex;
   width: 55vw;
+  margin-bottom: 3rem;
   flex-direction: column;
 }
 
@@ -52,13 +53,15 @@ h1 {
   margin-bottom: 3rem;
 }
 
-.colored-tag-pair-container div {
+.p-reactive{
   font-size: 1.2rem;
+}
+
+.colored-tag-pair-container {
   font-family: 'Yaldevi', sans-serif;
 }
 
 .paragraph-font {
-  font-size: 1.2rem;
   font-family: 'Yaldevi', sans-serif;
   text-align: center;
 }
@@ -70,7 +73,7 @@ h1 {
 .item-font {
   font-family: 'Yaldevi', sans-serif;
   font-size: 1.5rem;
-  max-width: 40vw;
+  width: 85%;
 }
 
 .paragraph-font a {
@@ -85,7 +88,7 @@ h1 {
 
 .bullet-lists-container {
   display: flex;
-  column-gap: 8vw;
+  column-gap: 4vw;
   flex-direction: row;
 }
 
@@ -102,15 +105,36 @@ h1 {
   align-items: center;
 }
 
+.bullet-lists-container ul {
+  margin-top: 0px;
+  padding-left: 20px;
+}
+
 .bullet-lists-container ul li {
   font-size: 1.2rem;
   text-align: left;
 }
 
-.p-reactive {
-  font-size: 1.5rem;
+.mission-container {
+  margin-top: 2rem ;
 }
 
+#besoin {
+  margin-block-start: 0%;
+}
+
+@media screen and (max-width: 1250px) {
+  .p-reactive {
+    font-size: 1.1rem;
+  }
+  .bullet-lists-container ul li {
+    font-size: 1.1rem;
+  }
+
+  .item-font {
+    font-size: 1.3rem;
+  }
+}
 
 @media screen and (max-width: 1000px) {
   .landing-segment-column-left {
@@ -121,10 +145,29 @@ h1 {
     font-size: 1rem;
   }
 
-  #a-propos {
+  .item-font {
+    font-size: 1.2rem;
+  }
+
+  .subtitle {
     font-size: 1.8rem;
   }
 
+  .mission-container {
+    margin-top: 1.5rem ;
+  }
+
+  .bullet-lists-container {
+    column-gap: 3vw;
+  }
+
+  .bullet-lists-container ul li {
+    font-size: 1rem;
+  }
+
+  .needs-container {
+    margin-bottom: 2rem;
+  }
 }
 
 @media screen and (max-width: 750px) {
@@ -136,19 +179,48 @@ h1 {
     display: block;
   }
 
-  #a-propos {
+  .subtitle {
     font-size: 1.5rem;
+  }
+
+  .item-font {
+    font-size: 1.1rem;
   }
 
   h1 {
     margin-bottom: 0.5rem;
   }
 
+  .colored-tag-pair-container {
+    flex-direction: column;
+    row-gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .mission-container {
+    margin-top: 1.0rem ;
+  }
+
+  .bullet-lists-container ul li {
+    font-size: 1rem;
+  }
+
+  .bullet-lists-container {
+    column-gap: 6vw;
+  }
 }
 
 @media screen and (max-width: 500px) {
   .p-reactive {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .bullet-lists-container {
+    column-gap: 4vw;
+  }
+
+  .bullet-lists-container ul li {
+    font-size: 0.8rem;
   }
 
   .platform-button-txt {
@@ -159,7 +231,7 @@ h1 {
     width: 85vw;
   }
 
-  #a-propos {
+  .subtitle {
     font-size: 1.4rem;
   }
 
@@ -167,6 +239,17 @@ h1 {
     margin-bottom: 0.3rem;
   }
 
+  .mission-container {
+    margin-top: 0.8rem ;
+  }
+
+  .colored-tag-pair-container {
+    row-gap: 5px;
+  }
+
+  .needs-container {
+    margin-bottom: 1rem;
+  }
 }
 
 @media screen and (max-width: 400px) {
@@ -174,21 +257,29 @@ h1 {
     font-size: 0.6rem;
   }
 
+  .bullet-lists-container ul li {
+    font-size: 0.6rem;
+  }
+
   .platform-button-txt {
     font-size: 0.6rem;
   }
 
-  #a-propos {
+  .subtitle {
     font-size: 1.2rem;
+  }
+
+  .mission-container {
+    margin-top: 0.6rem ;
   }
 }
 
 @media screen and (max-width: 350px) {
-  .p-reactive {
+  .platform-button-txt {
     font-size: 0.5rem;
   }
 
-  .platform-button-txt {
-    font-size: 0.5rem;
+  .mission-container {
+    margin-top: 0.4rem ;
   }
 }
