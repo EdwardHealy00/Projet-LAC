@@ -304,7 +304,7 @@ export default function AboutPage() {
                 <div className="all-items-margins">
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Gestion
+                        <p className="paragraph-font p-reactive">Gestion</p>
                         </AccordionSummary>
                         <AccordionDetails>
                                 <div className="teamContent">
@@ -315,7 +315,7 @@ export default function AboutPage() {
                                                     alt={member.name}
                                                     className="teamMemberPicture"
                                                 />
-                                                <div>
+                                                <div className="paragraph-font">
                                                     {member.name}
                                                     {member.title && ", " + member.title} <br />
                                                     {member.role && (
@@ -328,17 +328,17 @@ export default function AboutPage() {
                                                 </div>
                                             </div>
                                         ))}
-                                    <div>
+                                </div>
+                                <div className="footerContent p-reactive paragraph-font">
                                         Avec l’appui du:
                                         <div>Bureau d’Appui et d’Innovation Pédagogique (BAIP)</div>
                                         <div>Presses Internationales Polytechnique</div>
-                                    </div>
                                 </div>
                         </AccordionDetails>
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Comité scientifique
+                        <p className="paragraph-font p-reactive">Comité scientifique</p>
                         </AccordionSummary>
                         <AccordionDetails>
                             <div className="teamContent">
@@ -349,7 +349,7 @@ export default function AboutPage() {
                                                 alt={member.name}
                                                 className="teamMemberPicture"
                                             />
-                                            <div>
+                                            <div className="paragraph-font">
                                                 {member.name}
                                                 {member.title && ", " + member.title} <br />
                                                 {member.role && (
@@ -367,10 +367,10 @@ export default function AboutPage() {
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Étudiants en génie industriel (2021-2022)
+                        <p className="paragraph-font p-reactive"> Étudiants en génie industriel (2021-2022)</p>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <p>
+                            <p className="paragraph-font p-reactive">
                                 Dans le cadre du projet intégrateur&nbsp;
                                 <a
                                     href="https://www.polymtl.ca/programmes/cours/prisme"
@@ -387,6 +387,7 @@ export default function AboutPage() {
                                 des notions acquises dans les différents cours du programme de génie
                                 industriel en contexte réel.
                             </p>
+                            <br/>
                             <div className="teamContent">
                                 {studentsPrisme.map((member) => (
                                     <div className="team-list-item" key={member.id}>
@@ -395,7 +396,7 @@ export default function AboutPage() {
                                             alt={member.name}
                                             className="teamMemberPicture"
                                         />
-                                        <div>
+                                        <div className="paragraph-font">
                                             {member.name}
                                             {member.title && ", " + member.title} <br />
                                             {member.role && (
@@ -413,10 +414,10 @@ export default function AboutPage() {
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Étudiants en génie logiciel (2022-2023)
+                        <p className="paragraph-font p-reactive">Étudiants en génie logiciel (2022-2023)</p>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <p>
+                            <p className="paragraph-font p-reactive">
                                 Dans le cadre d’une subvention du&nbsp;
                                 <a href="https://www.polymtl.ca/appui-pedagogique/" target="_blank">
                                     Fonds d’actions pédagogiques stratégiques
@@ -429,6 +430,7 @@ export default function AboutPage() {
                                 plateforme au sein de petit groupe sera lancé à l’automne 2023 avant
                                 le lancement officiel (hiver 2024).
                             </p>
+                            <br/>
                             <div className="teamContent">
                                 {studentsLog.map((member) => (
                                     <div className="team-list-item" key={member.id}>
@@ -437,7 +439,7 @@ export default function AboutPage() {
                                             alt={member.name}
                                             className="teamMemberPicture"
                                         />
-                                        <div>
+                                        <div className="paragraph-font">
                                             {member.name}
                                             {member.title && ", " + member.title} <br />
                                             {member.role && (
