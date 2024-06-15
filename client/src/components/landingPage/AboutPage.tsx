@@ -159,8 +159,14 @@ export default function AboutPage() {
         position: 'fixed',
         bottom: 16,
         right: 16,
-        width: 56, 
-        height: 56,
+        width: 96, 
+        height: 96,
+        [theme.breakpoints.down('md')]: {
+            bottom: 12,
+            right: 12,
+            width: 64, 
+            height: 64, 
+        },
         [theme.breakpoints.down('sm')]: {
             bottom: 12,
             right: 12,
@@ -170,8 +176,11 @@ export default function AboutPage() {
     };
     
     const iconStyle = {
-        fontSize: 'xx-large',
+        fontSize: 'xxx-large',
         color: 'inherit', 
+        [theme.breakpoints.down('md')]: {
+            fontSize: 'xx-large',
+        },
         [theme.breakpoints.down('sm')]: {
             fontSize: 'x-large',
         },
@@ -258,31 +267,31 @@ export default function AboutPage() {
                     <div className="all-items-margins">
                         <div className="item-lists-container">
                             <CircleIcon color="#C3272E" href={TEACH}></CircleIcon>
-                            <div className="item-font">Promouvoir l'enseignement par les cas</div>
+                            <div className="item-font specificite">Promouvoir l'enseignement par les cas</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#FA961E" href={MEDIA}></CircleIcon>
-                            <div className="item-font">Proposer une variété de format (cas court, cas long, multimédia, podcase…)</div>
+                            <div className="item-font specificite">Proposer une variété de format (cas court, cas long, multimédia, podcase…)</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#7FC348" href={CATALOG}></CircleIcon>
-                            <div className="item-font">Offrir un catalogue de cas (payant et en libre accès)</div>
+                            <div className="item-font specificite">Offrir un catalogue de cas (payant et en libre accès)</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#C3272E" href={SPELL}></CircleIcon>
-                            <div className="item-font">Collaborer avec un éditeur reconnu, les Presses internationales Polytechnique, qui assure une révision linguistique rigoureuse</div>
+                            <div className="item-font specificite">Collaborer avec un éditeur reconnu, les Presses internationales Polytechnique, qui assure une révision linguistique rigoureuse</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#41AAE6" href={HEART}></CircleIcon>
-                            <div className="item-font">Donner son appréciation sur les cas pour offrir de la rétroaction aux autrices et auteurs de cas</div>
+                            <div className="item-font specificite">Donner son appréciation sur les cas pour offrir de la rétroaction aux autrices et auteurs de cas</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#FA961E" href={PENCIL}></CircleIcon>
-                            <div className="item-font">Jumeler l’expérience entre génie et sciences sociales et humaines</div>
+                            <div className="item-font specificite">Jumeler l’expérience entre génie et sciences sociales et humaines</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#7FC348" href={LIGHT}></CircleIcon>
-                            <div className="item-font">Créer des ponts entre les enseignant·e·s, les étudiant·e·s et tous les types d'organisation (privé, public, parapublic, organisme sans but lucratif)</div>
+                            <div className="item-font specificite">Créer des ponts entre les enseignant·e·s, les étudiant·e·s et tous les types d'organisation (privé, public, parapublic, organisme sans but lucratif)</div>
                         </div>
                     </div>
                     </div>
@@ -290,7 +299,7 @@ export default function AboutPage() {
         <BrainSeparator></BrainSeparator>
         <div className="landing-segment-container">
             <div className="landing-segment-column-left">
-                <h1 id="equipe">Équipe derrière le LAC</h1>
+                <h1 id="equipe" className="subtitle">Équipe derrière le LAC</h1>
                 <p className="item-font">Vous pouvez sélectionner les onglets pour découvrir les différentes personnes impliquées.</p>
                 <div className="all-items-margins">
                     <Accordion sx={{ background: 'transparent' }}>
@@ -451,7 +460,7 @@ export default function AboutPage() {
         <BrainSeparator></BrainSeparator>
         <div className="landing-segment-container">
             <div className="landing-segment-column-left">
-                <h1 id="histoire">Histoire du LAC</h1>
+                <h1 id="histoire" className="subtitle">Histoire du LAC</h1>
                 <p className="item-font">Dans le but de rendre reproductible notre démarche, les grandes étapes sont indiquées dans la chronologie ci-dessous.</p>
                 <Timeline></Timeline>
             </div>
