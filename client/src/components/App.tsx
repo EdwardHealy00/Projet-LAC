@@ -170,7 +170,7 @@ function App() {
             lineHeight: 1.5,
           },
           body1: {
-            fontSize: `calc(0.4rem + 0.4vw)`,
+            fontSize: `max(calc(0.4rem + 0.4vw), 0.8rem)`,
             lineHeight: 1.5,
           },
           body2: {
@@ -178,7 +178,7 @@ function App() {
             lineHeight: 1.4,
           },
           caption: {
-            fontSize: `calc(0.3rem + 0.3vw)`,
+            fontSize: `max(calc(0.3rem + 0.3vw), 0.6rem)`,
             lineHeight: 1.2,
           },
       },

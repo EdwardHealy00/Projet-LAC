@@ -7,13 +7,20 @@ import {
   Card,
   Chip,
   Collapse,
+  Divider,
   FormControl,
   Icon,
   InputLabel,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  SwipeableDrawer,
   Typography,
   alpha,
   styled,
@@ -32,6 +39,11 @@ import Articles, { ArticlesRef } from "./Articles";
 import AddCaseStudy, { AddCaseStudyDialogRef } from "./AddCaseStudy";
 import ClearIcon from '@mui/icons-material/Clear';
 import MenuIcon from '@mui/icons-material/Menu';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Filter {
   name: string;
@@ -201,14 +213,14 @@ export default function Catalogue() {
   }));
 
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  const isMediumScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   const FilterCard = () => (
     <Card id="filter-card">
           <div id="filter-header">
-            <Typography variant="h5">Filtrer par:</Typography>
-            <Button onClick={onResetFilters}>
-              <u>Effacer tous les filtres</u>
+            <Typography variant="h4">Filtrer par:</Typography>
+            <Button id="reinitBtn" variant="outlined" onClick={onResetFilters}>
+              <DeleteIcon></DeleteIcon>
+            <Typography variant="h5">Réinitialiser</Typography>
             </Button>
           </div>
           <div className="filter-list">
@@ -434,6 +446,120 @@ export default function Catalogue() {
     </Card>
   );
 
+  const [drawerState, setDrawerState] = React.useState(false);
+
+  const toggleDrawer =
+  (open: boolean) =>
+  (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' ||
+        (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+
+    setDrawerState(open);
+  };
+
+  const DrawerList = () => (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+          <ListItem key={'Catalogue'} disablePadding>
+            <ListItemButton href="/catalogue">
+              <ListItemIcon>
+                <ViewListIcon></ViewListIcon>
+              </ListItemIcon>
+              <ListItemText primary={
+                <Typography variant="h3">
+                  Catalogue
+                </Typography>
+              }/>
+            </ListItemButton>
+          </ListItem>
+          <UnlockAccess
+                role={[Role.Deputy, Role.ComityDirector, Role.Comity]}
+                children={
+                  <ListItem key={'Tableau de bord'} disablePadding>
+                    <ListItemButton href="/dashboard">
+                      <ListItemIcon>
+                        <DashboardIcon></DashboardIcon>
+                      </ListItemIcon>
+                      <ListItemText primary={
+                          <Typography variant="h3">
+                            Tableau de bord
+                          </Typography>
+                      }/>
+                    </ListItemButton>
+                  </ListItem>
+                }
+          ></UnlockAccess>
+          <UnlockAccess
+                role={[Role.Professor]}
+                children={  
+                  <ListItem key={'Mes études de cas'} disablePadding>
+                  <ListItemButton href="/my-pending-case-studies/paid">
+                    <ListItemIcon>
+                      <FolderSharedIcon></FolderSharedIcon>
+                    </ListItemIcon>
+                    <ListItemText primary={
+                        <Typography variant="h3">
+                          Mes études de cas
+                        </Typography>
+                      }/>
+                  </ListItemButton>
+                </ListItem>
+                }
+          ></UnlockAccess>
+      <ListItem key={'Guides'} disablePadding>
+      <ListItemButton href="/guide">
+        <ListItemIcon>
+            <LightbulbIcon></LightbulbIcon>
+        </ListItemIcon>
+        <ListItemText primary={
+          <Typography variant="h3">
+            Guides
+          </Typography>
+        }/>
+      </ListItemButton>
+    </ListItem>
+      </List>
+      <Divider />
+      <List>
+        <ListItem key={'Télécharger les gabarits'} disablePadding>
+          <ListItemButton onClick={() => downloadCaseStudyTemplate()}>
+            <ListItemIcon>
+            <Download></Download>
+            </ListItemIcon>
+            <ListItemText primary={
+                <Typography variant="h4">
+                  Télécharger les gabarits
+                </Typography>
+            }/>
+          </ListItemButton>
+        </ListItem>
+        <ListItem key={'Ajouter une étude de cas'} disablePadding>
+          <ListItemButton onClick={openAddCaseStudyDialog}>
+            <ListItemIcon>
+            <Add></Add>
+            </ListItemIcon>
+            <ListItemText primary={
+                <Typography variant="h4">
+                  Ajouter une étude de cas
+                </Typography>
+            }/>
+          </ListItemButton>
+        </ListItem>
+      </List>
+    </Box>
+  );
+
   const getCaseStudyAuthors = async () => {
     axios
       .get(`${process.env.REACT_APP_BASE_API_URL}/api/casestudies/authors`)
@@ -495,40 +621,59 @@ export default function Catalogue() {
         style={{ backgroundColor: theme.palette.primary.light }}
       >
         <div id="label-title">
-          <WhiteButton variant="text">
-            <MenuIcon/>
-          </WhiteButton>
+          {!isLargeScreen &&
+            <div>
+              <React.Fragment key={'left'}>
+                <WhiteButton id="drawerBtn" variant="text" onClick={toggleDrawer(true)}>
+                  <MenuIcon/>
+                </WhiteButton>
+                <SwipeableDrawer
+                  anchor={'left'}
+                  open={drawerState}
+                  onClose={toggleDrawer(false)}
+                  onOpen={toggleDrawer(true)}
+                >
+                  <DrawerList></DrawerList>
+                </SwipeableDrawer>
+              </React.Fragment>
+            </div>
+          }
           <WhiteTypography variant="h2" id="catalogue-title">
             Catalogue d'études de cas
           </WhiteTypography>
         </div>
-        <UnlockAccess
-          role={[Role.Professor]}
-          children={
-            <div id="addCaseRectangle">
-              <WhiteButton
-                variant="outlined"
-                onClick={() => downloadCaseStudyTemplate()}
-              >
-                <Download></Download>
-                {isLargeScreen && 'Télécharger les gabarits'}
-              </WhiteButton>
-              <WhiteButton variant="contained" onClick={openAddCaseStudyDialog}>
-                <Add></Add>
-                {isLargeScreen && 'Ajouter une étude de cas'}
-              </WhiteButton>
-            </div>
-          }
-        ></UnlockAccess>
-          <div id="search-bar">
+        {isLargeScreen &&
+          <UnlockAccess
+            role={[Role.Professor]}
+            children={
+              <div id="addCaseRectangle">
+                <WhiteButton
+                  variant="outlined"
+                  onClick={() => downloadCaseStudyTemplate()}
+                >
+                  <Download></Download>
+                  Télécharger les gabarits
+                </WhiteButton>
+                <WhiteButton variant="contained" onClick={openAddCaseStudyDialog}>
+                  <Add></Add>
+                  Ajouter une étude de cas
+                </WhiteButton>
+              </div>
+            }
+          ></UnlockAccess>
+        }
+        <div id="search-section">
           <FilterMenuButton
+          id="filterBtn"
           variant="outlined"
           onClick={toggleFilterMenu}
         >
           {isFilterMenuOpen ? <FilterAltOffIcon/> : <FilterAltIcon/>}
           
         </FilterMenuButton>
+          <div id="searchBtn">
           <SearchBar onFilter={onSearch}></SearchBar>
+          </div>
         </div>
       </div>
       <div id="rows">
