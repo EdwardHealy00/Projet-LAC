@@ -34,7 +34,7 @@
     padding: 0.5% 1%;
     flex-direction: row;
     display: flex;
-    gap:15%;
+    gap:0%;
     align-items: center;
     justify-content: space-between;
     position: fixed;
@@ -43,6 +43,9 @@
 
 #search-bar {
     margin: 1% 0%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 #searchField {
@@ -62,3 +65,69 @@
 .filter-form-control {
     width: 100%;
 }
+
+#label-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+@media screen and (max-width: 1200px) {
+    #rows {
+        flex-direction: column;
+    }
+
+    #filter-card {
+        margin-left: 5%;
+        margin-right: 5%;
+        padding-bottom: 2%;
+        width: 90%;
+    }
+
+    .filter-form-container {
+        padding-top: 2%;
+        width: 45%;
+    }
+
+    .filter-list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-left: 5%;
+    }
+
+    #catalogue-title {
+        font-size: 1rem;
+    }
+
+    #rectangle {
+        gap: 0%;
+    }
+
+}
+
+@media screen and (max-width: 600px) {
+    #rows {
+        flex-direction: column;
+    }
+
+    #filter-card {
+        margin-left: 5%;
+        margin-right: 5%;
+        width: 90%;
+    }
+
+    .filter-form-container {
+        padding-top: 5%;
+        width: 90%;
+    }
+
+    .filter-list {
+        display: flex;
+        flex-direction: column;
+        margin-left: 5%;
+    }
+
+}
+  
+  
