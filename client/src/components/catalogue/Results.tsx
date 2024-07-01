@@ -42,21 +42,14 @@ const Results: React.FC<Props> = ({ caseData }) => {
     setOpenDownloadDialog(false);
   };
 
-  const onCaseClick = () => {
-    if (caseData.isPaidCase) {
-      window.open(caseData.url as string, "_blank");
-    } else {
-      openInfoDialog();
-    }
+  const onCaseClick = (event: any) => {
+     event.stopPropagation();
+    window.open(caseData.url as string, "_blank");
   };
 
   const onActionClick = (event: any) => {
     event.stopPropagation();
-    if (caseData.isPaidCase) {
-      window.open(caseData.url as string, "_blank");
-    } else {
-      openDownloadDialog();
-    }
+    openDownloadDialog();
   };
 
   const theme = useTheme();
@@ -122,10 +115,15 @@ const Results: React.FC<Props> = ({ caseData }) => {
                 </Typography>
               </div>
               <div className="actions">
-                <Button onClick={onActionClick}>
-                  {caseData.isPaidCase && <Launch></Launch>}
-                  {!caseData.isPaidCase && <Download></Download>}
-                </Button>
+                {caseData.files.length !== 0 && 
+                  <Button onClick={onActionClick}>
+                    <Download></Download>
+                  </Button>
+                }
+                {caseData.isPaidCase && <Button onClick={onCaseClick}>
+                    <Launch></Launch>
+                  </Button>
+                }
               </div>
             </div>
           </div>
@@ -217,7 +215,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
             </div>
             <div>
 
-              {!caseData.isPaidCase &&
+              {caseData.files.length !== 0 &&
                 caseData.files.map((file: { originalname: string }, index: number) => (
                   <div key={index} className="file-row">
                     <div className="field">{file.originalname}</div>
