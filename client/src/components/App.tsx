@@ -142,31 +142,31 @@ function App() {
     typography: {
         fontFamily: `-apple-system, BlinkMacSystemFont, 'Yaldevi', 'Gotu', sans-serif`,
         h1: {
-            fontSize: `calc(1.15rem + 1.15vw)`,
+            fontSize: `max(calc(1.15rem + 1.15vw), 2.0rem)`,
             fontWeight: 'bold',
           },
           h2: {
-            fontSize: `calc(0.9rem + 0.9vw)`,
+            fontSize: `max(calc(0.9rem + 0.9vw), 1.3rem)`,
             fontWeight: 'bold',
           },
           h3: {
-            fontSize: `calc(0.65rem + 0.65vw)`,
+            fontSize: `max(calc(0.65rem + 0.65vw), 1.1rem)`,
             fontWeight: 'bold',
           },
           h4: {
-            fontSize: `calc(0.5rem + 0.5vw)`,
+            fontSize: `max(calc(0.5rem + 0.5vw), 1.0rem)`,
             fontWeight: 'bold',
           },
           h5: {
-            fontSize: `calc(0.4rem + 0.4vw)`,
+            fontSize: `max(calc(0.4rem + 0.4vw), 0.9rem)`,
             fontWeight: 'bold',
           },
           h6: {
-            fontSize: `calc(0.3rem + 0.3vw)`,
+            fontSize: `max(calc(0.3rem + 0.3vw), 0.8rem)`,
             fontWeight: 'bold',
           },
           subtitle1: {
-            fontSize: `calc(0.45rem + 0.45vw)`,
+            fontSize: `max(calc(0.45rem + 0.45vw), 0.95rem)`,
             lineHeight: 1.5,
           },
           body1: {
@@ -174,7 +174,7 @@ function App() {
             lineHeight: 1.5,
           },
           body2: {
-            fontSize: `calc(0.35rem + 0.35vw)`,
+            fontSize: `max(calc(0.35rem + 0.35vw), 0.7rem)`,
             lineHeight: 1.4,
           },
           caption: {

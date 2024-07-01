@@ -10,6 +10,6 @@ export function languageToString(language: Language): string {
         case Language.ENGLISH:
             return "Anglais";
         default:
-            return "Inconnu";
+            return "Inconnue";
     }
 }

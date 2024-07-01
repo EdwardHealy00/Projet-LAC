@@ -220,7 +220,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
               {!caseData.isPaidCase &&
                 caseData.files.map((file: { originalname: string }, index: number) => (
                   <div key={index} className="file-row">
-                    <div>{file.originalname}</div>
+                    <div className="field">{file.originalname}</div>
                     <Button onClick={() => handleFileDownload(file)}>
                       <Download />
                       Télécharger
@@ -228,7 +228,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
                   </div>
                 ))}
               {}
-            </div>
+            </div> 
           </div>
         </DialogContent>
 
