@@ -37,7 +37,7 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    getUserInfo();
+    if(loggedIn) getUserInfo();
   }, []);
 
   const getUserInfo = () => {
