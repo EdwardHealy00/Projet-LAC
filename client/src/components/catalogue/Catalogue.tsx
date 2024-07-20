@@ -471,92 +471,97 @@ export default function Catalogue() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-          <ListItem key={'Catalogue'} disablePadding>
-            <ListItemButton href="/catalogue">
-              <ListItemIcon>
-                <ViewListIcon></ViewListIcon>
-              </ListItemIcon>
-              <ListItemText primary={
-                <Typography variant="h3">
-                  Catalogue
-                </Typography>
-              }/>
-            </ListItemButton>
-          </ListItem>
-          <UnlockAccess
-                role={[Role.Deputy, Role.ComityDirector, Role.Comity]}
-                children={
-                  <ListItem key={'Tableau de bord'} disablePadding>
-                    <ListItemButton href="/dashboard">
-                      <ListItemIcon>
-                        <DashboardIcon></DashboardIcon>
-                      </ListItemIcon>
-                      <ListItemText primary={
-                          <Typography variant="h3">
-                            Tableau de bord
-                          </Typography>
-                      }/>
-                    </ListItemButton>
-                  </ListItem>
-                }
-          ></UnlockAccess>
-          <UnlockAccess
-                role={[Role.Professor]}
-                children={  
-                  <ListItem key={'Mes études de cas'} disablePadding>
-                  <ListItemButton href="/my-pending-case-studies/paid">
-                    <ListItemIcon>
-                      <FolderSharedIcon></FolderSharedIcon>
-                    </ListItemIcon>
-                    <ListItemText primary={
-                        <Typography variant="h3">
-                          Mes études de cas
-                        </Typography>
-                      }/>
-                  </ListItemButton>
-                </ListItem>
-                }
-          ></UnlockAccess>
-      <ListItem key={'Guides'} disablePadding>
-      <ListItemButton href="/guide">
-        <ListItemIcon>
-            <LightbulbIcon></LightbulbIcon>
-        </ListItemIcon>
-        <ListItemText primary={
-          <Typography variant="h3">
-            Guides
-          </Typography>
-        }/>
-      </ListItemButton>
-    </ListItem>
+        <ListItem key={"Catalogue"} disablePadding>
+          <ListItemButton href="/catalogue">
+            <ListItemIcon>
+              <ViewListIcon></ViewListIcon>
+            </ListItemIcon>
+            <ListItemText
+              primary={<Typography variant="h3">Catalogue</Typography>}
+            />
+          </ListItemButton>
+        </ListItem>
+        <UnlockAccess
+          role={[Role.Deputy, Role.ComityDirector, Role.Comity]}
+          children={
+            <ListItem key={"Tableau de bord"} disablePadding>
+              <ListItemButton href="/dashboard">
+                <ListItemIcon>
+                  <DashboardIcon></DashboardIcon>
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="h3">Tableau de bord</Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          }
+        ></UnlockAccess>
+        <UnlockAccess
+          role={[Role.Professor]}
+          children={
+            <ListItem key={"Mes études de cas"} disablePadding>
+              <ListItemButton href="/my-pending-case-studies/paid">
+                <ListItemIcon>
+                  <FolderSharedIcon></FolderSharedIcon>
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="h3">Mes études de cas</Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          }
+        ></UnlockAccess>
+        <ListItem key={"Guides"} disablePadding>
+          <ListItemButton href="/guide">
+            <ListItemIcon>
+              <LightbulbIcon></LightbulbIcon>
+            </ListItemIcon>
+            <ListItemText
+              primary={<Typography variant="h3">Guides</Typography>}
+            />
+          </ListItemButton>
+        </ListItem>
       </List>
       <Divider />
-      <List>
-        <ListItem key={'Télécharger les gabarits'} disablePadding>
-          <ListItemButton onClick={() => downloadCaseStudyTemplate()}>
-            <ListItemIcon>
-            <Download></Download>
-            </ListItemIcon>
-            <ListItemText primary={
-                <Typography variant="h4">
-                  Télécharger les gabarits
-                </Typography>
-            }/>
-          </ListItemButton>
-        </ListItem>
-        <ListItem key={'Ajouter une étude de cas'} disablePadding>
-          <ListItemButton onClick={openAddCaseStudyDialog}>
-            <ListItemIcon>
-            <Add></Add>
-            </ListItemIcon>
-            <ListItemText primary={
-                <Typography variant="h4">
-                  Ajouter une étude de cas
-                </Typography>
-            }/>
-          </ListItemButton>
-        </ListItem>
-      </List>
+      <UnlockAccess
+        role={[Role.Professor]}
+        children={
+          <List>
+            <ListItem key={"Télécharger les gabarits"} disablePadding>
+              <ListItemButton onClick={() => downloadCaseStudyTemplate()}>
+                <ListItemIcon>
+                  <Download></Download>
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="h4">
+                      Télécharger les gabarits
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key={"Ajouter une étude de cas"} disablePadding>
+              <ListItemButton onClick={openAddCaseStudyDialog}>
+                <ListItemIcon>
+                  <Add></Add>
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="h4">
+                      Ajouter une étude de cas
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        }
+      ></UnlockAccess>
     </Box>
   );
 
