@@ -164,7 +164,7 @@ export class UserController {
         this.router.post('/proof', this.middlewareRestrictTo(Role.ProfessorNotApproved), async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const user = res.locals.user;
-                const fileProof = req.files && req.files.length > 0 ? req.files[0] : undefined;
+                const fileProof = req.files && Array.isArray(req.files) && req.files.length > 0 ? req.files[0] : undefined;
                 if (!user) {
                     logError(res.locals.user, "404", "user not found")
                     res.status(404).json('Utilisateur introuvable');

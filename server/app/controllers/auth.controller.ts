@@ -27,7 +27,7 @@ export class AuthController {
         this.router.post('/register', this.middlewareValidate(createUserSchema), async (req: Request, res: Response, next: NextFunction) => {
             try {
 
-                const fileProof = req.files && req.files.length > 0 ? req.files[0] : undefined;
+                const fileProof = req.files && Array.isArray(req.files) && req.files.length > 0 ? req.files[0] : undefined;
                 const userInfo = {
                     email: req.body.email.toLowerCase(),
                     lastName: req.body.lastName,
@@ -37,6 +37,7 @@ export class AuthController {
                     school: req.body.school,
                     country: req.body.country,
                     city: req.body.city,
+                    proof: req.body.proof,
                 }
 
                 if (fileProof && userInfo.role == Role.ProfessorNotApproved) {

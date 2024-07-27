@@ -21,6 +21,8 @@
         "strictNullChecks": true,
         "paths": {
             "@app/*": ["./app/*"],
-        }
+        },
+        "typeRoots": ["./node_modules/@types", "./src/typings"],
+        "skipLibCheck": true
     }
 }

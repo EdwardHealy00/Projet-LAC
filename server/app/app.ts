@@ -49,7 +49,7 @@ export class Application {
                 const isCaseStudyReq = req.originalUrl.includes("caseStudies");
                 const fileName = Date.now().toString() + "-" + (isCaseStudyReq ? file.originalname : "");
                 if (isCaseStudyReq && req.files) {
-                    req.files[(req.files.length as number) - 1]["serverFileName"] = fileName;
+                    (req.files as any[])[(req.files.length as number) - 1]["serverFileName"] = fileName;
                 }
                 cb(null, fileName ) //Appending extension
             }

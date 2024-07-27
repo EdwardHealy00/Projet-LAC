@@ -243,8 +243,8 @@ export class CaseStudyController {
                     }
 
                     let newFiles = [];
-                    for (let i = 0; i < req.files.length; i++) {
-                        const fileProof = req.files[i];
+                    for (let i = 0; i < (req.files as Express.Multer.File[]).length; i++) {
+                        const fileProof: any = (req.files as any[])[i];
                         if (fileProof) {
                             fileProof.date = new Date().toISOString();
                             fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
@@ -359,7 +359,7 @@ export class CaseStudyController {
                         res.status(400).json('L\'étude de cas doit au moins 1 document');
                         return;
                     }
-                    if(req.files.length > MAX_FILES_PER_CASE) {
+                    if((req.files as any[]).length > MAX_FILES_PER_CASE) {
                         logError(res.locals.user, "400", "Case study must have at maximum 3 documents")
                         res.status(400).json('L\'étude de cas doit avoir un maximum de 3 documents');
                         return;
