@@ -9,6 +9,7 @@
         "outDir": "out",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "ignoreDeprecations": "5.0",
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noFallthroughCasesInSwitch": true,

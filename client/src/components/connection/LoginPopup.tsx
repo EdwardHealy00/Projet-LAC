@@ -30,6 +30,7 @@ const LoginPopup = forwardRef<LoginPopupRef, Props>(
     };
 
     const handleCancel = () => {
+      // eslint-disable-next-line no-restricted-globals
       if(location.pathname != '/' && location.pathname != '/about') {
         navigate('/catalogue'); 
       } else {

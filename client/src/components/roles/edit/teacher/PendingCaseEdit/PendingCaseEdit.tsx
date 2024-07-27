@@ -364,6 +364,7 @@ function PendingCaseEdit() {
                           accept=".docx"
                           type="file"
                           onChange={(e) => {
+                            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                             PendingCaseEditTableRef.current
                               ? PendingCaseEditTableRef.current.AddFiles(
                                   e.target.files
