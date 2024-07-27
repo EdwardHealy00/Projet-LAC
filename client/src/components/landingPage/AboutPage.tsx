@@ -15,7 +15,7 @@ import MEDIA from "../../img/icons/media.svg";
 import PENCIL from "../../img/icons/pencil.svg";
 import SPELL from "../../img/icons/spell.svg";
 import {TeamMember} from "../../model/Team";
-import {Accordion, AccordionDetails, AccordionSummary, Button, Fab, SxProps, Tooltip, makeStyles} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Button, Fab, SxProps, Tooltip, makeStyles, useTheme} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Timeline from "../about/creation/Timeline";
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
@@ -154,34 +154,53 @@ export default function AboutPage() {
         },
     ];
 
+    const theme = useTheme();
     const fabStyle = {
         position: 'fixed',
         bottom: 16,
         right: 16,
-        width: "4vw",
-        height: "4vw"
+        width: 96, 
+        height: 96,
+        [theme.breakpoints.down('md')]: {
+            bottom: 12,
+            right: 12,
+            width: 64, 
+            height: 64, 
+        },
+        [theme.breakpoints.down('sm')]: {
+            bottom: 12,
+            right: 12,
+            width: 48, 
+            height: 48, 
+        },
     };
-
+    
     const iconStyle = {
-        width: "2.5vw",
-        height: "2.5vw"
-      };
+        fontSize: 'xxx-large',
+        color: 'inherit', 
+        [theme.breakpoints.down('md')]: {
+            fontSize: 'xx-large',
+        },
+        [theme.breakpoints.down('sm')]: {
+            fontSize: 'x-large',
+        },
+    };
 
     return <div id="landingPage">
             <LandingNavBar></LandingNavBar>
             <Tooltip title= "Accéder aux ressources pédagogiques" arrow>
-                <Fab sx={fabStyle as SxProps} id="guide-button" color="primary" size="large" href="/guide"><LightbulbIcon sx={iconStyle as SxProps} fontSize="large"/>
+                <Fab sx={fabStyle as SxProps} id="guide-button" color="primary" href="/guide"><LightbulbIcon sx={iconStyle as SxProps}/>
                 </Fab>
             </Tooltip>
             <header className="student-banner">
                 <div></div>
                 <div id="access-platform">
-                    <Button variant="contained" color="primary"  href="/catalogue">Accéder à la plateforme</Button>
+                    <Button variant="contained" color="primary" href="/catalogue"><div className="platform-button-txt">Accéder à la plateforme</div></Button>
                 </div>
             </header>
             <div className="landing-segment-container">
                 <div className="landing-segment-column-left">
-                    <h1 id="a-propos">À propos</h1>
+                    <h1 id="a-propos" className="subtitle">À propos</h1>
                     <div className="value-paragraphs-container">
                         <LandingValueGroupParagraph content="des connaissances grâce à une plateforme collaborative" title={"Partager".toUpperCase()}></LandingValueGroupParagraph>
                         <LandingValueGroupParagraph content="à un catalogue d’études de cas pour faciliter l’enseignement par les cas" title={"Accéder".toUpperCase()}></LandingValueGroupParagraph>
@@ -193,19 +212,19 @@ export default function AboutPage() {
             <BrainSeparator></BrainSeparator>
             <div className="landing-segment-container">
                 <div className="landing-segment-column-left">
-                    <h1 id="mission">Mission, vision, pertinence et compétences promues</h1>
+                    <h1 className="subtitle" id="mission">Mission, vision, pertinence et compétences promues</h1>
                     <div className="mission-container">
                         <div className="colored-tag-pair-container">
                             <ColoredTag tag="MISSION" backgroundColor="#FA961E"></ColoredTag>
-                            <div>Proposer des approches pédagogiques diversifiées et adaptées afin de favoriser l’acquisition de nouvelles compétences par les ingénieures et ingénieurs et les gestionnaires de demain en rendant la formation plus professionnalisante et plus axée sur les aspects humains et environnementaux.</div>
+                            <div className="p-reactive">Proposer des approches pédagogiques diversifiées et adaptées afin de favoriser l’acquisition de nouvelles compétences par les ingénieures et ingénieurs et les gestionnaires de demain en rendant la formation plus professionnalisante et plus axée sur les aspects humains et environnementaux.</div>
                         </div>
                         <div className="colored-tag-pair-container">
                             <ColoredTag tag="VISION" backgroundColor="#7FC348"></ColoredTag>
-                            <div>Devenir une référence en innovation pédagogique en génie et sciences sociales au sein de Polytechnique Montréal et dans la francophonie.</div>
+                            <div className="p-reactive">Devenir une référence en innovation pédagogique en génie et sciences sociales au sein de Polytechnique Montréal et dans la francophonie.</div>
                         </div>
                         <div className="colored-tag-pair-container">
                             <ColoredTag tag="PERTINENCE" backgroundColor="#C3272E"></ColoredTag>
-                            <div>Les tendances technologiques, principalement la robotisation, la numérisation et l’intelligence artificielle entraîneront une transformation des milieux de travail et des relations entre les personnes. Ces changements nécessiteront une adaptation, une agilité et une flexibilité des étudiantes et étudiants, et c’est notamment par l’entremise des études de cas que ces compétences pourront être acquises plus rapidement.</div>
+                            <div className="p-reactive">Les tendances technologiques, principalement la robotisation, la numérisation et l’intelligence artificielle entraîneront une transformation des milieux de travail et des relations entre les personnes. Ces changements nécessiteront une adaptation, une agilité et une flexibilité des étudiantes et étudiants, et c’est notamment par l’entremise des études de cas que ces compétences pourront être acquises plus rapidement.</div>
                         </div>
                         <div className="colored-tag-pair-container">
                             <ColoredTag tag="COMPÉTENCES" backgroundColor="#FA961E"></ColoredTag>
@@ -227,15 +246,15 @@ export default function AboutPage() {
                             </div>
                         </div>
                     </div>
-                    <h1 id="besoin">Besoins auxquels répond le LAC</h1>
+                    <h1 id="besoin" className="subtitle">Besoins auxquels répond le LAC</h1>
                     <div className="needs-container">
-                        <p className="paragraph-font">
+                        <p className="paragraph-font p-reactive">
                             À la lumière des nombreuses tendances qui influent sur la pratique de l’ingénierie, un <a href="https://www.oiq.qc.ca/wp-content/uploads/documents/public/Etude_OIQ_Profil_Ing_2021.pdf" target="_blank">récent rapport de l’Ordre des ingénieurs du Québec (2021)</a> soutient que les diplômé·e·s devront non seulement maîtriser des compétences techniques inhérentes à leur discipline, mais devront également déployer de nombreuses autres compétences relevant davantage du champ des sciences sociales et humaines. Le rôle des ingénieures et ingénieurs est résolument transversal, il ne se limite plus à la compréhension et à la maîtrise des enjeux techniques, mais englobent également des enjeux sociaux.
                         </p>
-                        <p className="paragraph-font">
+                        <p className="paragraph-font p-reactive">
                             Par ailleurs, les compétences sociales ne semblent pas être totalement maîtrisées par les futurs ingénieures et ingénieurs. En effet, lors d’un sondage mené par l’Ordre des ingénieurs (2021), un constat est frappant : « malgré une solide formation universitaire sur le plan des compétences dites dures, plusieurs ont mentionné ne pas être suffisamment outillés à la sortie de l’université pour gérer cette complexité d’un point de vue humain » (p.91). C’est pour répondre à ces défis que le LAC a été créé.
                         </p>
-                        <p className="paragraph-font">
+                        <p className="paragraph-font p-reactive">
                             L’apprentissage par les cas offre des avantages uniques : il met l’accent sur le développement des compétences sociales et humaines, favorise les échanges d’idées et permet d’analyser de réelles problématiques organisationnelles et industrielles dans le but d’accélérer l’entrée sur le marché du travail des étudiantes et étudiants et leur prise de décision dans les organisations.
                         </p>
                     </div>
@@ -244,35 +263,35 @@ export default function AboutPage() {
             <BrainSeparator></BrainSeparator>
             <div className="landing-segment-container">
                 <div className="landing-segment-column-left">
-                    <h1 id="mission">Spécificités du LAC</h1>
+                    <h1 id="mission" className="subtitle">Spécificités du LAC</h1>
                     <div className="all-items-margins">
                         <div className="item-lists-container">
                             <CircleIcon color="#C3272E" href={TEACH}></CircleIcon>
-                            <div className="item-font">Promouvoir l'enseignement par les cas</div>
+                            <div className="item-font specificite">Promouvoir l'enseignement par les cas</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#FA961E" href={MEDIA}></CircleIcon>
-                            <div className="item-font">Proposer une variété de format (cas court, cas long, multimédia, podcase…)</div>
+                            <div className="item-font specificite">Proposer une variété de format (cas court, cas long, multimédia, podcase…)</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#7FC348" href={CATALOG}></CircleIcon>
-                            <div className="item-font">Offrir un catalogue de cas (payant et en libre accès)</div>
+                            <div className="item-font specificite">Offrir un catalogue de cas (payant et en libre accès)</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#C3272E" href={SPELL}></CircleIcon>
-                            <div className="item-font">Collaborer avec un éditeur reconnu, les Presses internationales Polytechnique, qui assure une révision linguistique rigoureuse</div>
+                            <div className="item-font specificite">Collaborer avec un éditeur reconnu, les Presses internationales Polytechnique, qui assure une révision linguistique rigoureuse</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#41AAE6" href={HEART}></CircleIcon>
-                            <div className="item-font">Donner son appréciation sur les cas pour offrir de la rétroaction aux autrices et auteurs de cas</div>
+                            <div className="item-font specificite">Donner son appréciation sur les cas pour offrir de la rétroaction aux autrices et auteurs de cas</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#FA961E" href={PENCIL}></CircleIcon>
-                            <div className="item-font">Jumeler l’expérience entre génie et sciences sociales et humaines</div>
+                            <div className="item-font specificite">Jumeler l’expérience entre génie et sciences sociales et humaines</div>
                         </div>
                         <div className="item-lists-container">
                             <CircleIcon color="#7FC348" href={LIGHT}></CircleIcon>
-                            <div className="item-font">Créer des ponts entre les enseignant·e·s, les étudiant·e·s et tous les types d'organisation (privé, public, parapublic, organisme sans but lucratif)</div>
+                            <div className="item-font specificite">Créer des ponts entre les enseignant·e·s, les étudiant·e·s et tous les types d'organisation (privé, public, parapublic, organisme sans but lucratif)</div>
                         </div>
                     </div>
                     </div>
@@ -280,12 +299,12 @@ export default function AboutPage() {
         <BrainSeparator></BrainSeparator>
         <div className="landing-segment-container">
             <div className="landing-segment-column-left">
-                <h1 id="equipe">Équipe derrière le LAC</h1>
+                <h1 id="equipe" className="subtitle">Équipe derrière le LAC</h1>
                 <p className="item-font">Vous pouvez sélectionner les onglets pour découvrir les différentes personnes impliquées.</p>
                 <div className="all-items-margins">
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Gestion
+                        <p className="paragraph-font p-reactive">Gestion</p>
                         </AccordionSummary>
                         <AccordionDetails>
                                 <div className="teamContent">
@@ -296,7 +315,7 @@ export default function AboutPage() {
                                                     alt={member.name}
                                                     className="teamMemberPicture"
                                                 />
-                                                <div>
+                                                <div className="paragraph-font">
                                                     {member.name}
                                                     {member.title && ", " + member.title} <br />
                                                     {member.role && (
@@ -309,17 +328,17 @@ export default function AboutPage() {
                                                 </div>
                                             </div>
                                         ))}
-                                    <div>
+                                </div>
+                                <div className="footerContent p-reactive paragraph-font">
                                         Avec l’appui du:
                                         <div>Bureau d’Appui et d’Innovation Pédagogique (BAIP)</div>
                                         <div>Presses Internationales Polytechnique</div>
-                                    </div>
                                 </div>
                         </AccordionDetails>
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Comité scientifique
+                        <p className="paragraph-font p-reactive">Comité scientifique</p>
                         </AccordionSummary>
                         <AccordionDetails>
                             <div className="teamContent">
@@ -330,7 +349,7 @@ export default function AboutPage() {
                                                 alt={member.name}
                                                 className="teamMemberPicture"
                                             />
-                                            <div>
+                                            <div className="paragraph-font">
                                                 {member.name}
                                                 {member.title && ", " + member.title} <br />
                                                 {member.role && (
@@ -348,10 +367,10 @@ export default function AboutPage() {
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Étudiants en génie industriel (2021-2022)
+                        <p className="paragraph-font p-reactive"> Étudiants en génie industriel (2021-2022)</p>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <p>
+                            <p className="paragraph-font p-reactive">
                                 Dans le cadre du projet intégrateur&nbsp;
                                 <a
                                     href="https://www.polymtl.ca/programmes/cours/prisme"
@@ -368,6 +387,7 @@ export default function AboutPage() {
                                 des notions acquises dans les différents cours du programme de génie
                                 industriel en contexte réel.
                             </p>
+                            <br/>
                             <div className="teamContent">
                                 {studentsPrisme.map((member) => (
                                     <div className="team-list-item" key={member.id}>
@@ -376,7 +396,7 @@ export default function AboutPage() {
                                             alt={member.name}
                                             className="teamMemberPicture"
                                         />
-                                        <div>
+                                        <div className="paragraph-font">
                                             {member.name}
                                             {member.title && ", " + member.title} <br />
                                             {member.role && (
@@ -394,10 +414,10 @@ export default function AboutPage() {
                     </Accordion>
                     <Accordion sx={{ background: 'transparent' }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            Étudiants en génie logiciel (2022-2023)
+                        <p className="paragraph-font p-reactive">Étudiants en génie logiciel (2022-2023)</p>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <p>
+                            <p className="paragraph-font p-reactive">
                                 Dans le cadre d’une subvention du&nbsp;
                                 <a href="https://www.polymtl.ca/appui-pedagogique/" target="_blank">
                                     Fonds d’actions pédagogiques stratégiques
@@ -410,6 +430,7 @@ export default function AboutPage() {
                                 plateforme au sein de petit groupe sera lancé à l’automne 2023 avant
                                 le lancement officiel (hiver 2024).
                             </p>
+                            <br/>
                             <div className="teamContent">
                                 {studentsLog.map((member) => (
                                     <div className="team-list-item" key={member.id}>
@@ -418,7 +439,7 @@ export default function AboutPage() {
                                             alt={member.name}
                                             className="teamMemberPicture"
                                         />
-                                        <div>
+                                        <div className="paragraph-font">
                                             {member.name}
                                             {member.title && ", " + member.title} <br />
                                             {member.role && (
@@ -441,7 +462,7 @@ export default function AboutPage() {
         <BrainSeparator></BrainSeparator>
         <div className="landing-segment-container">
             <div className="landing-segment-column-left">
-                <h1 id="histoire">Histoire du LAC</h1>
+                <h1 id="histoire" className="subtitle">Histoire du LAC</h1>
                 <p className="item-font">Dans le but de rendre reproductible notre démarche, les grandes étapes sont indiquées dans la chronologie ci-dessous.</p>
                 <Timeline></Timeline>
             </div>

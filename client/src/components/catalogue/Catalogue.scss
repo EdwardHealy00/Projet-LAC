@@ -24,6 +24,10 @@
     justify-content: space-between;
 }
 
+#reinitBtn {
+   padding: 5px 5px;
+}
+
 #rows {
     flex-direction: row;
     display: flex;
@@ -34,15 +38,44 @@
     padding: 0.5% 1%;
     flex-direction: row;
     display: flex;
-    gap:15%;
+    gap:0%;
     align-items: center;
     justify-content: space-between;
     position: fixed;
     z-index: 1000;
 }
 
-#search-bar {
+#navbar {
+    width: 100%;
+    padding: 0.5% 1%;
+    flex-direction: row;
+    display: flex;
+    gap:0%;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+    z-index: 1000;
+}
+
+#second-navbar {
+    width: 100%;
+    padding: 0.5% 2%;
+    flex-direction: row;
+    display: flex;
+    gap:0%;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+}
+
+#search-section {
     margin: 1% 0%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+
 }
 
 #searchField {
@@ -62,3 +95,100 @@
 .filter-form-control {
     width: 100%;
 }
+
+#label-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+@media screen and (max-width: 1200px) {
+    #rows {
+        flex-direction: column;
+    }
+
+    #filter-card {
+        margin-left: 5%;
+        margin-right: 5%;
+        padding-bottom: 2%;
+        width: 90%;
+    }
+
+    .filter-form-container {
+        padding-top: 2%;
+        width: 45%;
+    }
+
+    .filter-list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-left: 5%;
+    }
+
+    #rectangle {
+        gap: 0%;
+    }
+
+    #drawerBtn {
+        min-width: 32px;
+    }
+
+}
+
+@media screen and (max-width: 750px) {
+    #catalogue-title {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #rows {
+        flex-direction: column;
+    }
+
+    #filter-card {
+        margin-left: 5%;
+        margin-right: 5%;
+        width: 90%;
+    }
+
+    .filter-form-container {
+        padding-top: 5%;
+        width: 90%;
+    }
+
+    .filter-list {
+        display: flex;
+        flex-direction: column;
+        margin-left: 5%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #catalogue-title {
+        font-size: 0.9rem;
+    }
+
+    #search-section {
+        width: 30%;
+    }
+
+    #filterBtn {
+        min-width: 32px;
+        width: 10%;
+    }
+
+    #drawerBtn {
+        min-width: 32px;
+        width: 10%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #catalogue-title {
+        font-size: 0.8rem;
+    }
+}
+  
+  

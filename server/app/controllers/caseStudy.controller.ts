@@ -447,7 +447,21 @@ export class CaseStudyController {
                     }
                     // Delete review files once published and main files if paid case
                     await this.caseStudyService.deleteFilesForCaseStudy(caseStudy, caseStudy.isPaidCase); 
-
+                    
+                    if (req.files) {
+                        if(req.files.length + caseStudy.files.length > MAX_FILES_PER_CASE) {
+                            res.status(405).json(`Il est interdit d\'inclure plus de ${MAX_FILES_PER_CASE} documents dans une étude de cas`);
+                            return;
+                        }
+    
+                        let ret = await this.parseAndSaveFiles(req.files, false);
+                        if(!ret) {
+                            res.status(400).json(`Erreur lors de la sauvegarde des fichiers`);
+                            return;
+                        }
+                        caseStudy["files"] = ret.parsedFiles;
+                    }
+    
                     if(user) {
                         this.emailService.sendNotifyCaseStudyPublishedToUser(caseStudy.submitter, user!.firstName + ' ' + user!.lastName, caseStudy);
                     }
@@ -760,8 +774,8 @@ export class CaseStudyController {
         }
     }
 
-    private async parseAndSaveFiles(files: any) {
-        if(!files || !validateFilesType(files)) {
+    private async parseAndSaveFiles(files: any, isDocx: boolean = true) {
+        if(!files || (!validateFilesType(files) && isDocx)) {
             return undefined;
         }
         let parsedFiles = [];
@@ -771,9 +785,11 @@ export class CaseStudyController {
             if (fileProof) {
                 fileProof.date = new Date().toISOString();
                 fileProof.originalname = Buffer.from(fileProof.originalname, 'latin1').toString('utf8');
-                fileProof.pages = await countNumberPages(fileProof.path);
+                if(isDocx) {
+                    fileProof.pages = await countNumberPages(fileProof.path);
+                    totalNbPages += fileProof.pages;
+                }
                 parsedFiles.push(fileProof);
-                totalNbPages += fileProof.pages;
                 this.caseStudyService.saveCaseStudyFile(fileProof.serverFileName);
             }
         }

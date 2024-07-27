@@ -1,4 +1,32 @@
 .eventsList {
     display: inline-block;
     text-align: left;
+    font-size: 1rem;
 }
+
+.timeline {
+    margin-left: 0px;
+}
+
+@media screen and (max-width: 1250px) {
+    .eventsList {
+        font-size: 0.9rem;
+    }
+  }
+  
+  @media screen and (max-width: 1000px) {
+    .eventsList {
+        font-size: 0.8rem;
+    }
+  }
+  
+  @media screen and (max-width: 750px) {
+    .eventsList {
+        font-size: 0.7rem;
+    }
+
+    ul {
+      padding-inline-start: 20px;
+    }
+  }
+  

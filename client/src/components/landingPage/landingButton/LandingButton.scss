@@ -10,7 +10,7 @@
   display: inline-block;
   position: relative;
   color: #131313;
-  font-size: 1.5em;
+  font-size: 1.5rem;
 }
 
 .hover-underline-animation::after {
@@ -19,7 +19,7 @@
   width: 100%;
   transform: scaleX(0.5);
   height: 1px;
-  top: 35px;
+  top: 125%;
   left: 0;
   background-color: #131313;
   transform-origin: center;
@@ -33,7 +33,38 @@
 
 .button-container {
   width: min-content;
+  height: 50%;
   padding: 8px;
   white-space: nowrap;
   display: inline-block;
+}
+
+@media screen and (max-width: 1250px) {
+  .hover-underline-animation {
+    font-size: 1.25rem;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .hover-underline-animation {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .hover-underline-animation {
+    font-size: 0.75rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .hover-underline-animation {
+    font-size: 0.6rem;
+  }
+}
+
+  @media screen and (max-width: 350px) {
+    .hover-underline-animation {
+      font-size: 0.5rem;
+    }
 }

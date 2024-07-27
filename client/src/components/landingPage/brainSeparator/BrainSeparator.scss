@@ -1,33 +1,24 @@
-.all-length-red {
+.all-length {
   width: 100%;
   height: 4px;
+  margin-bottom: 4px;
+  z-index: 1;
+}
+
+.red {
   background-color: #B91E32;
-  margin-bottom: 4px;
-  z-index: 1;
 }
 
-.all-length-orange {
-  width: 100%;
-  height: 4px;
+.orange {
   background-color: #FA961E;
-  margin-bottom: 4px;
-  z-index: 1;
 }
 
-.all-length-green {
-  width: 100%;
-  height: 4px;
+.green {
   background-color: #8cc83c;
-  margin-bottom: 4px;
-  z-index: 1;
 }
 
-.all-length-blue {
-  width: 100%;
-  height: 4px;
+.blue {
   background-color: #41aae6;
-  margin-bottom: 4px;
-  z-index: 1;
 }
 
 .brain {
@@ -56,3 +47,76 @@
   margin-bottom: 72px;
   margin-top: 36px;
 }
+
+@media screen and (max-width: 1000px) {
+  .all-length {
+    width: 100%;
+    height: 3px;
+    margin-bottom: 3px;
+    z-index: 1;
+  }
+
+  .separator-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    margin-bottom: 54px;
+    margin-top: 28px;
+  }
+
+  .brain {
+    position: absolute;
+    left: calc(50% - 30px);
+    transform-origin: center center;
+    top: calc(50% - 30px);
+    height: 60px;
+    width: 60px;
+    z-index: 2;
+    display: block;
+  }
+  
+  .arrow {
+    position: absolute;
+    width: 28px;
+    left: calc(50% - 14px);
+    top: calc(100% + 30px);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .all-length {
+    width: 100%;
+    height: 2px;
+    margin-bottom: 2px;
+    z-index: 1;
+  }
+
+  .separator-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    margin-bottom: 36px;
+    margin-top: 24px;
+  }
+
+  .brain {
+    position: absolute;
+    left: calc(50% - 25px);
+    transform-origin: center center;
+    top: calc(50% - 25px);
+    height: 50px;
+    width: 50px;
+    z-index: 2;
+    display: block;
+  }
+  
+  .arrow {
+    position: absolute;
+    width: 20px;
+    left: calc(50% - 10px);
+    top: calc(100% + 25px);
+  }
+}
+

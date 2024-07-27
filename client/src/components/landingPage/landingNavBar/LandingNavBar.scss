@@ -1,15 +1,33 @@
 .nav-container {
   display: flex;
   justify-content: left;
-  column-gap: 50px;
+  column-gap: 4.5%;
   flex-direction: row;
-  margin: 0 22% 0 22%;
+  margin: 0% 22% 0% 22%;
   padding: 1% 0 1% 0;
 }
 
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1500px) {
+  .lac-logo {
+    max-width: 30%;
+    align-self: center;
+  }
   .nav-container {
-    margin: 0 15% 0 15%;
-    padding: 1% 0 1% 0;
+    column-gap: 1%;
+    justify-content: center;
+    margin: 0% 0% 0% 0%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .nav-container {
+    justify-content: left;
+    margin: 0% 0% 0% 1%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .nav-container {
+    column-gap: 0%;
   }
 }

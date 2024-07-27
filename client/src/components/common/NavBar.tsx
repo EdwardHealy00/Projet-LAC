@@ -5,6 +5,7 @@ import {
   Toolbar,
   alpha,
   styled,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import React, { forwardRef, useImperativeHandle, useRef } from "react";
@@ -55,6 +56,8 @@ const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
     backgroundColor: theme.palette.primary.main,
   };
 
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+
   return (
     <div>
       {!(
@@ -64,7 +67,10 @@ const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
         <AppBar position="fixed" id="nav-bar" style={appBarStyles}>
           <Toolbar disableGutters id="toolbar">
             <a href="/"><img src={logo} alt="LAC logo" id="lac-logo"/></a>
-            <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+
+            {
+              (window.location.pathname !== "/catalogue" || isLargeScreen) && 
+              <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
               <WhiteButton className="navbutton" href="/catalogue">
                 Catalogue
               </WhiteButton>
@@ -89,7 +95,7 @@ const NavBar = forwardRef<NavBarRef, Props>((_props, ref) => {
                 Guides
               </WhiteButton>
             </Box>
-
+            }
             <div id="loginStatus">
               <Login ref={loginRef} />
             </div>

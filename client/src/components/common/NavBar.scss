@@ -16,3 +16,18 @@
         cursor: pointer;
     } 
 }
+
+
+@media screen and (max-width: 750px) {
+    #lac-logo {
+        width: 150px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #lac-logo {
+        width: 100px;
+    }
+}
+
+

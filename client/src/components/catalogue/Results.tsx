@@ -17,6 +17,7 @@ import {
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { handleFileDownload } from "../../utils/FileDownloadUtil";
+import { languageToString } from "../../model/enum/Language";
 
 interface Props {
   caseData: any;
@@ -41,21 +42,14 @@ const Results: React.FC<Props> = ({ caseData }) => {
     setOpenDownloadDialog(false);
   };
 
-  const onCaseClick = () => {
-    if (caseData.isPaidCase) {
-      window.open(caseData.url as string, "_blank");
-    } else {
-      openInfoDialog();
-    }
+  const onCaseClick = (event: any) => {
+     event.stopPropagation();
+    window.open(caseData.url as string, "_blank");
   };
 
   const onActionClick = (event: any) => {
     event.stopPropagation();
-    if (caseData.isPaidCase) {
-      window.open(caseData.url as string, "_blank");
-    } else {
-      openDownloadDialog();
-    }
+    openDownloadDialog();
   };
 
   const theme = useTheme();
@@ -109,6 +103,11 @@ const Results: React.FC<Props> = ({ caseData }) => {
                   <b>Sujet(s) : </b>
                   {caseData.subjects.join(", ")}
                 </Typography>
+                <Typography variant="body2">
+                  {" "}
+                  <b>Langue : </b>
+                  {languageToString(caseData.language)}
+                </Typography>
                 <Typography variant="body2" className="info-text field">
                   {" "}
                   <b>Nombre de pages : </b>
@@ -116,10 +115,15 @@ const Results: React.FC<Props> = ({ caseData }) => {
                 </Typography>
               </div>
               <div className="actions">
-                <Button onClick={onActionClick}>
-                  {caseData.isPaidCase && <Launch></Launch>}
-                  {!caseData.isPaidCase && <Download></Download>}
-                </Button>
+                {caseData.files.length !== 0 && 
+                  <Button onClick={onActionClick}>
+                    <Download></Download>
+                  </Button>
+                }
+                {caseData.isPaidCase && <Button onClick={onCaseClick}>
+                    <Launch></Launch>
+                  </Button>
+                }
               </div>
             </div>
           </div>
@@ -199,6 +203,11 @@ const Results: React.FC<Props> = ({ caseData }) => {
                 {caseData.subjects.join(", ")}
               </Typography>
               <Typography variant="body1" className="spaced">
+                  {" "}
+                  <b>Langue : </b>
+                  {languageToString(caseData.language)}
+                </Typography>
+              <Typography variant="body1" className="spaced">
                 {" "}
                 <b>Nombre de pages : </b>
                 {caseData.page}
@@ -206,10 +215,10 @@ const Results: React.FC<Props> = ({ caseData }) => {
             </div>
             <div>
 
-              {!caseData.isPaidCase &&
+              {caseData.files.length !== 0 &&
                 caseData.files.map((file: { originalname: string }, index: number) => (
                   <div key={index} className="file-row">
-                    <div>{file.originalname}</div>
+                    <div className="field">{file.originalname}</div>
                     <Button onClick={() => handleFileDownload(file)}>
                       <Download />
                       Télécharger
@@ -217,7 +226,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
                   </div>
                 ))}
               {}
-            </div>
+            </div> 
           </div>
         </DialogContent>
 

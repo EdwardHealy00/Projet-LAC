@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from "react";
 import InputBase from "@mui/material/InputBase";
-import { alpha, styled } from "@mui/material";
+import { alpha, styled, useMediaQuery, useTheme } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import "./SearchBar.scss";
 
@@ -9,6 +9,9 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ onFilter }) => {
+
+  const theme = useTheme();
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up(501));
 
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -49,6 +52,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFilter }) => {
     },
   }));
 
+  const StyledInputBaseSm = styled(InputBase)(({ theme }) => ({
+    color: theme.palette.common.white,
+    justifySelf: "left",
+    width: "100%",
+    "& .MuiInputBase-input": {
+      padding: theme.spacing(1, 1, 1, 0),
+      paddingLeft: "0.6em",
+    },
+  }));
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
     // Call the onFilter function to filter results based on the new search term
@@ -57,15 +70,25 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFilter }) => {
 
   return (
     <div id="search-comp">
+      {isLargeScreen && 
         <Search>
-        <SearchIconWrapper>
-            <SearchIcon />
-        </SearchIconWrapper>
+          <SearchIconWrapper>
+              <SearchIcon />
+          </SearchIconWrapper>
         <StyledInputBase
             placeholder="Rechercher..."
             onChange={handleInputChange}
         />
         </Search>
+      }
+      {!isLargeScreen && 
+        <Search>
+        <StyledInputBaseSm
+            placeholder="Rechercher..."
+            onChange={handleInputChange}
+        />
+        </Search>
+      }
     </div>
     
   );

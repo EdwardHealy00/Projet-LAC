@@ -1,6 +1,7 @@
 .value-group-separator {
   height: 1px;
-  width: 180px;
+  width: 100%;
+  max-width: 25vw;
   background-color: black;
   border: none;
   margin: 6px 0 12px 0;
@@ -10,7 +11,6 @@
 .value-group-content {
   font-family: 'Yaldevi', sans-serif;
   font-size: 1.2rem;
-  width: 20vw;
 }
 
 .value-group-paragraph-container {
@@ -22,3 +22,57 @@
   font-size: 1.5rem;
   max-lines: 2;
 }
+
+@media screen and (max-width: 1000px) {
+  .value-group-paragraph-container {
+    width: 30vw;
+  }
+
+  .value-group-content {
+    font-size: 1.0rem;
+  }
+
+  .value-group-title {
+    font-size: 1.2rem;
+  }
+
+  .value-group-separator {
+    max-width: 30vw;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .value-group-paragraph-container {
+    width: 75vw;
+  }
+
+  .value-group-separator {
+    max-width: 100vw;
+  }
+  
+}
+
+@media screen and (max-width: 500px) {
+  .value-group-paragraph-container {
+    width: 85vw;
+  }
+
+  .value-group-content {
+    font-size: 0.80rem;
+  }
+
+  .value-group-title {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .value-group-content {
+    font-size: 0.6rem;
+  }
+
+  .value-group-title {
+    font-size: 0.75rem;
+  }
+}
+

@@ -6,40 +6,43 @@ import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
 import TimelineDot from "@mui/lab/TimelineDot";
-import Typography from "@mui/material/Typography";
 import { downloadCaseStudyTemplate } from "../../../utils/FileDownloadUtil";
 import "./Timeline.scss";
 
 export default function CustomizedTimeline() {
   return (
-    <Timeline position="alternate">
+    <Timeline position="alternate" className="timeline">
       <TimelineItem>
         <TimelineOppositeContent>
+        <div className="eventsList">
           <b>Printemps et été 2021</b>
+        </div>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
-          <Typography>
+        <TimelineContent>
+        <div className="eventsList">
             <ul>
               <li>Idéation</li>
               <li>Demande de subventions</li>
               <li>Création de l'équipe projet</li>
             </ul>
-          </Typography>
+          </div>
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent>
+        <div className="eventsList">
           <b>Automne 2021</b>
+        </div>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
+        <TimelineContent>
           <div className="eventsList">
             <ul>
               <li>Étude de marché des centres de cas existants</li>
@@ -54,12 +57,12 @@ export default function CustomizedTimeline() {
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
-          <Typography>
+        <TimelineContent>
+          <div className="eventsList">
             <ul>
               <li>Rédaction des questionnaires et des guides d’entretien</li>
             </ul>
-          </Typography>
+          </div>
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
@@ -67,7 +70,7 @@ export default function CustomizedTimeline() {
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
+        <TimelineContent>
           <div className="eventsList">
             <ul>
               <li>
@@ -98,8 +101,8 @@ export default function CustomizedTimeline() {
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
-          <Typography>
+        <TimelineContent>
+          <div className="eventsList">
             <ul>
               <li>
                 <a
@@ -111,18 +114,20 @@ export default function CustomizedTimeline() {
                 </a>
               </li>
             </ul>
-          </Typography>
+          </div>
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent>
+        <div className="eventsList">
           <b>Hiver 2022</b>
+        </div>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
+        <TimelineContent>
           <div className="eventsList">
             <ul>
               <li>
@@ -143,12 +148,12 @@ export default function CustomizedTimeline() {
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
-          <Typography>
+        <TimelineContent>
+          <div className="eventsList">
             <ul>
               <li>Rédaction du plan d’affaires</li>
             </ul>
-          </Typography>
+          </div>
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
@@ -156,7 +161,7 @@ export default function CustomizedTimeline() {
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
+        <TimelineContent>
           <div className="eventsList">
             <ul>
               <li>Développement des schémas d’interface</li>
@@ -168,29 +173,33 @@ export default function CustomizedTimeline() {
 
       <TimelineItem>
         <TimelineOppositeContent>
-          <b>Été 2022</b>
+          <div className="eventsList">
+            <b>Été 2022</b>
+          </div>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
-          <Typography>
+        <TimelineContent>
+          <div className="eventsList">
             <ul>
               <li>Développement de la plateforme numérique (site web)</li>
             </ul>
-          </Typography>
+          </div>
         </TimelineContent>
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent>
-          <b>Automne 2022</b>
+          <div className="eventsList">
+            <b>Automne 2022</b>
+          </div>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
+        <TimelineContent>
           <div className="eventsList">
             <ul>
               <li>
@@ -207,13 +216,15 @@ export default function CustomizedTimeline() {
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent>
-          <b>Hiver 2023</b>
+          <div className="eventsList">
+            <b>Hiver 2023</b>
+          </div>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
+        <TimelineContent>
           <div className="eventsList">
             <ul>
               <li>Édition des premiers cas</li>
@@ -223,13 +234,15 @@ export default function CustomizedTimeline() {
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent>
-          <b>Été et automne 2023</b>
+          <div className="eventsList">
+            <b>Été et automne 2023</b>
+          </div>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
+        <TimelineContent>
           <div className="eventsList">
             <ul>
               <li>
@@ -248,13 +261,15 @@ export default function CustomizedTimeline() {
       </TimelineItem>
       <TimelineItem>
         <TimelineOppositeContent>
-          <b>Hiver 2024</b>
+          <div className="eventsList">
+            <b>Hiver 2024</b>
+          </div>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineDot />
           <TimelineConnector />
         </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
+        <TimelineContent>
           <div className="eventsList">
             <ul>
               <li>Lancement de la plateforme à l’interne</li>

@@ -4,9 +4,11 @@ import { Case } from "../../model/CaseStudy";
 import axios from "axios";
 import { Typography } from "@mui/material";
 import "./Articles.scss";
+import { languageToString } from "../../model/enum/Language";
 
 interface ArticlesProps {
   typeFilters: string[];
+  languageFilters: string[];
   disciplineFilters: string[];
   subjectFilters: string[];
   dateFilters: string[];
@@ -67,6 +69,19 @@ const Articles = forwardRef<ArticlesRef, ArticlesProps>((props, ref) => {
             !(caseStudy as Case).isPaidCase) ||
           (props.typeFilters.includes(PAID_STR) &&
             (caseStudy as Case).isPaidCase)
+        );
+      });
+    }
+
+    if (props.languageFilters.length > 0) {
+      caseStudiesToFilter = caseStudiesToFilter.filter((caseStudy) => {
+        if ((caseStudy as Case).language == null) {
+          return false;
+        }
+        console.log(props.languageFilters)
+        console.log(languageToString((caseStudy as Case).language))
+        return props.languageFilters.includes(
+          languageToString((caseStudy as Case).language)
         );
       });
     }
@@ -231,6 +246,7 @@ const Articles = forwardRef<ArticlesRef, ArticlesProps>((props, ref) => {
     onFilterChange();
   }, [
     props.typeFilters,
+    props.languageFilters,
     props.disciplineFilters,
     props.subjectFilters,
     props.dateFilters,

@@ -58,7 +58,8 @@ export default function Approval() {
               caseStudy.approvalDecision,
               caseStudy.comments,
               caseStudy.ratings,
-              caseStudy.votes
+              caseStudy.votes,
+              caseStudy.language
             );
             caseStudy.isPaidCase ? paidCases.push(newData) : freeCases.push(newData);
           }

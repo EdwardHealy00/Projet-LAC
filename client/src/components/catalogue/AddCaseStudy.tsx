@@ -21,7 +21,7 @@ import {
 import { NewCaseStudy } from "../../model/CaseStudy";
 import axios from "axios";
 import MenuItem from "@mui/material/MenuItem";
-import { Disciplines, Subjects } from "./Catalogue";
+import { Disciplines, Subjects, Languages } from "./Catalogue";
 import { useNavigate } from "react-router-dom";
 import { checkList } from "../roles/approval/deputy/PreApproveFeedback";
 import { MAX_FILES_PER_CASE } from "../../utils/Constants";
@@ -94,6 +94,8 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
 
   const [selectedSubjects, setSelectedSubject] = React.useState<string[]>([]);
 
+  const [selectedLanguage, setSelectedLanguage] = React.useState(0);
+
   const [reachedMaxFiles, setReachedMaxFiles] = React.useState(false);
 
   const getFilesToUpload = () => {
@@ -106,6 +108,10 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
     setSelectedSubject(e.target.value);
   };
 
+  const onLanguageChanged = (e: any) => {
+    setSelectedLanguage(e.target.value);
+  };
+
   const caseStudyFilesTableRef = React.useRef<CaseStudyFilesTableRef | null>(null);
 
   const initialStateErrors = {
@@ -116,6 +122,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
     course: { isError: false, message: "" },
     discipline: { isError: false, message: "" },
     subject: { isError: false, message: "" },
+    language: { isError: false, message: "" },
   };
 
   const [stateErrors, setStateErrors] = React.useState(initialStateErrors);
@@ -209,6 +216,14 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
       isValid = false;
     }
 
+    if (e.language.value.trim() === "") {
+      stateErrorsCopy.language = {
+        isError: true,
+        message: "Veuillez entrer la langue",
+      };
+      isValid = false;
+    }
+
     const courseIdPattern = new RegExp("^[A-Z]{2,4}\\d{3,5}\\s?$");
     if (!courseIdPattern.test(e.course.value.toUpperCase())) {
       stateErrorsCopy.course = {
@@ -261,6 +276,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
       files: filesToUpload,
       discipline: e.target.elements.discipline.value,
       isPaidCase: isPaid,
+      language: e.target.elements.language.value,
     } as NewCaseStudy;
 
     const formData = new FormData();
@@ -278,6 +294,7 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
 
     setSelectedDiscipline("");
     setSelectedSubject([]);
+    setSelectedLanguage(0);
     for(const index in checkList) {
       checkedState[index] = false;
     }
@@ -422,6 +439,24 @@ const AddCaseStudy = forwardRef<AddCaseStudyDialogRef, Props>((props, ref) => {
                   </Select>
                 </FormControl>
               </div>
+            </div>
+            <div id="select-options">
+              <FormControl fullWidth>
+                  <InputLabel>Langue</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Langue"
+                    name="language"
+                    value={selectedLanguage}
+                    onChange={onLanguageChanged}
+                    error={stateErrors.language.isError}
+                  >
+                      {Languages.map((language, index) => (
+                      <MenuItem key={index} value={index}>{language}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
             </div>
             <div>
               <Button variant="contained" component="label" fullWidth disabled={reachedMaxFiles}>

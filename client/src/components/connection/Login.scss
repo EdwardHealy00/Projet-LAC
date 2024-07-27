@@ -22,3 +22,15 @@
 #resubmitInfo {
     margin-left: 0.5%;
 }
+
+@media screen and (max-width: 1200px) {
+    #loginInfo {
+        margin-right: 1%;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    #loginInfo {
+        margin-right: 2%;
+    }
+}

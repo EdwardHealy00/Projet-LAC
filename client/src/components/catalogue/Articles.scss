@@ -16,3 +16,11 @@
     flex-wrap: wrap;
     gap: 1em;
 }
+
+@media screen and (max-width: 1200px) {
+    #articles-results {
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+}

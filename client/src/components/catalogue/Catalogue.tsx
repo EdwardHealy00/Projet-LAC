@@ -6,15 +6,25 @@ import {
   Button,
   Card,
   Chip,
+  Collapse,
+  Divider,
   FormControl,
+  Icon,
   InputLabel,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  SwipeableDrawer,
   Typography,
   alpha,
   styled,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import axios from "axios";
@@ -22,10 +32,19 @@ import { Role } from "../../model/enum/Role";
 import { UnlockAccess } from "../connection/UnlockAccess";
 import { Download } from "@mui/icons-material";
 import { Add } from "@mui/icons-material";
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import { downloadCaseStudyTemplate } from "../../utils/FileDownloadUtil";
 import Articles, { ArticlesRef } from "./Articles";
 import AddCaseStudy, { AddCaseStudyDialogRef } from "./AddCaseStudy";
 import ClearIcon from '@mui/icons-material/Clear';
+import MenuIcon from '@mui/icons-material/Menu';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import DeleteIcon from '@mui/icons-material/Delete';
+import logo from "../../img/logo-lac-short.png";
 
 interface Filter {
   name: string;
@@ -63,6 +82,11 @@ export const Subjects = [
   "Innovation",
 ];
 
+export const Languages = [
+  "Français",
+  "Anglais"
+];
+
 export default function Catalogue() {
   const dates = [
     "0-3 mois",
@@ -75,6 +99,7 @@ export default function Catalogue() {
   const numberPages = ["1 à 4 pages", "5 à 10 pages", "11+ pages"];
   const [filters, setFilters] = React.useState<Filter[]>([]);
   const [typeFilters, setTypeFilters] = React.useState<string[]>([]);
+  const [languageFilters, setLanguageFilters] = React.useState<string[]>([]);
   const [disciplineFilters, setDisciplineFilters] = React.useState<string[]>(
     []
   );
@@ -98,6 +123,13 @@ export default function Catalogue() {
   const OnChangeType = (event: SelectChangeEvent<any>) => {
     const { target: { value } } = event;
     setTypeFilters(
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  const OnChangeLanguage= (event: SelectChangeEvent<any>) => {
+    const { target: { value } } = event;
+    setLanguageFilters(
       typeof value === "string" ? value.split(",") : value
     );
   };
@@ -144,6 +176,7 @@ export default function Catalogue() {
     }
     setFilters([]);
     setTypeFilters([]);
+    setLanguageFilters([]);
     setDisciplineFilters([]);
     setSubjectFilters([]);
     setDateFilters([]);
@@ -152,6 +185,13 @@ export default function Catalogue() {
   };
 
   const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('lg'));
+  const [isFilterMenuOpen, setIsFilterMenuOpen] = React.useState(false);
+
+  const toggleFilterMenu = () => {
+    setIsFilterMenuOpen(!isFilterMenuOpen);
+  };
+
   const WhiteTypography = styled(Typography)({
     color: theme.palette.primary.contrastText,
   });
@@ -162,6 +202,383 @@ export default function Catalogue() {
       backgroundColor: alpha(theme.palette.common.white, 0.15), // Change to the desired hover color
     },
   });
+
+  const FilterMenuButton = styled(WhiteButton)(({ theme }) => ({
+    [theme.breakpoints.up('lg')]: {
+      display: 'none',
+    },
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
+    },
+  }));
+
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+
+  const FilterCard = () => (
+    <Card id="filter-card">
+          <div id="filter-header">
+            <Typography variant="h4">Filtrer par:</Typography>
+            <Button id="reinitBtn" variant="outlined" onClick={onResetFilters}>
+              <DeleteIcon></DeleteIcon>
+            <Typography variant="h5">Réinitialiser</Typography>
+            </Button>
+          </div>
+          <div className="filter-list">
+            <div className="filter-form-container">
+              <FormControl className="filter-form-control">
+                <InputLabel id="type-select-label">Type de cas</InputLabel>
+                <Select
+                  labelId="type-select-label"
+                  id="type-select"
+                  multiple
+                  value={typeFilters}
+                  onChange={OnChangeType}
+                  input={
+                    <OutlinedInput
+                      id="select-multiple-chip"
+                      label="Type de cas"
+                    />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value, index) => (
+                        <Chip key={index} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                >
+                  <MenuItem key={0} value={"Libre d'accès"}>
+                    Libre d'accès
+                  </MenuItem>
+                  <MenuItem key={1} value={"Payant"}>
+                    Payant
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <ClearButton filterArray={typeFilters} setFilterFunction={setTypeFilters} />
+            </div>
+            <div className="filter-form-container">
+              <FormControl className="filter-form-control">
+                <InputLabel id="type-select-label">Langue</InputLabel>
+                <Select
+                  labelId="type-select-label"
+                  id="type-select"
+                  multiple
+                  value={languageFilters}
+                  onChange={OnChangeLanguage}
+                  input={
+                    <OutlinedInput
+                      id="select-multiple-chip"
+                      label="Langue"
+                    />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value, index) => (
+                        <Chip key={index} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                >
+                  <MenuItem key={0} value={"Français"}>
+                    Français
+                  </MenuItem>
+                  <MenuItem key={1} value={"Anglais"}>
+                    Anglais
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <ClearButton filterArray={languageFilters} setFilterFunction={setLanguageFilters  } />
+            </div>
+            <div className="filter-form-container">
+              <FormControl className="filter-form-control">
+                <InputLabel id="type-select-label">Discipline</InputLabel>
+                <Select
+                  labelId="type-select-label"
+                  id="type-select"
+                  multiple
+                  value={disciplineFilters}
+                  onChange={OnChangeDiscipline}
+                  input={
+                    <OutlinedInput id="select-multiple-chip" label="Discipline" />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value, index) => (
+                        <Chip key={index} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                >
+                  {Disciplines.map((name, index) => (
+                    <MenuItem key={index} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <ClearButton filterArray={disciplineFilters} setFilterFunction={setDisciplineFilters} />
+            </div>
+            <div className="filter-form-container">
+              <FormControl className="filter-form-control">
+                <InputLabel id="type-select-label">Sujet</InputLabel>
+                <Select
+                  labelId="type-select-label"
+                  id="type-select"
+                  multiple
+                  value={subjectFilters}
+                  onChange={OnChangeSubject}
+                  input={
+                    <OutlinedInput id="select-multiple-chip" label="Sujet" />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value, index) => (
+                        <Chip key={index} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                >
+                  {Subjects.map((name, index) => (
+                    <MenuItem key={index} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <ClearButton filterArray={subjectFilters} setFilterFunction={setSubjectFilters} />
+            </div>
+            <div className="filter-form-container">
+              <FormControl className="filter-form-control">
+                <InputLabel id="type-select-label">Date de parution</InputLabel>
+                <Select
+                  labelId="type-select-label"
+                  id="type-select"
+                  multiple
+                  value={dateFilters}
+                  onChange={OnChangeDate}
+                  input={
+                    <OutlinedInput
+                      id="select-multiple-chip"
+                      label="Date de parution"
+                    />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value, index) => (
+                        <Chip key={index} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                >
+                  {dates.map((name, index) => (
+                    <MenuItem key={index} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <ClearButton filterArray={dateFilters} setFilterFunction={setDateFilters} />
+            </div>
+            <div className="filter-form-container">
+              <FormControl className="filter-form-control">
+                <InputLabel id="type-select-label">Nombre de pages</InputLabel>
+                <Select
+                  labelId="type-select-label"
+                  id="type-select"
+                  multiple
+                  value={numberPagesFilters}
+                  onChange={OnChangePages}
+                  input={
+                    <OutlinedInput
+                      id="select-multiple-chip"
+                      label="Nombre de pages"
+                    />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value, index) => (
+                        <Chip key={index} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                >
+                  {numberPages.map((name, index) => (
+                    <MenuItem key={index} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <ClearButton filterArray={numberPagesFilters} setFilterFunction={setNumberPagesFilters} />
+            </div>
+            <div className="filter-form-container">
+              <FormControl className="filter-form-control">
+                <InputLabel id="type-select-label">Auteur</InputLabel>
+                <Select
+                  labelId="type-select-label"
+                  id="type-select"
+                  multiple
+                  value={authorsFilters}
+                  onChange={OnChangeAuthor}
+                  input={
+                    <OutlinedInput id="select-multiple-chip" label="Auteur" />
+                  }
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value, index) => (
+                        <Chip key={index} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                >
+                  {caseStudyAuthors.map((name, index) => (
+                    <MenuItem key={index} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <ClearButton filterArray={authorsFilters} setFilterFunction={setAuthorsFilters} />
+            </div>
+          </div>
+
+    </Card>
+  );
+
+  const [drawerState, setDrawerState] = React.useState(false);
+
+  const toggleDrawer =
+  (open: boolean) =>
+  (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' ||
+        (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+
+    setDrawerState(open);
+  };
+
+  const DrawerList = () => (
+    <Box
+      sx={{ width: 250, height: '100vh', backgroundColor: theme.palette.background.default}}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <div
+        id="navbar"
+        style={{ backgroundColor: theme.palette.primary.main, height: getNavBarSize(), width: 250 }}
+      >
+        <a href="/"><img src={logo} alt="LAC logo" id="lac-logo"/></a>
+      </div>
+      <div
+        id="second-navbar"
+        style={{ backgroundColor: theme.palette.primary.light, height: getSecondNavBarSize(), marginTop: getNavBarSize(), width: 250 }}
+      >
+        <WhiteTypography variant="h2" id="catalogue-title">Navigation</WhiteTypography>
+      </div>
+      <div style={{ marginTop: getNavBarSize() + getSecondNavBarSize()}}>
+        <List>
+          <ListItem key={"Catalogue"} disablePadding>
+            <ListItemButton href="/catalogue">
+              <ListItemIcon>
+                <ViewListIcon></ViewListIcon>
+              </ListItemIcon>
+              <ListItemText
+                primary={<Typography variant="h3">Catalogue</Typography>}
+              />
+            </ListItemButton>
+          </ListItem>
+          <UnlockAccess
+            role={[Role.Deputy, Role.ComityDirector, Role.Comity]}
+            children={
+              <ListItem key={"Tableau de bord"} disablePadding>
+                <ListItemButton href="/dashboard">
+                  <ListItemIcon>
+                    <DashboardIcon></DashboardIcon>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography variant="h3">Tableau de bord</Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            }
+          ></UnlockAccess>
+          <UnlockAccess
+            role={[Role.Professor]}
+            children={
+              <ListItem key={"Mes études de cas"} disablePadding>
+                <ListItemButton href="/my-pending-case-studies/paid">
+                  <ListItemIcon>
+                    <FolderSharedIcon></FolderSharedIcon>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography variant="h3">Mes études de cas</Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            }
+          ></UnlockAccess>
+          <ListItem key={"Guides"} disablePadding>
+            <ListItemButton href="/guide">
+              <ListItemIcon>
+                <LightbulbIcon></LightbulbIcon>
+              </ListItemIcon>
+              <ListItemText
+                primary={<Typography variant="h3">Guides</Typography>}
+              />
+            </ListItemButton>
+          </ListItem>
+        </List>
+        <Divider />
+        <UnlockAccess
+          role={[Role.Professor]}
+          children={
+            <List>
+              <ListItem key={"Télécharger les gabarits"} disablePadding>
+                <ListItemButton onClick={() => downloadCaseStudyTemplate()}>
+                  <ListItemIcon>
+                    <Download></Download>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography variant="h4">
+                        Télécharger les gabarits
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key={"Ajouter une étude de cas"} disablePadding>
+                <ListItemButton onClick={openAddCaseStudyDialog}>
+                  <ListItemIcon>
+                    <Add></Add>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography variant="h4">
+                        Ajouter une étude de cas
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            </List>
+        }
+        ></UnlockAccess>
+      </div>
+    </Box>
+  );
 
   const getCaseStudyAuthors = async () => {
     axios
@@ -202,6 +619,24 @@ export default function Catalogue() {
     }
   }
 
+  const getNavBarSize = () => {
+      const mainNavBar = document.querySelector('#nav-bar') as HTMLElement;
+  
+      if (mainNavBar ) {
+          return mainNavBar.clientHeight;
+      }
+      return 0;
+  }
+
+  const getSecondNavBarSize = () => {
+    const catalogueNavBar = document.querySelector('#rectangle') as HTMLElement;
+
+    if (catalogueNavBar ) {
+        return catalogueNavBar.clientHeight - 2;
+    }
+    return 0;
+}
+
   interface ClearButtonProps {
     filterArray: string[];
     setFilterFunction: React.Dispatch<React.SetStateAction<string[]>>;
@@ -223,227 +658,76 @@ export default function Catalogue() {
         id="rectangle"
         style={{ backgroundColor: theme.palette.primary.light }}
       >
-        <WhiteTypography variant="h2" id="catalogue-title">
-          Catalogue d'études de cas
-        </WhiteTypography>
-        <UnlockAccess
-          role={[Role.Professor]}
-          children={
-            <div id="addCaseRectangle">
-              <WhiteButton
-                variant="outlined"
-                onClick={() => downloadCaseStudyTemplate()}
-              >
-                <Download></Download>
-                Télécharger les gabarits
-              </WhiteButton>
-              <WhiteButton variant="contained" onClick={openAddCaseStudyDialog}>
-                <Add></Add>
-                Ajouter une étude de cas
-              </WhiteButton>
+        <div id="label-title">
+          {!isLargeScreen &&
+            <div>
+              <React.Fragment key={'left'}>
+                <WhiteButton id="drawerBtn" variant="text" onClick={toggleDrawer(true)}>
+                  <MenuIcon/>
+                </WhiteButton>
+                <SwipeableDrawer
+                  anchor={'left'}
+                  open={drawerState}
+                  onClose={toggleDrawer(false)}
+                  onOpen={toggleDrawer(true)}
+                >
+                  <DrawerList></DrawerList>
+                </SwipeableDrawer>
+              </React.Fragment>
             </div>
           }
-        ></UnlockAccess>
-          <div id="search-bar">
+          <WhiteTypography variant="h2" id="catalogue-title">
+            Catalogue d'études de cas
+          </WhiteTypography>
+        </div>
+        {isLargeScreen &&
+          <UnlockAccess
+            role={[Role.Professor]}
+            children={
+              <div id="addCaseRectangle">
+                <WhiteButton
+                  variant="outlined"
+                  onClick={() => downloadCaseStudyTemplate()}
+                >
+                  <Download></Download>
+                  Télécharger les gabarits
+                </WhiteButton>
+                <WhiteButton variant="contained" onClick={openAddCaseStudyDialog}>
+                  <Add></Add>
+                  Ajouter une étude de cas
+                </WhiteButton>
+              </div>
+            }
+          ></UnlockAccess>
+        }
+        <div id="search-section">
+          <FilterMenuButton
+          id="filterBtn"
+          variant="outlined"
+          onClick={toggleFilterMenu}
+        >
+          {isFilterMenuOpen ? <FilterAltOffIcon/> : <FilterAltIcon/>}
+          
+        </FilterMenuButton>
+          <div id="searchBtn">
           <SearchBar onFilter={onSearch}></SearchBar>
+          </div>
         </div>
       </div>
       <div id="rows">
-        <Card id="filter-card">
-          <div id="filter-header">
-            <Typography variant="h5">Filtrer par:</Typography>
-            <Button onClick={onResetFilters}>
-              <u>Effacer tous les filtres</u>
-            </Button>
-          </div>
-          <div className="filter-form-container">
-            <FormControl className="filter-form-control">
-              <InputLabel id="type-select-label">Type de cas</InputLabel>
-              <Select
-                labelId="type-select-label"
-                id="type-select"
-                multiple
-                value={typeFilters}
-                onChange={OnChangeType}
-                input={
-                  <OutlinedInput
-                    id="select-multiple-chip"
-                    label="Type de cas"
-                  />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value, index) => (
-                      <Chip key={index} label={value} />
-                    ))}
-                  </Box>
-                )}
-              >
-                <MenuItem key={0} value={"Libre d'accès"}>
-                  Libre d'accès
-                </MenuItem>
-                <MenuItem key={1} value={"Payant"}>
-                  Payant
-                </MenuItem>
-              </Select>
-            </FormControl>
-            <ClearButton filterArray={typeFilters} setFilterFunction={setTypeFilters} />
-          </div>
-          <div className="filter-form-container">
-            <FormControl className="filter-form-control">
-              <InputLabel id="type-select-label">Discipline</InputLabel>
-              <Select
-                labelId="type-select-label"
-                id="type-select"
-                multiple
-                value={disciplineFilters}
-                onChange={OnChangeDiscipline}
-                input={
-                  <OutlinedInput id="select-multiple-chip" label="Discipline" />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value, index) => (
-                      <Chip key={index} label={value} />
-                    ))}
-                  </Box>
-                )}
-              >
-                {Disciplines.map((name, index) => (
-                  <MenuItem key={index} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <ClearButton filterArray={disciplineFilters} setFilterFunction={setDisciplineFilters} />
-          </div>
-          <div className="filter-form-container">
-            <FormControl className="filter-form-control">
-              <InputLabel id="type-select-label">Sujet</InputLabel>
-              <Select
-                labelId="type-select-label"
-                id="type-select"
-                multiple
-                value={subjectFilters}
-                onChange={OnChangeSubject}
-                input={
-                  <OutlinedInput id="select-multiple-chip" label="Sujet" />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value, index) => (
-                      <Chip key={index} label={value} />
-                    ))}
-                  </Box>
-                )}
-              >
-                {Subjects.map((name, index) => (
-                  <MenuItem key={index} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <ClearButton filterArray={subjectFilters} setFilterFunction={setSubjectFilters} />
-          </div>
-          <div className="filter-form-container">
-            <FormControl className="filter-form-control">
-              <InputLabel id="type-select-label">Date de parution</InputLabel>
-              <Select
-                labelId="type-select-label"
-                id="type-select"
-                multiple
-                value={dateFilters}
-                onChange={OnChangeDate}
-                input={
-                  <OutlinedInput
-                    id="select-multiple-chip"
-                    label="Date de parution"
-                  />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value, index) => (
-                      <Chip key={index} label={value} />
-                    ))}
-                  </Box>
-                )}
-              >
-                {dates.map((name, index) => (
-                  <MenuItem key={index} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <ClearButton filterArray={dateFilters} setFilterFunction={setDateFilters} />
-          </div>
-          <div className="filter-form-container">
-            <FormControl className="filter-form-control">
-              <InputLabel id="type-select-label">Nombre de pages</InputLabel>
-              <Select
-                labelId="type-select-label"
-                id="type-select"
-                multiple
-                value={numberPagesFilters}
-                onChange={OnChangePages}
-                input={
-                  <OutlinedInput
-                    id="select-multiple-chip"
-                    label="Nombre de pages"
-                  />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value, index) => (
-                      <Chip key={index} label={value} />
-                    ))}
-                  </Box>
-                )}
-              >
-                {numberPages.map((name, index) => (
-                  <MenuItem key={index} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <ClearButton filterArray={numberPagesFilters} setFilterFunction={setNumberPagesFilters} />
-          </div>
-          <div className="filter-form-container">
-            <FormControl className="filter-form-control">
-              <InputLabel id="type-select-label">Auteur</InputLabel>
-              <Select
-                labelId="type-select-label"
-                id="type-select"
-                multiple
-                value={authorsFilters}
-                onChange={OnChangeAuthor}
-                input={
-                  <OutlinedInput id="select-multiple-chip" label="Auteur" />
-                }
-                renderValue={(selected) => (
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                    {selected.map((value, index) => (
-                      <Chip key={index} label={value} />
-                    ))}
-                  </Box>
-                )}
-              >
-                {caseStudyAuthors.map((name, index) => (
-                  <MenuItem key={index} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <ClearButton filterArray={authorsFilters} setFilterFunction={setAuthorsFilters} />
-          </div>
-        </Card>
+        {
+        matches ? (
+          <Collapse in={isFilterMenuOpen}>
+            <FilterCard />
+          </Collapse>
+        ) : (
+          <FilterCard />
+        )
+        }
         <Articles
           ref={articlesRef}
           typeFilters={typeFilters}
+          languageFilters={languageFilters}
           disciplineFilters={disciplineFilters}
           subjectFilters={subjectFilters}
           dateFilters={dateFilters}

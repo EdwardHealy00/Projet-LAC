@@ -11,8 +11,9 @@ import axios from "axios";
 import { Role } from "../../model/enum/Role";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../App";
-import { Typography } from "@mui/material";
+import { Typography, useMediaQuery, useTheme } from "@mui/material";
 import ResubmitProofPopup, { ResubmitProofPopupRef } from "./ResubmitProofPopup";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export interface Props {}
 export interface LoginRef {
@@ -36,7 +37,7 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    getUserInfo();
+    if(loggedIn) getUserInfo();
   }, []);
 
   const getUserInfo = () => {
@@ -109,6 +110,9 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
     }
   };
 
+  const theme = useTheme();
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up(601));
+
   return (
     <div>
       {!loggedIn && (
@@ -148,7 +152,8 @@ const Login = forwardRef<LoginRef, Props>((props, ref) => {
             color="error"
             onClick={onLogout}
           >
-            Déconnexion
+            {!isLargeScreen && <LogoutIcon></LogoutIcon>}
+            {isLargeScreen && 'Déconnexion'}
           </Button>
         </div>
       )}
