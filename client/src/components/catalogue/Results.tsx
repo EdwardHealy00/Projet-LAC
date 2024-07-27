@@ -232,7 +232,7 @@ const Results: React.FC<Props> = ({ caseData }) => {
 
         <DialogActions className="dialog-actions">
         {caseData.isPaidCase && (
-                <Button variant="contained" color="primary" onClick={onActionClick}>
+                <Button variant="contained" color="primary" onClick={onCaseClick}>
                   <Launch></Launch>Accéder à l'étude de cas
                 </Button>
               )}
